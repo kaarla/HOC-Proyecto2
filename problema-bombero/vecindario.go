@@ -1,4 +1,4 @@
-package bomberos
+package problema-bomberos
 
  import(
 //   "os"

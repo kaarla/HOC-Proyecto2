@@ -1,7 +1,7 @@
 package main
 import(
   "fmt"
-  "github.com/kaarla/HOC-Proyecto2/bombero"
+  "github.com/kaarla/HOC-Proyecto2/problema-bombero"
 )
 
 func main() {
