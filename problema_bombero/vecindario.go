@@ -9,17 +9,17 @@ package problema_bombero
  )
 
 type Manzana struct{
-  id int
-  nombre string
-  estado string
-  vecinos []Manzana
+  Id int
+  Nombre string
+  Estado string
+  Vecinos []Manzana
 }
 
 type Vecindario struct{
-  manzanas []Manzana
-  mapa [][]float64
+  Manzanas []Manzana
+  Mapa [][]float64
   // var tamano int
-  grado int
+  Grado int
 }
 
 func NewVecindario(mapa [][]float64) *Vecindario{

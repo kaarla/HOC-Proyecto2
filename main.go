@@ -7,5 +7,6 @@ import(
 func main() {
     fmt.Println("hello world")
     vecindario := problema_bombero.VecindarioCero("grafica12.txt")
-    fmt.Println(vecindario.getMapa())
+    // mapita := vecindario.mapa
+    fmt.Println(vecindario.Mapa
 }
