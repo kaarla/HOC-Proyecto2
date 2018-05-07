@@ -1,4 +1,4 @@
-package problema-bomberos
+package problema_bomberos
 
 
 type hormiga struct{
