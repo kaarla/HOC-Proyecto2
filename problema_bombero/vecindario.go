@@ -2,7 +2,7 @@ package problema_bombero
 
  import(
 //   "os"
-//   "fmt"
+  // "fmt"
    "strings"
    "io/ioutil"
    "strconv"
@@ -24,7 +24,7 @@ type Vecindario struct{
 
 func NewVecindario(mapa [][]float64) *Vecindario{
   vec := Vecindario{}
-  vec.mapa = mapa
+  vec.Mapa = mapa
   //vec.calculaGrado()
   // vec.tamano =
   return &vec
@@ -32,20 +32,26 @@ func NewVecindario(mapa [][]float64) *Vecindario{
 
 func VecindarioCero(grafica string) Vecindario{
   vecindario := Vecindario{}
-  vecindario.mapa = initMapa(grafica)
+  vecindario.Mapa = initMapa(grafica)
   //TODO
-  vecindario.manzanas = nil
-  vecindario.grado = 5
+  vecindario.Manzanas = nil
+  vecindario.Grado = 5
   return vecindario
 }
 
 func initMapa(grafica string) [][]float64{
   datos, err := ioutil.ReadFile(grafica)
   check(err)
-  var mapa [][]float64
-  for i := 0; i < len(datos); i++{
-    linea := strings.Split(string(datos[i]), ",")
-    for j := 0; j < len(datos); j++{
+  lineas := strings.Split(string(datos), "\n")
+
+  var mapa [][]float64 = make([][]float64, len(lineas) - 1)
+  for k := range mapa{
+    mapa[k] = make([]float64, len(lineas) - 1)
+  }
+
+  for i := 0; i < len(lineas) - 1; i++{
+    linea := strings.Split(string(lineas[i]), ",")
+    for j := 0; j < len(lineas) - 1; j++{
       num, err := strconv.ParseFloat(linea[j], 64)
       check(err)
       mapa[i][j] = num
@@ -54,9 +60,6 @@ func initMapa(grafica string) [][]float64{
   return mapa
 }
 
-func (vecindario *Vecindario) getMapa() [][]float64{
-  return vecindario.mapa
-}
 
 func check(e error){
   if e != nil{
