@@ -1,4 +1,4 @@
-package problema_bomberos
+package problema_bombero
 
  import(
 //   "os"
@@ -54,6 +54,9 @@ func initMapa(grafica string) [][]float64{
   return mapa
 }
 
+func (vecindario *Vecindario) getMapa() [][]float64{
+  return vecindario.mapa
+}
 
 func check(e error){
   if e != nil{
