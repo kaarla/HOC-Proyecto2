@@ -2,17 +2,19 @@ package problema_bombero
 
  import(
 //   "os"
-  // "fmt"
+  "fmt"
    "strings"
    "io/ioutil"
    "strconv"
+   // "time"
+   // "math/rand"
  )
 
 type Manzana struct{
   Id int
-  Nombre string
-  Estado string
-  Vecinos []Manzana
+  // Nombre string
+  Estado int
+  Vecinos []int
 }
 
 type Vecindario struct{
@@ -33,9 +35,9 @@ func NewVecindario(mapa [][]float64) *Vecindario{
 func VecindarioCero(grafica string) Vecindario{
   vecindario := Vecindario{}
   vecindario.Mapa = initMapa(grafica)
-  //TODO
   vecindario.Manzanas = nil
   vecindario.Grado = 5
+  vecindario.initManzanas()
   return vecindario
 }
 
@@ -60,6 +62,118 @@ func initMapa(grafica string) [][]float64{
   return mapa
 }
 
+func initManzana(id int) Manzana{
+  manzana := Manzana{}
+  manzana.Id = id
+  manzana.Estado = 0
+  manzana.Vecinos = nil
+  return manzana
+}
+
+func (vecindario *Vecindario) initManzanas(){
+  mapa := vecindario.Mapa
+  var manzanas []Manzana = make ([]Manzana, len(mapa))
+  for i := 0; i < len(mapa); i++{
+    vecinos := []int{}
+    manzanas[i] = initManzana(i)
+    for j := 0; j < len(mapa); j++{
+      if(mapa[i][j] > 0.0 && i != j){
+        vecinos = append(vecinos, j)
+      }
+    }
+    manzanas[i].Vecinos = vecinos
+    vecindario.Manzanas = manzanas
+  }
+}
+
+// func (vecindario *Vecindario) initFuegoRandom(semilla int){
+// }
+
+func (manzana *Manzana) SetEstado(estado int){
+  manzana.Estado = estado
+}
+
+func (vecindario *Vecindario) InitFuegoEspecifico(manzana int){
+  vecindario.Manzanas[manzana].SetEstado(2)
+}
+
+func (vecindario *Vecindario) PropagaFuego(){
+  incendiados := vecindario.GetIncendiados()
+  for i := 0; i < len(incendiados); i++{
+    v := vecindario.Manzanas[incendiados[i]].Vecinos
+    for j := 0; j < len(v); j++{
+      m := vecindario.Manzanas[v[j]]
+      if(m.Estado == 0){
+        vecindario.Manzanas[v[j]].SetEstado(2)
+      }
+    }
+  }
+}
+
+func (vecindario *Vecindario) GetIncendiados() []int{
+  res := []int{}
+  for i := 0; i < len(vecindario.Manzanas); i++{
+    if(vecindario.Manzanas[i].Estado == 2){
+      res = append(res, i)
+    }
+  }
+  return res
+}
+
+func (vecindario *Vecindario) GetDefendidos() []int{
+  res := []int{}
+  for i := 0; i < len(vecindario.Manzanas); i++{
+    if(vecindario.Manzanas[i].Estado == 1){
+      res = append(res, i)
+    }
+  }
+  return res
+}
+
+func (vecindario *Vecindario) GetASalvo() []int{
+  res := []int{}
+  i := 0
+  for _, b := range vecindario.Manzanas{
+    if(b.Estado == 0){
+      res = append(res, i)
+    }
+    i++
+  }
+  return res
+}
+
+func (vecindario *Vecindario) GetCandidatos() []int{
+  incendiados := vecindario.GetIncendiados()
+  candidatos := []int{}
+  for i := 0; i < len(incendiados); i++{
+    v := vecindario.Manzanas[incendiados[i]].Vecinos
+    for j := 0; j < len(v); j++{
+      m := vecindario.Manzanas[v[j]]
+      if(m.Estado == 0 && !contiene(candidatos, v[j])){
+        candidatos = append(candidatos, v[j])
+      }
+    }
+  }
+  fmt.Println(".")
+  return candidatos
+}
+
+func contiene(a []int, e int) bool{
+  for _, b := range a{
+    if b == e{
+      return true
+    }
+  }
+  return false
+}
+
+func(vecindario *Vecindario) Copia() Vecindario{
+  copia := Vecindario{}
+  copia.Mapa = vecindario.Mapa
+  copia.Manzanas = vecindario.Manzanas
+  copia.Grado = vecindario.Grado
+  return copia
+}
 
 func check(e error){
   if e != nil{
