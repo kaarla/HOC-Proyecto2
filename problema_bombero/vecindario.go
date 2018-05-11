@@ -6,7 +6,7 @@ package problema_bombero
    "strings"
    "io/ioutil"
    "strconv"
-   // "time"
+      // "time"
    // "math/rand"
  )
 
@@ -86,6 +86,7 @@ func (vecindario *Vecindario) initManzanas(){
   }
 }
 
+// TODO: fuego random
 // func (vecindario *Vecindario) initFuegoRandom(semilla int){
 // }
 
@@ -94,7 +95,7 @@ func (manzana *Manzana) SetEstado(estado int){
 }
 
 func (vecindario *Vecindario) InitFuegoEspecifico(manzana int){
-  vecindario.Manzanas[manzana].SetEstado(2)
+    vecindario.Manzanas[manzana].SetEstado(2)
 }
 
 func (vecindario *Vecindario) PropagaFuego(){
@@ -120,16 +121,6 @@ func (vecindario *Vecindario) GetIncendiados() []int{
   return res
 }
 
-func (vecindario *Vecindario) GetDefendidos() []int{
-  res := []int{}
-  for i := 0; i < len(vecindario.Manzanas); i++{
-    if(vecindario.Manzanas[i].Estado == 1){
-      res = append(res, i)
-    }
-  }
-  return res
-}
-
 func (vecindario *Vecindario) GetASalvo() []int{
   res := []int{}
   i := 0
@@ -142,6 +133,17 @@ func (vecindario *Vecindario) GetASalvo() []int{
   return res
 }
 
+func (vecindario *Vecindario) GetDefendidos() []int{
+  res := []int{}
+  for i := 0; i < len(vecindario.Manzanas); i++{
+    if(vecindario.Manzanas[i].Estado == 1){
+      res = append(res, i)
+    }
+  }
+  return res
+}
+
+
 func (vecindario *Vecindario) GetCandidatos() []int{
   incendiados := vecindario.GetIncendiados()
   candidatos := []int{}
@@ -149,16 +151,16 @@ func (vecindario *Vecindario) GetCandidatos() []int{
     v := vecindario.Manzanas[incendiados[i]].Vecinos
     for j := 0; j < len(v); j++{
       m := vecindario.Manzanas[v[j]]
-      if(m.Estado == 0 && !contiene(candidatos, v[j])){
+      if(m.Estado == 0 && !Contiene(candidatos, v[j])){
         candidatos = append(candidatos, v[j])
       }
     }
   }
-  fmt.Println(".")
+  fmt.Println("")
   return candidatos
 }
 
-func contiene(a []int, e int) bool{
+func Contiene(a []int, e int) bool{
   for _, b := range a{
     if b == e{
       return true
@@ -179,4 +181,10 @@ func check(e error){
   if e != nil{
     panic(e)
   }
+}
+
+func (vecindario *Vecindario) Evalua(numBomberos int) float64{
+  quemados := float64(len(vecindario.GetIncendiados()))
+  defendidos := float64(len(vecindario.GetDefendidos()))
+  return (quemados / float64(len(vecindario.Manzanas))) * (defendidos / float64(numBomberos))
 }
