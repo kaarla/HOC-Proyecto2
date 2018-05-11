@@ -1,13 +1,10 @@
 package problema_bombero
 
  import(
-//   "os"
   "fmt"
    "strings"
    "io/ioutil"
    "strconv"
-      // "time"
-   // "math/rand"
  )
 
 type Manzana struct{
