@@ -43,10 +43,10 @@ func InitEscenario(vecindario Vecindario) *Escenario{
   escenario.Eval = escenario.Ve.Evalua(TotalBomberos)
   escenario.Vecinos = nil
   escenario.MejorVecino = nil
-  return escenario
+  return &escenario
 }
 
-func InitHormiga(id int, escenario *Escenario) Hormiga{
+func InitHormiga(id int, escenario *Escenario) *Hormiga{
   hormiga := Hormiga{}
   hormiga.Id = id
   hormiga.Actual = *escenario
@@ -54,7 +54,7 @@ func InitHormiga(id int, escenario *Escenario) Hormiga{
   hormiga.Trayecto = append(hormiga.Trayecto, *escenario)
   // fmt.Println("................", hormiga.Trayecto, "............")
   hormiga.Camina = true
-  return hormiga
+  return &hormiga
 }
 
 func (hormiga *Hormiga) CalculaSolucion() Solucion{
@@ -171,7 +171,7 @@ func CorreHeuristica(grafica string){
   fmt.Println(vecindarioCero)
   escenarioCero := InitEscenario(vecindarioCero)
   for i := 0; i < HormigasXt; i++{
-    HormigasCaminantes = append(HormigasCaminantes, InitHormiga(i, *escenarioCero))
+    HormigasCaminantes = append(HormigasCaminantes, *InitHormiga(i, escenarioCero))
   }
   for c:= 1; c <= 2; c++{
     for _, b := range HormigasCaminantes{
