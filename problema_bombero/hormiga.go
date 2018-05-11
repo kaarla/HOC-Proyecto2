@@ -57,11 +57,11 @@ func InitHormiga(id int, escenario *Escenario) *Hormiga{
   return &hormiga
 }
 
-func (hormiga *Hormiga) CalculaSolucion() Solucion{
+func (hormiga *Hormiga) CalculaSolucion() *Solucion{
   solucion := Solucion{}
   solucion.Trayecto = hormiga.Trayecto
   solucion.Costo = hormiga.CalculaCosto()
-  return solucion
+  return &solucion
 }
 
 func (escenario *Escenario) reducePheActual(){
@@ -139,15 +139,9 @@ func (hormiga *Hormiga) newEscenario(candidatos []int) Escenario{
       }
     }
   }
-  // fmt.Println("bomberos, ", bomberosN)
   for i := 0; i < len(bomberosN); i++{
-    // fmt.Println("i", i)
-    // fmt.Println("bomberosN i", bomberosN[i])
-    // fmt.Println("candidatos i", candidatos[bomberosN[i]])
     escenario.Ve.Manzanas[candidatos[bomberosN[i]]].Estado = 1
-    // fmt.Println("id estado, ", escenario.Ve.Manzanas[candidatos[bomberosN[i]]].Id, escenario.Ve.Manzanas[candidatos[bomberosN[i]]].Estado)
   }
-  // fmt.Println("protegidos", escenario.Ve, escenario.Ve.GetDefendidos())
   return escenario
 }
 
