@@ -72,9 +72,6 @@ func (hormiga *Hormiga) CalculaCosto() float64{
   bomberosT := float64(len(hormiga.Trayecto[len(hormiga.Trayecto) - 1].Ve.GetDefendidos()))
   dano1 := quemados1 / float64(len(hormiga.Trayecto[0].Ve.Manzanas))
   danoT := quemadosT / float64(len(hormiga.Trayecto[0].Ve.Manzanas))
-  // fmt.Println(hormiga.Trayecto[0])
-  // fmt.Println("dano1", dano1, "quemados1", quemados1)
-  // fmt.Println("danoT", danoT, "quemadosT", quemadosT)
   d := (dano1 / danoT)
   b := (bomberosT / float64(TotalBomberos))
   return  (d * b) * float64(len(hormiga.Trayecto))
@@ -85,12 +82,11 @@ func (hormiga *Hormiga) AvanzaHormiga(){
   d1 = randInt(0, 2)
   nuevoEscenario := Escenario{}
   candidatos := hormiga.Actual.Ve.GetCandidatos()
-  // fmt.Println("candidatos", candidatos)
   if(len(candidatos) < 1){
     hormiga.Camina = false
     sol := hormiga.CalculaSolucion()
-    // fmt.Println("Solucion:", sol)
-    sol.printSol()
+    sol.Trayecto[len(sol.Trayecto) - 1].Ve.PrintManzana()
+    fmt.Println("Costo:", sol.Costo)
   }else{
     if(hormiga.Actual.Vecinos != nil && d1 == 0){
       nuevoEscenario = *hormiga.Actual.MejorVecino
@@ -158,27 +154,13 @@ func randInt(min int, max int) int {
   return min + rand.Intn(max-min)
 }
 
-func (sol *Solucion) printSol(){
-  color := ""
-  for _, m := range sol.Trayecto[len(sol.Trayecto) - 1].Ve.Manzanas{
-    switch m.Estado {
-    case 0:
-      color = "pink}\n"
-    case 1:
-      color = "blue}\n"
-    case 2:
-      color = "orange}\n"
-    }
-    fmt.Println(m.Id, " {color:", color)
-  }
-  fmt.Println("Costo:", sol.Costo)
-}
-
 func CorreHeuristica(grafica string){
   rand.Seed(Semilla)
   vecindarioCero := VecindarioCero(grafica)
   vecindarioCero.InitFuegoEspecifico(6)
-  fmt.Println(vecindarioCero)
+  fmt.Println("-------- INICIAL ---------")
+  vecindarioCero.PrintManzana()
+  fmt.Println("---------------------------")
   escenarioCero := InitEscenario(vecindarioCero)
   for i := 0; i < HormigasXt; i++{
     HormigasCaminantes = append(HormigasCaminantes, *InitHormiga(i, escenarioCero))

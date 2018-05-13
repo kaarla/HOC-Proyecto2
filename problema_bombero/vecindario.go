@@ -185,3 +185,19 @@ func (vecindario *Vecindario) Evalua(numBomberos int) float64{
   defendidos := float64(len(vecindario.GetDefendidos()))
   return (quemados / float64(len(vecindario.Manzanas))) * (defendidos / float64(numBomberos))
 }
+
+func (vecindario *Vecindario) PrintManzana(){
+  color := ""
+  for _, m := range vecindario.Manzanas{
+    switch m.Estado {
+    case 0:
+      color = "pink}\n"
+    case 1:
+      color = "blue}\n"
+    case 2:
+      color = "orange}\n"
+    }
+    fmt.Println(m.Id, " {color:", color)
+  }
+  // fmt.Println("EvalVecindario:", vecindario.Evalua(10))
+}
