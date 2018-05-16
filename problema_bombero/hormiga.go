@@ -85,7 +85,7 @@ func (hormiga *Hormiga) AvanzaHormiga(){
   if(len(candidatos) < 1){
     hormiga.Camina = false
     sol := hormiga.CalculaSolucion()
-    sol.Trayecto[len(sol.Trayecto) - 1].Ve.PrintManzana()
+    // sol.Trayecto[len(sol.Trayecto) - 1].Ve.PrintManzana()
     fmt.Println("Costo:", sol.Costo)
   }else{
     if(hormiga.Actual.Vecinos != nil && d1 == 0){
@@ -165,9 +165,11 @@ func CorreHeuristica(grafica string){
   for i := 0; i < HormigasXt; i++{
     HormigasCaminantes = append(HormigasCaminantes, *InitHormiga(i, escenarioCero))
   }
-  for c:= 1; c <= 2; c++{
+  for c:= 1; c <= 20; c++{
     for _, b := range HormigasCaminantes{
+      fmt.Println("c", c)
       if(b.Camina == true){
+        fmt.Println("b.camina", b.Camina)
         b.AvanzaHormiga()
         b.Actual.Ve.PropagaFuego()
       }

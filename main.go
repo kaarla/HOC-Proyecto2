@@ -2,6 +2,7 @@ package main
 import(
   // "fmt"
   "github.com/kaarla/HOC-Proyecto2/problema_bombero"
+  // "github.com/kaarla/HOC-Proyecto2/problema_bombero/grafica"
   // "strconv"
 )
 
@@ -11,11 +12,15 @@ func main() {
     problema_bombero.HormigasXt = 3
     problema_bombero.Phe = 0.3
     problema_bombero.PheReducion = 0.15
-    problema_bombero.Semilla = 50
+    problema_bombero.Semilla = 100
 
 
-    problema_bombero.CorreHeuristica("grafica12.txt")
+    problema_bombero.CorreHeuristica("grafica50.txt")
 
+    // grafica := grafica.GeneraCuadricula()
+    // grafica = grafica.DiagonalesRandom(15)
+    // grafica.ImprimeGrafica()
+    // grafica.ImprimeV()
     // fmt.Println("hello world")
     // vecindario := problema_bombero.VecindarioCero("grafica12.txt")
     // fmt.Println(vecindario.Manzanas[1].Estado)
