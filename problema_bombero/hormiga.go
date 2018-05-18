@@ -158,6 +158,7 @@ func CorreHeuristica(grafica string){
   vecindarioCero := VecindarioCero(grafica)
   vecindarioCero.InitFuegoEspecifico(31)
   vecindarioCero.InitFuegoEspecifico(33)
+  vecindarioCero.InitFuegoEspecifico(18)
   fmt.Println("-------- INICIAL ---------")
   vecindarioCero.PrintManzana()
   fmt.Println("---------------------------")
