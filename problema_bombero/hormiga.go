@@ -165,7 +165,7 @@ func CorreHeuristica(grafica string){
   for i := 0; i < HormigasXt; i++{
     HormigasCaminantes = append(HormigasCaminantes, *InitHormiga(i, escenarioCero))
   }
-  for c:= 1; c <= 2; c++{
+  for c:= 1; c <= 5; c++{
     for _, b := range HormigasCaminantes{
       // fmt.Println("c", c)
       if(b.Camina == true){
