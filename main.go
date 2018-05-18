@@ -12,7 +12,7 @@ func main() {
     problema_bombero.HormigasXt = 3
     problema_bombero.Phe = 0.3
     problema_bombero.PheReducion = 0.15
-    problema_bombero.Semilla = 879
+    problema_bombero.Semilla = 46466
 
     problema_bombero.CorreHeuristica("grafica50.txt")
 
