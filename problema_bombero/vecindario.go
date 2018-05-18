@@ -47,13 +47,14 @@ func initMapa(grafica string) [][]float64{
   for k := range mapa{
     mapa[k] = make([]float64, len(lineas) - 1)
   }
-
+  // fmt.Println("len", len(lineas))
   for i := 0; i < len(lineas) - 1; i++{
     linea := strings.Split(string(lineas[i]), ",")
     for j := 0; j < len(lineas) - 1; j++{
       num, err := strconv.ParseFloat(linea[j], 64)
       check(err)
       mapa[i][j] = num
+      mapa[j][i] = num
     }
   }
   return mapa
@@ -99,6 +100,7 @@ func (vecindario *Vecindario) PropagaFuego(){
   incendiados := vecindario.GetIncendiados()
   for i := 0; i < len(incendiados); i++{
     v := vecindario.Manzanas[incendiados[i]].Vecinos
+    // fmt.Println("v", vecindario.Manzanas[incendiados[i]], "vecinos", v)
     for j := 0; j < len(v); j++{
       m := vecindario.Manzanas[v[j]]
       if(m.Estado == 0){
@@ -106,6 +108,7 @@ func (vecindario *Vecindario) PropagaFuego(){
       }
     }
   }
+  // fmt.Println("incendiadosP", vecindario.GetIncendiados())
 }
 
 func (vecindario *Vecindario) GetIncendiados() []int{

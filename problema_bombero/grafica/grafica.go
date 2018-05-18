@@ -17,27 +17,32 @@ type Grafica struct{
   nodos [][]int
 }
 
-func GeneraCuadricula() Grafica{
-  var matriz [][]int = make([][]int, 50)
+func GeneraCuadricula(numDiagonales int) Grafica{
+  var matriz [][]int = make([][]int, numVertices)
   for k := range matriz{
-    matriz[k] = make([]int, 50)
+    matriz[k] = make([]int, numVertices)
   }
   for i := 0; i < len(matriz); i++{
     for j := 0; j < len(matriz); j++{
       if((j >= numColumnas) && (j % numColumnas == 0)){
-        matriz[j - 5][j] = 1
+        matriz[j - numColumnas][j] = 1
+        matriz[j][j - numColumnas] = 1
       }else{
         if((j - numColumnas) == i && numVertices % j != 0){
           matriz[i][j] = 1
+          matriz[j][i] = 1
         }
         if((j - 1) == i){
           matriz[i][j] = 1
+          matriz[j][i] = 1
         }
       }
     }
   }
   grafica := Grafica{}
   grafica.nodos = matriz
+  grafica = grafica.DiagonalesRandom(numDiagonales)
+  // fmt.Println(grafica)
   return grafica
 }
 
@@ -49,12 +54,13 @@ func (grafica Grafica) DiagonalesRandom(numDiagonales int) Grafica{
   c := 1
   for c != numDiagonales{
     i = randInt(0, numVertices - numColumnas)
-    if((i % numColumnas) == 4){
+    if((i % numColumnas) == (numColumnas - 1)){
       j = i
     }else{
       j = i + numColumnas + 1
     }
     g.nodos[i][j] = 1
+    g.nodos[j][i] = 1
     c++
   }
   return g

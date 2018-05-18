@@ -48,9 +48,7 @@ func InitHormiga(id int, escenario *Escenario) *Hormiga{
   hormiga := Hormiga{}
   hormiga.Id = id
   hormiga.Actual = *escenario
-  // fmt.Println(escenario.Ve)
   hormiga.Trayecto = append(hormiga.Trayecto, *escenario)
-  // fmt.Println("................", hormiga.Trayecto, "............")
   hormiga.Camina = true
   return &hormiga
 }
@@ -82,10 +80,11 @@ func (hormiga *Hormiga) AvanzaHormiga(){
   d1 = randInt(0, 2)
   nuevoEscenario := Escenario{}
   candidatos := hormiga.Actual.Ve.GetCandidatos()
+  // fmt.Println("candidatosA", candidatos)
   if(len(candidatos) < 1){
     hormiga.Camina = false
     sol := hormiga.CalculaSolucion()
-    // sol.Trayecto[len(sol.Trayecto) - 1].Ve.PrintManzana()
+    sol.Trayecto[len(sol.Trayecto) - 1].Ve.PrintManzana()
     fmt.Println("Costo:", sol.Costo)
   }else{
     if(hormiga.Actual.Vecinos != nil && d1 == 0){
@@ -157,7 +156,8 @@ func randInt(min int, max int) int {
 func CorreHeuristica(grafica string){
   rand.Seed(Semilla)
   vecindarioCero := VecindarioCero(grafica)
-  vecindarioCero.InitFuegoEspecifico(6)
+  vecindarioCero.InitFuegoEspecifico(31)
+  vecindarioCero.InitFuegoEspecifico(33)
   fmt.Println("-------- INICIAL ---------")
   vecindarioCero.PrintManzana()
   fmt.Println("---------------------------")
@@ -165,13 +165,15 @@ func CorreHeuristica(grafica string){
   for i := 0; i < HormigasXt; i++{
     HormigasCaminantes = append(HormigasCaminantes, *InitHormiga(i, escenarioCero))
   }
-  for c:= 1; c <= 20; c++{
+  for c:= 1; c <= 2; c++{
     for _, b := range HormigasCaminantes{
-      fmt.Println("c", c)
+      // fmt.Println("c", c)
       if(b.Camina == true){
-        fmt.Println("b.camina", b.Camina)
+        // fmt.Println("b.camina", b.Camina)
         b.AvanzaHormiga()
         b.Actual.Ve.PropagaFuego()
+        // fmt.Println("quemados", b.Actual.Ve.GetIncendiados())
+        // fmt.Println("candidatos", b.Actual.Ve.GetCandidatos())
       }
     }
   }
