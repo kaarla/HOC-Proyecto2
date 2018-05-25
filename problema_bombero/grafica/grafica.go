@@ -5,12 +5,14 @@ import (
   "strconv"
   "math/rand"
   // "strings"
+  // "bytes"
 )
 
 var(
-  numVertices = 50
-  numfilas = 10
-  numColumnas = 5
+  numVertices = 1000
+  numfilas = 25
+  numColumnas = 40
+  // buffer bytes.Buffer
 )
 
 type Grafica struct{

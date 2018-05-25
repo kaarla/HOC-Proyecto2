@@ -12,13 +12,14 @@ func main() {
     problema_bombero.HormigasXt = 3
     problema_bombero.Phe = 0.3
     problema_bombero.PheReducion = 0.15
-    problema_bombero.Semilla = 46466
+    problema_bombero.Semilla = 4845
 
-    problema_bombero.CorreHeuristica("grafica50.txt")
+    fuegoInicial := []int{31, 33, 18, 50, 991, 500, 628, 300}
+
+    problema_bombero.CorreHeuristica("graficas/grafica1000.txt", fuegoInicial)
 
 
-    // grafica := grafica.GeneraCuadricula(15)
-    // grafica = grafica.DiagonalesRandom(5)
+    // grafica := grafica.GeneraCuadricula(100)
     // grafica.ImprimeGrafica()
     // grafica.ImprimeV()
 }
