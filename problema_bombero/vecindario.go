@@ -5,6 +5,7 @@ package problema_bombero
    "strings"
    "io/ioutil"
    "strconv"
+   // "github.com/kaarla/HOC-Proyecto2/problema_bombero/grafica"
  )
 
 type Manzana struct{
@@ -194,13 +195,15 @@ func (vecindario *Vecindario) PrintManzana(){
   for _, m := range vecindario.Manzanas{
     switch m.Estado {
     case 0:
-      color = "pink}\n"
+      color = "pink}"
     case 1:
-      color = "blue}\n"
+      color = "blue}"
     case 2:
-      color = "orange}\n"
+      color = "red}"
     }
-    fmt.Println(m.Id, " {color:", color)
+  //  fmt.Printf("<circle id=\"point%d\" cx=\"10\" cy=\"10\" r=\"3\" fill=\"%s\" stroke=\"%s\" />\n",
+  //    m.Id, color, color)
+     fmt.Println(m.Id, " {color:", color)
   }
   // fmt.Println("EvalVecindario:", vecindario.Evalua(10))
 }

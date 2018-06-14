@@ -13,6 +13,7 @@ var BomberosXt int
 var HormigasXt int
 var HormigasCaminantes []Hormiga
 var Semilla int64
+var q1 int
 
 type Solucion struct{
   Trayecto []Escenario
@@ -53,10 +54,10 @@ func InitHormiga(id int, escenario *Escenario) *Hormiga{
   return &hormiga
 }
 
-func (hormiga *Hormiga) CalculaSolucion() *Solucion{
+func (hormiga *Hormiga) CalculaSolucion(c int) *Solucion{
   solucion := Solucion{}
   solucion.Trayecto = hormiga.Trayecto
-  solucion.Costo = hormiga.CalculaCosto()
+  solucion.Costo = hormiga.CalculaCosto(c)
   return &solucion
 }
 
@@ -64,18 +65,22 @@ func (escenario *Escenario) reducePheActual(){
   escenario.PheActual = escenario.PheActual - PheReducion
 }
 
-func (hormiga *Hormiga) CalculaCosto() float64{
-  quemados1 := float64(len(hormiga.Trayecto[0].Ve.GetIncendiados()))
+func (hormiga *Hormiga) CalculaCosto(c int) float64{
+  quemados1 := float64(q1)
+  fmt.Println(quemados1)
   quemadosT := float64(len(hormiga.Trayecto[len(hormiga.Trayecto) - 1].Ve.GetIncendiados()))
   bomberosT := float64(len(hormiga.Trayecto[len(hormiga.Trayecto) - 1].Ve.GetDefendidos()))
-  dano1 := quemados1 / float64(len(hormiga.Trayecto[0].Ve.Manzanas))
-  danoT := quemadosT / float64(len(hormiga.Trayecto[0].Ve.Manzanas))
-  d := (dano1 / danoT)
-  b := (bomberosT / float64(TotalBomberos))
-  return  (d * b) * float64(len(hormiga.Trayecto))
+  dano1 := quemados1 / float64(c)
+  danoT := quemadosT / float64(c)
+  d := (danoT - dano1)
+  b := (bomberosT / float64(TotalBomberos)) * (bomberosT / float64(TotalBomberos))
+  return  (d * b) * float64(c)
 }
 
-func (hormiga *Hormiga) AvanzaHormiga(){
+func (hormiga *Hormiga) AvanzaHormiga(c int) bool{
+  // hormigaN := hormiga.copia()
+
+  // fmt.Println("h avanza", len(hormiga.Trayecto))
   d1 := 0
   d1 = randInt(0, 2)
   nuevoEscenario := Escenario{}
@@ -83,9 +88,17 @@ func (hormiga *Hormiga) AvanzaHormiga(){
   // fmt.Println("candidatosA", candidatos)
   if(len(candidatos) < 1){
     hormiga.Camina = false
-    sol := hormiga.CalculaSolucion()
-    sol.Trayecto[len(sol.Trayecto) - 1].Ve.PrintManzana()
+    // fmt.Println("h avanza if1", len(hormiga.Trayecto))
+
+    sol := hormiga.CalculaSolucion(c)
+    //fmt.Println("h avanza if2", len(hormiga.Trayecto))
+    //sol.Trayecto[len(sol.Trayecto) - 1].Ve.PrintManzana()
+    fmt.Println("Semilla:", Semilla)
     fmt.Println("Costo:", sol.Costo)
+    fmt.Println("Salvados: ", len(hormiga.Actual.Ve.GetASalvo()) + len(hormiga.Actual.Ve.GetDefendidos()))
+    fmt.Println("Defendidos: ", len(hormiga.Actual.Ve.GetDefendidos()))
+
+    return false
   }else{
     if(hormiga.Actual.Vecinos != nil && d1 == 0){
       nuevoEscenario = *hormiga.Actual.MejorVecino
@@ -98,11 +111,16 @@ func (hormiga *Hormiga) AvanzaHormiga(){
     }
     //agregar arreglo para que ahi se haga el append
     hormiga.Actual.Vecinos = append(hormiga.Actual.Vecinos, nuevoEscenario)
+    hormiga.Trayecto = append(hormiga.Trayecto, nuevoEscenario)
+    // fmt.Println("vecinosAvanza", len(hormiga.Actual.Vecinos))
+
+
     if(hormiga.Actual.MejorVecino != nil && hormiga.Actual.MejorVecino.Eval < nuevoEscenario.Eval){
       *hormiga.Actual.MejorVecino = nuevoEscenario
     }
     hormiga.Actual = nuevoEscenario
     nuevoEscenario.PheActual = nuevoEscenario.PheActual + Phe
+    return true
   }
 }
 
@@ -114,6 +132,15 @@ func (escenario *Escenario) copia() Escenario{
     escenarioN.Vecinos = escenario.Vecinos
     escenarioN.MejorVecino = escenario.MejorVecino
     return escenarioN
+}
+
+func (hormiga* Hormiga) copia() Hormiga{
+  hormigaN := Hormiga{}
+  hormigaN.Id = hormiga.Id
+  hormigaN.Actual = hormiga.Actual
+  hormigaN.Trayecto = hormiga.Trayecto
+  hormigaN.Camina = hormiga.Camina
+  return hormigaN
 }
 
 func (hormiga *Hormiga) newEscenario(candidatos []int) Escenario{
@@ -156,26 +183,30 @@ func randInt(min int, max int) int {
 
 func CorreHeuristica(grafica string, fuegoInicial []int){
   rand.Seed(Semilla)
+  q1 = len(fuegoInicial)
   vecindarioCero := VecindarioCero(grafica)
   for _, i := range fuegoInicial{
     vecindarioCero.InitFuegoEspecifico(i)
   }
-  fmt.Println("-------- INICIAL ---------")
-  vecindarioCero.PrintManzana()
-  fmt.Println("---------------------------")
+   // fmt.Println("-------- INICIAL ---------")
+   // vecindarioCero.PrintManzana()
+   // fmt.Println("---------------------------")
   escenarioCero := InitEscenario(vecindarioCero)
   for i := 0; i < HormigasXt; i++{
     HormigasCaminantes = append(HormigasCaminantes, *InitHormiga(i, escenarioCero))
   }
   for c:= 1; c <= 10; c++{
+    // mejor := Hormiga{}
     for _, b := range HormigasCaminantes{
       // fmt.Println("c", c)
-      if(b.Camina == true){
+      t := true
+      if(t){
         // fmt.Println("b.camina", b.Camina)
-        b.AvanzaHormiga()
+        t = b.AvanzaHormiga(c)
+        //b.Actual.Ve.PrintManzana()
         b.Actual.Ve.PropagaFuego()
-        fmt.Println("quemados", len(b.Actual.Ve.GetIncendiados()))
-        fmt.Println("no-quemados", len(b.Actual.Ve.GetASalvo()) + len(b.Actual.Ve.GetDefendidos()))
+        //b.Actual.Ve.PrintManzana()
+        // mejor = b
       }
     }
   }

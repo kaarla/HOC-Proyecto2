@@ -9,9 +9,9 @@ import (
 )
 
 var(
-  numVertices = 1000
-  numfilas = 25
-  numColumnas = 40
+  NumVertices = 50
+  Numfilas = 10
+  NumColumnas = 5
   // buffer bytes.Buffer
 )
 
