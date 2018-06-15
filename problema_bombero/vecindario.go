@@ -5,12 +5,10 @@ package problema_bombero
    "strings"
    "io/ioutil"
    "strconv"
-   // "github.com/kaarla/HOC-Proyecto2/problema_bombero/grafica"
  )
 
 type Manzana struct{
   Id int
-  // Nombre string
   Estado int
   Vecinos []int
 }
@@ -18,15 +16,12 @@ type Manzana struct{
 type Vecindario struct{
   Manzanas []Manzana
   Mapa [][]float64
-  // var tamano int
   Grado int
 }
 
 func NewVecindario(mapa [][]float64) *Vecindario{
   vec := Vecindario{}
   vec.Mapa = mapa
-  //vec.calculaGrado()
-  // vec.tamano =
   return &vec
 }
 
@@ -48,7 +43,6 @@ func initMapa(grafica string) [][]float64{
   for k := range mapa{
     mapa[k] = make([]float64, len(lineas) - 1)
   }
-  // fmt.Println("len", len(lineas))
   for i := 0; i < len(lineas) - 1; i++{
     linea := strings.Split(string(lineas[i]), ",")
     for j := 0; j < len(lineas) - 1; j++{
@@ -85,9 +79,6 @@ func (vecindario *Vecindario) initManzanas(){
   }
 }
 
-// TODO: fuego random
-// func (vecindario *Vecindario) initFuegoRandom(semilla int){
-// }
 
 func (manzana *Manzana) SetEstado(estado int){
   manzana.Estado = estado
@@ -101,7 +92,6 @@ func (vecindario *Vecindario) PropagaFuego(){
   incendiados := vecindario.GetIncendiados()
   for i := 0; i < len(incendiados); i++{
     v := vecindario.Manzanas[incendiados[i]].Vecinos
-    // fmt.Println("v", vecindario.Manzanas[incendiados[i]], "vecinos", v)
     for j := 0; j < len(v); j++{
       m := vecindario.Manzanas[v[j]]
       if(m.Estado == 0){
@@ -109,7 +99,6 @@ func (vecindario *Vecindario) PropagaFuego(){
       }
     }
   }
-  // fmt.Println("incendiadosP", vecindario.GetIncendiados())
 }
 
 func (vecindario *Vecindario) GetIncendiados() []int{
@@ -201,9 +190,61 @@ func (vecindario *Vecindario) PrintManzana(){
     case 2:
       color = "red}"
     }
-  //  fmt.Printf("<circle id=\"point%d\" cx=\"10\" cy=\"10\" r=\"3\" fill=\"%s\" stroke=\"%s\" />\n",
-  //    m.Id, color, color)
      fmt.Println(m.Id, " {color:", color)
   }
-  // fmt.Println("EvalVecindario:", vecindario.Evalua(10))
+}
+
+func (vecindario *Vecindario) PrintSVG(){
+    x := 5
+    y := 5
+    numColumnas := 0
+    h := 0
+    color := ""
+    switch len(vecindario.Manzanas) {
+    case 9:
+      numColumnas = 3
+      h = 500
+    case 50:
+      numColumnas = 5
+      h = 800
+    case 100:
+      numColumnas = 10
+      h = 600
+    case 1000:
+      numColumnas = 40
+      h = 1500
+    }
+    fmt.Printf("<svg height=\"%d\" width=\"2000\">\n<g font-size=\"10\" font-family=\"sans-serif\" fill=\"black\" stroke=\"none\">\n", h)
+    for _, m := range vecindario.Manzanas{
+      switch m.Estado {
+      case 0:
+        color = "pink"
+      case 1:
+        color = "blue"
+      case 2:
+        color = "red"
+      }
+      if(m.Id % numColumnas == 0){
+        x = 5
+        y += 50
+      }
+      fmt.Printf("<circle id=\"point%d\" cx=\"%d\" cy=\"%d\" r=\"6\" fill=\"%s\" stroke=\"%s\" />\n",
+        m.Id, x, y, color, color)
+      fmt.Printf("<text x=\"%d\" y=\"%d\" dy=\"%d\">%d</text>\n", x, y, -10, m.Id)
+      for _, n := range m.Vecinos{
+        switch n {
+        case m.Id + 1:
+          fmt.Printf("<path id=\"line%d%d\" d=\"M %d %d l %d %d\" stroke=\"black\" stroke-width=\"3\" />\n",
+             m.Id, n, x, y, 47, 0)
+        case m.Id + numColumnas:
+          fmt.Printf("<path id=\"line%d%d\" d=\"M %d %d l %d %d\" stroke=\"black\" stroke-width=\"3\" />\n",
+             m.Id, n, x, y, 0, 47)
+        case m.Id + numColumnas + 1:
+          fmt.Printf("<path id=\"line%d%d\" d=\"M %d %d l %d %d\" stroke=\"black\" stroke-width=\"3\" />\n",
+             m.Id, n, x, y, 47, 47)
+        }
+      }
+      x += 50
+    }
+  fmt.Println("</g>\n</svg>")
 }
