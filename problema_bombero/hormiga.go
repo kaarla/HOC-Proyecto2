@@ -89,7 +89,7 @@ func (hormiga *Hormiga) AvanzaHormiga(c int) bool{
     fmt.Println("Costo:", sol.Costo)
     fmt.Println("Salvados: ", len(hormiga.Actual.Ve.GetASalvo()) + len(hormiga.Actual.Ve.GetDefendidos()))
     fmt.Println("Bomberos usados: ", len(hormiga.Actual.Ve.GetDefendidos()))
-    sol.Trayecto[len(sol.Trayecto) - 1].Ve.PrintSVG()
+   // sol.Trayecto[len(sol.Trayecto) - 1].Ve.PrintSVG()
 
     return false
   }else{
