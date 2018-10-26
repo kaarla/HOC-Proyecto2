@@ -25,7 +25,7 @@ func main() {
     switch os.Args[1] {
     case "50":
       problema_bombero.TotalBomberos = 12
-      problema_bombero.BomberosXt = 7
+      problema_bombero.BomberosXt = 5
       problema_bombero.HormigasXt = 3
       problema_bombero.Phe = 0.3
       problema_bombero.PheReducion = 0.15
@@ -33,9 +33,9 @@ func main() {
       grafica = "graficas/grafica50.txt"
       fuegoInicial = []int{31, 33, 18}
 
-    case "1000-a":
+    case "1000-a": \\bordes
       problema_bombero.TotalBomberos = 50
-      problema_bombero.BomberosXt = 12
+      problema_bombero.BomberosXt = 8
       problema_bombero.HormigasXt = 3
       problema_bombero.Phe = 0.3
       problema_bombero.PheReducion = 0.15
@@ -43,7 +43,7 @@ func main() {
       fuegoInicial = []int{31, 33, 6, 15, 900}
       grafica = "graficas/grafica1000.txt"
 
-    case "1000-b":
+    case "1000-b": \\centro
       problema_bombero.TotalBomberos = 50
       problema_bombero.BomberosXt = 12
       problema_bombero.HormigasXt = 3

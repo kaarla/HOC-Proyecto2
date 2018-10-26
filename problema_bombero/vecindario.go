@@ -206,7 +206,7 @@ func (vecindario *Vecindario) PrintSVG(){
       h = 500
     case 50:
       numColumnas = 5
-      h = 800
+      h =600
     case 100:
       numColumnas = 10
       h = 600

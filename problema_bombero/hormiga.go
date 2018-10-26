@@ -6,33 +6,45 @@ import (
 )
 
 var Time int
+//rastro que dejará la hormiga al pasar
 var Phe float64
+//cuánto se reducirá el rastro de feromonas por cada unidad de tiempo
 var PheReducion float64
+//cuántos bomberos se utilizaron en una solución
 var TotalBomberos int
+//cuántos bomberos se pueden asignar por unidad de tiempo
 var BomberosXt int
+//cuantas hormigas nuevas salen del origen por cada unidad de tiempo
 var HormigasXt int
+//arreglo para guardar a las hormigas que actualmente están en la heurística
 var HormigasCaminantes []Hormiga
+//semilla que se usará para inicializar el random
 var Semilla int64
+//número de vértices que se incendiarán en t = 1
 var q1 int
 
+//Estructura para una solución, guardo su trayecto que es un arreglo de escenarios
+// y su costo
 type Solucion struct{
   Trayecto []Escenario
   Costo float64
 }
 
+//Estructura para la hormiga
 type Hormiga struct{
-  Id int
-  Actual Escenario
-  Trayecto []Escenario
-  Camina bool
+  Id int                  //id para identificarla
+  Actual Escenario        //escenario en el que se encuentra
+  Trayecto []Escenario    //trayectoria que siguió hasta el momento
+  Camina bool             //booleano para saber si ya llegó a la condición de paro
 }
 
+//Estructura para el escenario
 type Escenario struct{
-  Ve Vecindario
-  PheActual float64
-  Eval float64
-  Vecinos []Escenario
-  MejorVecino *Escenario
+  Ve Vecindario            //estado de la gráfica en la que se extiende el inciendio
+  PheActual float64        //feromonas actuales en el escenario
+  Eval float64             //evaluación del escenario dado el vecindario
+  Vecinos []Escenario      //escenarios conocidos a los que se puede llegar desde el actual en una unidad de tiempo
+  MejorVecino *Escenario   //vecino con mejor evaluación
 }
 
 func InitEscenario(vecindario Vecindario) *Escenario{
@@ -85,11 +97,12 @@ func (hormiga *Hormiga) AvanzaHormiga(c int) bool{
     hormiga.Camina = false
 
     sol := hormiga.CalculaSolucion(c)
-    fmt.Println("Semilla:", Semilla)
-    fmt.Println("Costo:", sol.Costo)
-    fmt.Println("Salvados: ", len(hormiga.Actual.Ve.GetASalvo()) + len(hormiga.Actual.Ve.GetDefendidos()))
-    fmt.Println("Bomberos usados: ", len(hormiga.Actual.Ve.GetDefendidos()))
-   // sol.Trayecto[len(sol.Trayecto) - 1].Ve.PrintSVG()
+    fmt.Println("<p>Seed:", Semilla, "</p>")
+    fmt.Println("<p>Cost:", sol.Costo, "</p>")
+    fmt.Println("<p>Saved: ", len(hormiga.Actual.Ve.GetASalvo()) + len(hormiga.Actual.Ve.GetDefendidos()), "</p>")
+    fmt.Println("<p>Total of firefighters: ", len(hormiga.Actual.Ve.GetDefendidos()), "</p>")
+    fmt.Println("<p>Firefighters in each t: ", BomberosXt, "</p>")
+    sol.Trayecto[len(sol.Trayecto) - 1].Ve.PrintSVG()
 
     return false
   }else{
