@@ -34,10 +34,14 @@ func VecindarioCero(grafica string) Vecindario{
   return vecindario
 }
 
+/* 
+Inicializa el mapa del vecindario a partir de la gráfica
+que recibe en formato de texto convirtiéndolo en un arreglo bidimensional.
+*/
 func initMapa(grafica string) [][]float64{
   datos, err := ioutil.ReadFile(grafica)
   check(err)
-  lineas := strings.Split(string(datos), "\n")
+  lineas := strings.Split(string(datos), "\n") //cada línea es una fila de la cuadrícula
 
   var mapa [][]float64 = make([][]float64, len(lineas) - 1)
   for k := range mapa{
@@ -55,6 +59,11 @@ func initMapa(grafica string) [][]float64{
   return mapa
 }
 
+/*
+  Una manzana representa el un bloque del vecindario, que es lo
+  mismo que un espacio en el mapa.
+  Se inicializa con su id únicamente y se marca como "a salvo".
+*/
 func initManzana(id int) Manzana{
   manzana := Manzana{}
   manzana.Id = id
@@ -63,6 +72,10 @@ func initManzana(id int) Manzana{
   return manzana
 }
 
+/*
+  Se inicializan todas las manzanas con su respectiva lista de vecinos
+  y se agrega el arreglo de manzanas al vecindario.
+*/
 func (vecindario *Vecindario) initManzanas(){
   mapa := vecindario.Mapa
   var manzanas []Manzana = make ([]Manzana, len(mapa))
@@ -79,15 +92,23 @@ func (vecindario *Vecindario) initManzanas(){
   }
 }
 
-
+/*
+  Cambia el estado de una manzana.
+*/
 func (manzana *Manzana) SetEstado(estado int){
   manzana.Estado = estado
 }
 
+/*
+  mmmh, do I really need this?
+*/
 func (vecindario *Vecindario) InitFuegoEspecifico(manzana int){
     vecindario.Manzanas[manzana].SetEstado(2)
 }
 
+/*
+  Se propaga el fuego a todos los vecinos no protegidos de incendios.
+*/
 func (vecindario *Vecindario) PropagaFuego(){
   incendiados := vecindario.GetIncendiados()
   for i := 0; i < len(incendiados); i++{
@@ -101,6 +122,9 @@ func (vecindario *Vecindario) PropagaFuego(){
   }
 }
 
+/*
+  Devuelve un arreglo con el id de las manzanas incendiadas
+*/
 func (vecindario *Vecindario) GetIncendiados() []int{
   res := []int{}
   for i := 0; i < len(vecindario.Manzanas); i++{
@@ -111,6 +135,9 @@ func (vecindario *Vecindario) GetIncendiados() []int{
   return res
 }
 
+/*
+  Devuelve un arreglo con el id de las manzanas a salvo
+*/
 func (vecindario *Vecindario) GetASalvo() []int{
   res := []int{}
   i := 0
@@ -123,6 +150,9 @@ func (vecindario *Vecindario) GetASalvo() []int{
   return res
 }
 
+/*
+  Devuelve un arreglo con el id de las manzanas defendidas
+*/
 func (vecindario *Vecindario) GetDefendidos() []int{
   res := []int{}
   for i := 0; i < len(vecindario.Manzanas); i++{
@@ -133,7 +163,10 @@ func (vecindario *Vecindario) GetDefendidos() []int{
   return res
 }
 
-
+/*
+  Devuelve un arreglo con el id de las manzanas vecinas de incendiados
+  que no han sido defendidas ni incendiadas
+*/
 func (vecindario *Vecindario) GetCandidatos() []int{
   incendiados := vecindario.GetIncendiados()
   candidatos := []int{}
@@ -150,6 +183,9 @@ func (vecindario *Vecindario) GetCandidatos() []int{
   return candidatos
 }
 
+/*
+  Revisa si un elemento está en un arreglo.
+*/
 func Contiene(a []int, e int) bool{
   for _, b := range a{
     if b == e{
@@ -159,6 +195,9 @@ func Contiene(a []int, e int) bool{
   return false
 }
 
+/*
+  Devuelve una copia del vecindario sobre el que se aplica.
+*/
 func(vecindario *Vecindario) Copia() Vecindario{
   copia := Vecindario{}
   copia.Mapa = vecindario.Mapa
@@ -167,18 +206,28 @@ func(vecindario *Vecindario) Copia() Vecindario{
   return copia
 }
 
+/*
+  excepción lol
+*/
 func check(e error){
   if e != nil{
     panic(e)
   }
 }
 
+/*
+  Evalúa "qué tan bueno" es un escenario tomando en cuenta una relación
+  entre los incendios y el número de bomberos utilizados.
+*/
 func (vecindario *Vecindario) Evalua(numBomberos int) float64{
   quemados := float64(len(vecindario.GetIncendiados()))
   defendidos := float64(len(vecindario.GetDefendidos()))
   return (quemados / float64(len(vecindario.Manzanas))) * (defendidos / float64(numBomberos))
 }
 
+/*
+  Formato para imprimir una manzana con su color con javascript.
+*/
 func (vecindario *Vecindario) PrintManzana(){
   color := ""
   for _, m := range vecindario.Manzanas{
@@ -194,6 +243,9 @@ func (vecindario *Vecindario) PrintManzana(){
   }
 }
 
+/*
+  Para dar formato de SVG.
+*/
 func (vecindario *Vecindario) PrintSVG(){
     x := 5
     y := 5

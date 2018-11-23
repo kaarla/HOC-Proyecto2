@@ -47,6 +47,9 @@ type Escenario struct{
   MejorVecino *Escenario   //vecino con mejor evaluación
 }
 
+/*
+  Inicializa el vecindario vacío
+*/
 func InitEscenario(vecindario Vecindario) *Escenario{
   escenario := Escenario{}
   escenario.Ve= vecindario.Copia()
@@ -57,6 +60,9 @@ func InitEscenario(vecindario Vecindario) *Escenario{
   return &escenario
 }
 
+/*
+  Inicializa una hormiga con un escenario.
+*/
 func InitHormiga(id int, escenario *Escenario) *Hormiga{
   hormiga := Hormiga{}
   hormiga.Id = id

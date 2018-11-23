@@ -9,16 +9,29 @@ import (
 )
 
 var(
-  NumVertices = 50
-  Numfilas = 10
-  NumColumnas = 5
+  numVertices = 9
+  numfilas = 3
+  numColumnas = 3
   // buffer bytes.Buffer
 )
 
+/*
+  Representacion de la grafica
+*/
 type Grafica struct{
-  nodos [][]int
+  Nodos [][]int
 }
 
+type Recorridos struct{
+  val [][]int
+}
+
+/*
+  Genera la gráfica simple que es un arreglo bidimencional, cuando
+  el valor es 1, significa que los vértices que representan los índices
+  del arreglo son vecinos.
+  Esta es la matriz de distancias.
+*/
 func GeneraCuadricula(numDiagonales int) Grafica{
   var matriz [][]int = make([][]int, numVertices)
   for k := range matriz{
@@ -41,16 +54,31 @@ func GeneraCuadricula(numDiagonales int) Grafica{
       }
     }
   }
+  for i := 0; i < len(matriz); i++{
+    for j := 0; j < len(matriz); j++{
+      if(matriz[i][j] == 0){
+        matriz[i][j] = 2147483647
+        matriz[j][i] = 2147483647
+      }
+    }
+  }
+  for i := 0; i < len(matriz); i++{
+    matriz[i][i] = 0
+    matriz[i][i] = 0
+  }
   grafica := Grafica{}
-  grafica.nodos = matriz
+  grafica.Nodos = matriz
   grafica = grafica.DiagonalesRandom(numDiagonales)
   // fmt.Println(grafica)
   return grafica
 }
 
+/*
+  Agrega diagonales aleatoriamente a una cuadrícula.
+*/
 func (grafica Grafica) DiagonalesRandom(numDiagonales int) Grafica{
   g := grafica
-  g.nodos = grafica.nodos
+  g.Nodos = grafica.Nodos
   i := 0
   j := 0
   c := 1
@@ -61,18 +89,51 @@ func (grafica Grafica) DiagonalesRandom(numDiagonales int) Grafica{
     }else{
       j = i + numColumnas + 1
     }
-    g.nodos[i][j] = 1
-    g.nodos[j][i] = 1
+    g.Nodos[i][j] = 1
+    g.Nodos[j][i] = 1
     c++
   }
   return g
 }
 
+func (grafica Grafica) FloydWarshal() Grafica{
+  distancias := grafica.Nodos
+  var pats [][]int = make([][]int, numVertices)
+  for k := range pats{
+    pats[k] = make([]int, numVertices)
+  }
+  for i := range pats{
+    for j := range pats{
+      if (distancias[i][j] == 2147483647){
+        pats[i][j] = 0
+      }else{
+        pats[i][j] = i
+      }
+    }
+  }
+  for k := range pats{
+    for i := range pats{
+      for j := range pats{
+        if(distancias[i][j] > distancias[i][k] + distancias[k][j]){
+          distancias[i][j] = distancias[i][k] + distancias[k][j]
+          pats[i][j] = pats[k][j]
+        }
+      }
+    }
+  }
+  g := Grafica{}
+  g.Nodos = pats
+  return g
+}
+
+/*
+  Imprime en texto simplemente la matriz de la gráfica.
+*/
 func (grafica *Grafica) ImprimeGrafica(){
   s := ""
-  for i := 0; i < len(grafica.nodos); i++{
-    for j := 0; j < len(grafica.nodos); j++{
-      s += strconv.Itoa(grafica.nodos[i][j]) + ","
+  for i := 0; i < len(grafica.Nodos); i++{
+    for j := 0; j < len(grafica.Nodos); j++{
+      s += strconv.Itoa(grafica.Nodos[i][j]) + ","
     }
     s = s[:len(s) - 1]
     s += "\n"
@@ -81,11 +142,14 @@ func (grafica *Grafica) ImprimeGrafica(){
   fmt.Println(s)
 }
 
+/*
+  No necesito esto .-.
+*/
 func (grafica *Grafica) ImprimeV(){
   s := ""
-  for i := 0; i < len(grafica.nodos); i++{
-    for j := 0; j < len(grafica.nodos); j++{
-      if(grafica.nodos[i][j] > 0){
+  for i := 0; i < len(grafica.Nodos); i++{
+    for j := 0; j < len(grafica.Nodos); j++{
+      if(grafica.Nodos[i][j] == 1){
         s += strconv.Itoa(i) + " -> " + strconv.Itoa(j) + "\n"
       }
     }
@@ -93,6 +157,9 @@ func (grafica *Grafica) ImprimeV(){
   fmt.Println(s)
 }
 
+/*
+  random para las diagonales
+*/
 func randInt(min int, max int) int {
   return min + rand.Intn(max-min)
 }
