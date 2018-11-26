@@ -62,13 +62,13 @@ func GeneraCuadricula(numDiagonales int) Grafica{
       }
     }
   }
-  for i := 0; i < len(matriz); i++{
-    matriz[i][i] = 0
-    matriz[i][i] = 0
-  }
   grafica := Grafica{}
   grafica.Nodos = matriz
   grafica = grafica.DiagonalesRandom(numDiagonales)
+  for i := 0; i < len(matriz); i++{
+    matriz[i][i] = 0
+  }
+
   // fmt.Println(grafica)
   return grafica
 }
@@ -96,7 +96,7 @@ func (grafica Grafica) DiagonalesRandom(numDiagonales int) Grafica{
   return g
 }
 
-func (grafica Grafica) FloydWarshal() Grafica{
+func (grafica Grafica) FloydWarshal() (Grafica, Grafica){
   distancias := grafica.Nodos
   var pats [][]int = make([][]int, numVertices)
   for k := range pats{
@@ -121,9 +121,11 @@ func (grafica Grafica) FloydWarshal() Grafica{
       }
     }
   }
-  g := Grafica{}
-  g.Nodos = pats
-  return g
+  dist := Grafica{}
+  dist.Nodos = distancias
+  recorridos := Grafica{}
+  recorridos.Nodos = pats
+  return dist, recorridos
 }
 
 /*
@@ -139,7 +141,7 @@ func (grafica *Grafica) ImprimeGrafica(){
     s += "\n"
   }
   s = s[:len(s) - 1]
-  fmt.Println(s)
+  fmt.Println(s, "\n")
 }
 
 /*

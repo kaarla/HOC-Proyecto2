@@ -8,9 +8,10 @@ func main() {
 
   grafica := grafica.GeneraCuadricula(6)
   grafica.ImprimeGrafica()
-  grafica.ImprimeV()
+  // grafica.ImprimeV()
 
-  recorridos := grafica.FloydWarshal()
+  distancias, recorridos := grafica.FloydWarshal()
+  distancias.ImprimeGrafica()
   recorridos.ImprimeGrafica()
 
 }
