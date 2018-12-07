@@ -62,9 +62,6 @@ func CreaArbol(distancias [][]int, raiz int, numVertices int) *Arbol{
   Hace el trabajo sucio de agregar hijos del arbol de manera recursiva.
 */
 func (arbol *Arbol) agregaHijos(id int, dist [][]int, numVer int, porProc *list.List, vert []*Vertice) *Arbol{
-  if(porProc.Len() == 0){
-    return arbol
-  }
   var verTemp *Vertice
   for i := 0; i < len(dist); i++ {
       if(dist[id][i] == 1 && vert[i] == nil){

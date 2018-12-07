@@ -39,14 +39,9 @@ func main() {
       grafica := grafica.GeneraCuadricula(6)
       distancias, recorridos := grafica.FloydWarshal()
       recorridos.ImprimeGrafica("graficas/recorridos9x9.txt")
-      
+
       arbol := problema_bombero.CreaArbol(distancias.Nodos, 4, 9)
       fmt.Println(arbol.Elementos)
-      fmt.Println(arbol.Raiz.Id)
-      fmt.Println("padreR", arbol.Raiz.Padre)
-      for i := 0; i < len(arbol.Vertices); i++{
-        fmt.Printf("padre de %d: %d\n", i, arbol.Vertices[i].Padre)
-      }
     }
   }
 }
