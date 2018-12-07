@@ -43,10 +43,9 @@ func CreaArbol(distancias [][]int, raiz int, numVertices int) *Arbol{
   fmt.Println("raiz padre", arbol.Raiz.Padre)
   porProcesar := list.New()
   porProcesar.PushFront(raiz)
-  var verTemp *Vertice = newVertice(raiz)
   vertices := make([]*Vertice, numVertices)
   arbol.Vertices = vertices
-  arbol.Vertices[verTemp.Id] = verTemp
+  arbol.Vertices[arbol.Raiz.Id] = arbol.Raiz
   arbol.Elementos++
   return arbol.agregaHijos(raiz, distancias, numVertices, porProcesar, arbol.Vertices)
 }
@@ -62,7 +61,6 @@ func (arbol *Arbol) agregaHijos(id int, dist [][]int, numVer int, porProc *list.
           porProc.PushBack(verTemp.Id)
           arbol.Raiz.Hijos = append(arbol.Raiz.Hijos, verTemp.Id)
           if(vert[i] == nil){
-            // fmt.Println("agregando ", i)
             verTemp.Padre = id
             vert[verTemp.Id] = verTemp
             arbol.Elementos++
