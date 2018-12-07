@@ -4,15 +4,13 @@ import (
   "fmt"
   "strconv"
   "math/rand"
-  // "strings"
-  // "bytes"
+  "os"
 )
 
 var(
   numVertices = 9
   numfilas = 3
   numColumnas = 3
-  // buffer bytes.Buffer
 )
 
 /*
@@ -20,10 +18,6 @@ var(
 */
 type Grafica struct{
   Nodos [][]int
-}
-
-type Recorridos struct{
-  val [][]int
 }
 
 /*
@@ -131,7 +125,7 @@ func (grafica Grafica) FloydWarshal() (Grafica, Grafica){
 /*
   Imprime en texto simplemente la matriz de la gráfica.
 */
-func (grafica *Grafica) ImprimeGrafica(){
+func (grafica *Grafica) ImprimeGrafica(nombre string){
   s := ""
   for i := 0; i < len(grafica.Nodos); i++{
     for j := 0; j < len(grafica.Nodos); j++{
@@ -141,7 +135,11 @@ func (grafica *Grafica) ImprimeGrafica(){
     s += "\n"
   }
   s = s[:len(s) - 1]
-  fmt.Println(s, "\n")
+  f, err := os.Create(nombre)
+  check(err)
+  defer f.Close()
+  n3, err := f.WriteString(s)
+  fmt.Printf("se escribieron %d bytes en %s\n", n3, nombre)
 }
 
 /*
@@ -164,4 +162,10 @@ func (grafica *Grafica) ImprimeV(){
 */
 func randInt(min int, max int) int {
   return min + rand.Intn(max-min)
+}
+
+func check(e error) {
+    if e != nil {
+        panic(e)
+    }
 }

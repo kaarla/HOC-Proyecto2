@@ -2,9 +2,9 @@ package problema_bombero
 
  import(
   "fmt"
-   "strings"
-   "io/ioutil"
-   "strconv"
+  "strings"
+  "io/ioutil"
+  "strconv"
  )
 
 type Manzana struct{
@@ -15,11 +15,11 @@ type Manzana struct{
 
 type Vecindario struct{
   Manzanas []Manzana
-  Mapa [][]float64
+  Mapa [][]int
   Grado int
 }
 
-func NewVecindario(mapa [][]float64) *Vecindario{
+func NewVecindario(mapa [][]int) *Vecindario{
   vec := Vecindario{}
   vec.Mapa = mapa
   return &vec
@@ -34,26 +34,26 @@ func VecindarioCero(grafica string) Vecindario{
   return vecindario
 }
 
-/* 
+/*
 Inicializa el mapa del vecindario a partir de la gráfica
 que recibe en formato de texto convirtiéndolo en un arreglo bidimensional.
 */
-func initMapa(grafica string) [][]float64{
+func initMapa(grafica string) [][]int{
   datos, err := ioutil.ReadFile(grafica)
   check(err)
   lineas := strings.Split(string(datos), "\n") //cada línea es una fila de la cuadrícula
 
-  var mapa [][]float64 = make([][]float64, len(lineas) - 1)
+  var mapa [][]int = make([][]int, len(lineas) - 1)
   for k := range mapa{
-    mapa[k] = make([]float64, len(lineas) - 1)
+    mapa[k] = make([]int, len(lineas) - 1)
   }
   for i := 0; i < len(lineas) - 1; i++{
     linea := strings.Split(string(lineas[i]), ",")
     for j := 0; j < len(lineas) - 1; j++{
-      num, err := strconv.ParseFloat(linea[j], 64)
+      num, err := strconv.ParseInt(linea[j], 10, 64)
       check(err)
-      mapa[i][j] = num
-      mapa[j][i] = num
+      mapa[i][j] = int(num)
+      mapa[j][i] = int(num)
     }
   }
   return mapa
