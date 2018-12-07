@@ -1,28 +1,30 @@
 package problema_bombero
 
 import (
-  "fmt"
-  // "strconv"
-  // "math/rand"
-  // "io/ioutil"
-  // "strings"
-  // "bytes"
   "container/list"
 )
 
+/*
+  Vertice, sóĺo guarda indices de padre y hermanos
+*/
 type Vertice struct{
   Id int
-  // Estado int
   Padre int
   Hijos []int
 }
 
+/*
+  Arbol, guarda un arreglo con las referencias de padres e hijos de los vertices
+*/
 type Arbol struct{
   Elementos int
   Raiz *Vertice
   Vertices []*Vertice
 }
 
+/*
+  Crea un nuevo vértice (sin padre)
+*/
 func newVertice(id int) *Vertice{
   ver := Vertice{}
   ver.Id = id
@@ -30,6 +32,10 @@ func newVertice(id int) *Vertice{
   return &ver
 }
 
+/*
+  Inicializa nuevo arbol sin referencia a "padre",
+  uso numero simbolico de infinito para decir que no tiene padre
+*/
 func newArbol(r int) *Arbol{
   arbol := Arbol{}
   arbol.Elementos = 0
@@ -38,9 +44,11 @@ func newArbol(r int) *Arbol{
   return &arbol
 }
 
+/*
+  Crea árbol completo a partir de un vértice dado de la gráfica.
+*/
 func CreaArbol(distancias [][]int, raiz int, numVertices int) *Arbol{
   arbol := newArbol(raiz)
-  fmt.Println("raiz padre", arbol.Raiz.Padre)
   porProcesar := list.New()
   porProcesar.PushFront(raiz)
   vertices := make([]*Vertice, numVertices)
@@ -50,6 +58,9 @@ func CreaArbol(distancias [][]int, raiz int, numVertices int) *Arbol{
   return arbol.agregaHijos(raiz, distancias, numVertices, porProcesar, arbol.Vertices)
 }
 
+/*
+  Hace el trabajo sucio de agregar hijos del arbol de manera recursiva.
+*/
 func (arbol *Arbol) agregaHijos(id int, dist [][]int, numVer int, porProc *list.List, vert []*Vertice) *Arbol{
   if(porProc.Len() == 0){
     return arbol
@@ -71,6 +82,7 @@ func (arbol *Arbol) agregaHijos(id int, dist [][]int, numVer int, porProc *list.
   if(porProc.Len() == 0){
     return arbol
   }else{
-  temp := porProc.Front().Value
-  return arbol.agregaHijos(temp.(int), dist, numVer, porProc, vert)}
+    temp := porProc.Front().Value
+    return arbol.agregaHijos(temp.(int), dist, numVer, porProc, vert)
+  }
 }

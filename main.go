@@ -34,10 +34,12 @@ func main() {
       grafica = "graficas/distancias9x9.txt"
       fuegoInicial = []int{4}
       problema_bombero.CorreHeuristica(grafica, fuegoInicial)
+
     }else if (os.Args[1] == "arbol"){
       grafica := grafica.GeneraCuadricula(6)
       distancias, recorridos := grafica.FloydWarshal()
       recorridos.ImprimeGrafica("graficas/recorridos9x9.txt")
+      
       arbol := problema_bombero.CreaArbol(distancias.Nodos, 4, 9)
       fmt.Println(arbol.Elementos)
       fmt.Println(arbol.Raiz.Id)
