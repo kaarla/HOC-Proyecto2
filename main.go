@@ -42,6 +42,7 @@ func main() {
 
       arbol := problema_bombero.CreaArbol(distancias.Nodos, 4, 9)
       fmt.Println(arbol.Elementos)
+      fmt.Println(arbol.GetTrayectoria(8))
     }
   }
 }

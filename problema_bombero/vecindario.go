@@ -19,6 +19,7 @@ type Vecindario struct{
   Grado int
 }
 
+
 func NewVecindario(mapa [][]int) *Vecindario{
   vec := Vecindario{}
   vec.Mapa = mapa
@@ -182,6 +183,15 @@ func (vecindario *Vecindario) GetCandidatos() []int{
   fmt.Println("")
   return candidatos
 }
+
+// /*
+//   Encuentra los candidatos para proteger en el objetivo S-Fire
+//   a partir del vecindario recibe la lista de vertices a proteger
+// */
+// func (vecindario *Vecindario) GetCandidatosSF(sfire []int) ([]int, Arbol){
+//
+// }
+
 
 /*
   Revisa si un elemento está en un arreglo.

@@ -1,6 +1,6 @@
 package problema_bombero
 
-import (
+import(
   "fmt"
   "math/rand"
 )
@@ -22,6 +22,9 @@ var HormigasCaminantes []Hormiga
 var Semilla int64
 //número de vértices que se incendiarán en t = 1
 var q1 int
+//Ids del conjunto que hay que salvar a toda costa
+var PorSalvar []int
+
 
 //Estructura para una solución, guardo su trayecto que es un arreglo de escenarios
 // y su costo

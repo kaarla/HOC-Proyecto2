@@ -1,6 +1,6 @@
 package problema_bombero
 
-import (
+import(
   "container/list"
 )
 
@@ -82,4 +82,18 @@ func (arbol *Arbol) agregaHijos(id int, dist [][]int, numVer int, porProc *list.
     temp := porProc.Front().Value
     return arbol.agregaHijos(temp.(int), dist, numVer, porProc, vert)
   }
+}
+
+/*
+  Obtiene un arreglo con el camino más corto entre un vértice y el vértice S de su árbol
+*/
+func (arbol *Arbol) GetTrayectoria(v int) []int{
+  var result []int
+  result = append(result, v)
+  var pa = arbol.Vertices[v].Padre
+  for pa != 2147483647{
+    result = append(result, pa)
+    pa = arbol.Vertices[pa].Padre
+  }
+  return result
 }
