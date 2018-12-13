@@ -23,7 +23,7 @@ var Semilla int64
 //número de vértices que se incendiarán en t = 1
 var q1 int
 //Ids del conjunto que hay que salvar a toda costa
-var PorSalvar []int
+// var PorSalvar []int
 
 
 //Estructura para una solución, guardo su trayecto que es un arreglo de escenarios
@@ -39,6 +39,7 @@ type Hormiga struct{
   Actual Escenario        //escenario en el que se encuentra
   Trayecto []Escenario    //trayectoria que siguió hasta el momento
   Camina bool             //booleano para saber si ya llegó a la condición de paro
+  // Ida bool
 }
 
 //Estructura para el escenario
@@ -106,11 +107,11 @@ func (hormiga *Hormiga) AvanzaHormiga(c int) bool{
     hormiga.Camina = false
 
     sol := hormiga.CalculaSolucion(c)
-    fmt.Println("<p>Seed:", Semilla, "</p>")
+    // fmt.Println("<p>Seed:", Semilla, "</p>")
     fmt.Println("<p>Cost:", sol.Costo, "</p>")
-    fmt.Println("<p>Saved: ", len(hormiga.Actual.Ve.GetASalvo()) + len(hormiga.Actual.Ve.GetDefendidos()), "</p>")
-    fmt.Println("<p>Total of firefighters: ", len(hormiga.Actual.Ve.GetDefendidos()), "</p>")
-    fmt.Println("<p>Firefighters in each t: ", BomberosXt, "</p>")
+    // fmt.Println("<p>Saved: ", len(hormiga.Actual.Ve.GetASalvo()) + len(hormiga.Actual.Ve.GetDefendidos()), "</p>")
+    // fmt.Println("<p>Total of firefighters: ", len(hormiga.Actual.Ve.GetDefendidos()), "</p>")
+    // fmt.Println("<p>Firefighters in each t: ", BomberosXt, "</p>")
     //sol.Trayecto[len(sol.Trayecto) - 1].Ve.PrintSVG()
 
     return false
@@ -187,6 +188,7 @@ func randInt(min int, max int) int {
 
 func CorreHeuristica(grafica string, fuegoInicial []int){
   rand.Seed(Semilla)
+  fmt.Println("Hola, mundo")
   q1 = len(fuegoInicial)
   vecindarioCero := VecindarioCero(grafica)
   for _, i := range fuegoInicial{
@@ -202,14 +204,22 @@ func CorreHeuristica(grafica string, fuegoInicial []int){
   fin := true
   c := 1
   for fin{
-    for _, b := range HormigasCaminantes{
+    fin = false
+    for i, b := range HormigasCaminantes{
       t := true
-      if(t){
+      if t{
+        fmt.Println("------\nh.Id", b.Id)
+        fmt.Println("long trayectoria", len(b.Trayecto))
+        // fmt.Println("ciclos:", c)
         t = b.AvanzaHormiga(c)
         b.Actual.Ve.PropagaFuego()
-        fin = b.Camina
-        c++
+        fin = fin || b.Camina
+        // fmt.Println("fin", fin, "\n")
+        HormigasCaminantes[i] = b
       }
     }
+    c++
   }
+  // fmt.Println("#hormigas", len(HormigasCaminantes))
+  // fmt.Println("tamanio T de cero", len(HormigasCaminantes[0].Trayecto))
 }

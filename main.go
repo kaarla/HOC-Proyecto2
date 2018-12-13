@@ -26,13 +26,13 @@ func main() {
       grafica := ""
 
       problema_bombero.TotalBomberos = 20
-      problema_bombero.BomberosXt = 2
-      problema_bombero.HormigasXt = 2
+      problema_bombero.BomberosXt = 3
+      problema_bombero.HormigasXt = 5
       problema_bombero.Phe = 0.3
       problema_bombero.PheReducion = 0.15
-      problema_bombero.Semilla =  56551321
-      grafica = "graficas/distancias9x9.txt"
-      fuegoInicial = []int{4}
+      problema_bombero.Semilla =  54565
+      grafica = "graficas/grafica100.txt"
+      fuegoInicial = []int{31, 33, 18, 20}
       problema_bombero.CorreHeuristica(grafica, fuegoInicial)
 
     }else if (os.Args[1] == "arbol"){
@@ -43,6 +43,13 @@ func main() {
       arbol := problema_bombero.CreaArbol(distancias.Nodos, 4, 9)
       fmt.Println(arbol.Elementos)
       fmt.Println(arbol.GetTrayectoria(8))
-    }
+    }//else if (os.Args[1] == "ex"){
+    //   var m map[int]float64
+    //   m = make([int]float64)
+    //   m[1] = 9.8
+    //   m[7] = 98.8766
+    //   fmt.Println("de uno", m[1])
+    //   fmt.Println("de siete", m[7])
+    // }
   }
 }
