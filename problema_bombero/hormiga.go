@@ -198,12 +198,12 @@ func CorreHeuristica(grafica string, fuegoInicial []int){
    //vecindarioCero.PrintSVG()
    fmt.Println("---------------------------")
   escenarioCero := InitEscenario(vecindarioCero)
-  for i := 0; i < HormigasXt; i++{
-    HormigasCaminantes = append(HormigasCaminantes, *InitHormiga(i, escenarioCero))
-  }
   fin := true
-  c := 1
+  c := 0
   for fin{
+    for i := 0; i < HormigasXt; i++{
+      HormigasCaminantes = append(HormigasCaminantes, *InitHormiga(i + (c * HormigasXt), escenarioCero))
+    }
     fin = false
     for i, b := range HormigasCaminantes{
       t := true
