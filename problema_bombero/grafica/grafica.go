@@ -5,6 +5,7 @@ import (
   "strconv"
   "math/rand"
   "os"
+  "sort"
 )
 
 var(
@@ -168,4 +169,58 @@ func check(e error) {
     if e != nil {
         panic(e)
     }
+}
+
+/*
+  promedio de distancias
+*/
+func (grafica *Grafica) getDistPromedio() float64{
+  cont := 0.0
+  suma := 0.0
+  for i := 0; i < len(grafica.Nodos); i++{
+    for j := 0; j < len(grafica.Nodos); j++{
+      suma += float64(grafica.Nodos[i][j])
+      cont += 1.0
+    }
+  }
+  return suma / cont
+}
+
+/*
+  promedio de distancias de un vertice
+*/
+func (grafica *Grafica) getProm(i int) float64{
+  cont := 0.0
+  suma := 0.0
+  for j := 0; j < len(grafica.Nodos); j++{
+    suma += float64(grafica.Nodos[i][j])
+    cont += 1.0
+  }
+  return suma / cont
+}
+
+/*
+  moda de las distancias de un vertice
+*/
+func (grafica *Grafica) GetModa(i int) (int, int, int){
+  aux := make([]int, len(grafica.Nodos))
+  for j := 0; j < len(grafica.Nodos); j++{
+    aux[j] = grafica.Nodos[i][j]
+  }
+  sort.Ints(aux)
+  countAnterior, count := 0, 0
+  actual, moda := aux[0], aux[0]
+  for j := 0; j < len(aux); j++{
+    if(aux[j] == actual){
+      count++
+      if(count >= countAnterior){
+        moda = actual
+        countAnterior = count
+      }
+    }else{
+      actual = aux[j]
+      count = 1
+    }
+  }
+  return i, moda, countAnterior
 }

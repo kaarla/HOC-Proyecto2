@@ -184,14 +184,6 @@ func (vecindario *Vecindario) GetCandidatos() []int{
   return candidatos
 }
 
-// /*
-//   Encuentra los candidatos para proteger en el objetivo S-Fire
-//   a partir del vecindario recibe la lista de vertices a proteger
-// */
-// func (vecindario *Vecindario) GetCandidatosSF(sfire []int) ([]int, Arbol){
-//
-// }
-
 
 /*
   Revisa si un elemento está en un arreglo.

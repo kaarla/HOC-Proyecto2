@@ -20,6 +20,7 @@ func main() {
       distancias, recorridos := grafica.FloydWarshal()
       distancias.ImprimeGrafica("graficas/distancias9x9.txt")
       recorridos.ImprimeGrafica("graficas/recorridos9x9.txt")
+      fmt.Println(distancias.GetModa(0))
 
     }else if (os.Args[1] == "problema"){
       fuegoInicial := []int{}
@@ -27,11 +28,11 @@ func main() {
 
       problema_bombero.TotalBomberos = 20
       problema_bombero.BomberosXt = 3
-      problema_bombero.HormigasXt = 3
+      problema_bombero.HormigasXt = 20
       problema_bombero.Phe = 0.3
       problema_bombero.PheReducion = 0.15
       problema_bombero.Semilla =  54565
-      grafica = "graficas/grafica100.txt"
+      grafica = "graficas/grafica1000.txt"
       fuegoInicial = []int{31, 33, 18, 20}
       problema_bombero.CorreHeuristica(grafica, fuegoInicial)
 
@@ -43,13 +44,6 @@ func main() {
       arbol := problema_bombero.CreaArbol(distancias.Nodos, 4, 9)
       fmt.Println(arbol.Elementos)
       fmt.Println(arbol.GetTrayectoria(8))
-    }//else if (os.Args[1] == "ex"){
-    //   var m map[int]float64
-    //   m = make([int]float64)
-    //   m[1] = 9.8
-    //   m[7] = 98.8766
-    //   fmt.Println("de uno", m[1])
-    //   fmt.Println("de siete", m[7])
-    // }
+    }
   }
 }
