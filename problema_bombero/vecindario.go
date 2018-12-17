@@ -5,6 +5,7 @@ package problema_bombero
   "strings"
   "io/ioutil"
   "strconv"
+  "sort"
  )
 
 type Manzana struct{
@@ -226,6 +227,61 @@ func (vecindario *Vecindario) Evalua(numBomberos int) float64{
   defendidos := float64(len(vecindario.GetDefendidos()))
   return (quemados / float64(len(vecindario.Manzanas))) * (defendidos / float64(numBomberos))
 }
+
+/*
+  promedio de distancias
+*/
+func (vecindario *Vecindario) getDistPromedio() float64{
+  cont := 0.0
+  suma := 0.0
+  for i := 0; i < len(vecindario.Mapa); i++{
+    for j := 0; j < len(vecindario.Mapa); j++{
+      suma += float64(vecindario.Mapa[i][j])
+      cont += 1.0
+    }
+  }
+  return suma / cont
+}
+
+/*
+  promedio de distancias de un vertice
+*/
+func (vecindario *Vecindario) getProm(i int) float64{
+  cont := 0.0
+  suma := 0.0
+  for j := 0; j < len(vecindario.Mapa); j++{
+    suma += float64(vecindario.Mapa[i][j])
+    cont += 1.0
+  }
+  return suma / cont
+}
+
+/*
+  moda de las distancias de un vertice
+*/
+func (vecindario *Vecindario) GetModa(i int) (int, int, int){
+  aux := make([]int, len(vecindario.Mapa))
+  for j := 0; j < len(vecindario.Mapa); j++{
+    aux[j] = vecindario.Mapa[i][j]
+  }
+  sort.Ints(aux)
+  countAnterior, count := 0, 0
+  actual, moda := aux[0], aux[0]
+  for j := 0; j < len(aux); j++{
+    if(aux[j] == actual){
+      count++
+      if(count >= countAnterior){
+        moda = actual
+        countAnterior = count
+      }
+    }else{
+      actual = aux[j]
+      count = 1
+    }
+  }
+  return i, moda, countAnterior
+}
+
 
 /*
   Formato para imprimir una manzana con su color con javascript.

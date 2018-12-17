@@ -20,7 +20,7 @@ func main() {
       distancias, recorridos := grafica.FloydWarshal()
       distancias.ImprimeGrafica("graficas/distancias9x9.txt")
       recorridos.ImprimeGrafica("graficas/recorridos9x9.txt")
-      fmt.Println(distancias.GetModa(0))
+      
 
     }else if (os.Args[1] == "problema"){
       fuegoInicial := []int{}
