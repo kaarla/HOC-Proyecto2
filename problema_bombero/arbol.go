@@ -55,6 +55,7 @@ func CreaArbol(distancias [][]int, raiz int, numVertices int) *Arbol{
   arbol.Vertices = vertices
   arbol.Vertices[arbol.Raiz.Id] = arbol.Raiz
   arbol.Elementos++
+
   return arbol.agregaHijos(raiz, distancias, numVertices, porProcesar, arbol.Vertices)
 }
 
@@ -67,12 +68,10 @@ func (arbol *Arbol) agregaHijos(id int, dist [][]int, numVer int, porProc *list.
       if(dist[id][i] == 1 && vert[i] == nil){
           verTemp = newVertice(i)
           porProc.PushBack(verTemp.Id)
-          arbol.Raiz.Hijos = append(arbol.Raiz.Hijos, verTemp.Id)
-          if(vert[i] == nil){
-            verTemp.Padre = id
-            vert[verTemp.Id] = verTemp
-            arbol.Elementos++
-          }
+          arbol.Vertices[id].Hijos = append(arbol.Vertices[id].Hijos, verTemp.Id)
+          verTemp.Padre = id
+          vert[verTemp.Id] = verTemp
+          arbol.Elementos++
       }
   }
   porProc.Remove(porProc.Front())
@@ -80,6 +79,7 @@ func (arbol *Arbol) agregaHijos(id int, dist [][]int, numVer int, porProc *list.
     return arbol
   }else{
     temp := porProc.Front().Value
+
     return arbol.agregaHijos(temp.(int), dist, numVer, porProc, vert)
   }
 }

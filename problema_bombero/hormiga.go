@@ -3,6 +3,7 @@ package problema_bombero
 import(
   "fmt"
   "math/rand"
+  "github.com/kaarla/HOC-Proyecto2/util"
 )
 
 var Time int
@@ -101,7 +102,7 @@ func (hormiga *Hormiga) CalculaCosto(c int) float64{
 
 func (hormiga *Hormiga) AvanzaHormiga(c int) bool{
   d1 := 0
-  d1 = randInt(0, 2)
+  d1 = util.RandInt(0, 2)
   nuevoEscenario := Escenario{}
   candidatos := hormiga.Actual.Ve.GetCandidatos()
   if(len(candidatos) < 1){
@@ -123,9 +124,9 @@ func (hormiga *Hormiga) AvanzaHormiga(c int) bool{
     if(hormiga.Actual.Vecinos != nil && d1 == 0){
       nuevoEscenario = *hormiga.Actual.MejorVecino
     }
-    d1 = randInt(0, 2)
+    d1 = util.RandInt(0, 2)
     if(hormiga.Actual.Vecinos != nil && d1 == 1){
-      nuevoEscenario = hormiga.Actual.Vecinos[(randInt(0, len(hormiga.Actual.Vecinos)))]
+      nuevoEscenario = hormiga.Actual.Vecinos[(util.RandInt(0, len(hormiga.Actual.Vecinos)))]
     }else{
       nuevoEscenario = hormiga.newEscenario(candidatos)
     }
@@ -182,8 +183,8 @@ func (hormiga *Hormiga) newEscenario(candidatos []int) Escenario{
     }
   }else{
     for i:= 0; i < BomberosXt; i++{
-      r1 = randInt(0, len(candidatos))
-      if(Contiene(bomberosN, r1)){
+      r1 = util.RandInt(0, len(candidatos))
+      if(util.Contiene(bomberosN, r1)){
         i--
       }else{
         bomberosN = append(bomberosN, r1)
@@ -194,11 +195,6 @@ func (hormiga *Hormiga) newEscenario(candidatos []int) Escenario{
     escenario.Ve.Manzanas[candidatos[bomberosN[i]]].Estado = 1
   }
   return escenario
-}
-
-
-func randInt(min int, max int) int {
-  return min + rand.Intn(max-min)
 }
 
 func CorreHeuristica(grafica string, fuegoInicial []int){

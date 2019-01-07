@@ -3,9 +3,8 @@ package grafica
 import (
   "fmt"
   "strconv"
-  "math/rand"
   "os"
-  
+  "github.com/kaarla/HOC-Proyecto2/util"
 )
 
 var(
@@ -78,7 +77,7 @@ func (grafica Grafica) DiagonalesRandom(numDiagonales int) Grafica{
   j := 0
   c := 1
   for c != numDiagonales{
-    i = randInt(0, numVertices - numColumnas)
+    i = util.RandInt(0, numVertices - numColumnas)
     if((i % numColumnas) == (numColumnas - 1)){
       j = i
     }else{
@@ -156,13 +155,6 @@ func (grafica *Grafica) ImprimeV(){
     }
   }
   fmt.Println(s)
-}
-
-/*
-  random para las diagonales
-*/
-func randInt(min int, max int) int {
-  return min + rand.Intn(max-min)
 }
 
 func check(e error) {

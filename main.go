@@ -15,12 +15,11 @@ func main() {
     if(os.Args[1] == "grafica"){
       grafica := grafica.GeneraCuadricula(6)
       grafica.ImprimeGrafica("graficas/basica9x9.txt")
-      //grafica.ImprimeV()
 
       distancias, recorridos := grafica.FloydWarshal()
       distancias.ImprimeGrafica("graficas/distancias9x9.txt")
       recorridos.ImprimeGrafica("graficas/recorridos9x9.txt")
-      
+
 
     }else if (os.Args[1] == "problema"){
       fuegoInicial := []int{}
