@@ -31,6 +31,7 @@ func main() {
       problema_bombero.Phe = 0.3
       problema_bombero.PheReducion = 0.15
       problema_bombero.Semilla =  54565
+      problema_bombero.PorSalvar = []int{1}
       grafica = "graficas/grafica1000.txt"
       fuegoInicial = []int{31, 33, 18, 20}
       problema_bombero.CorreHeuristica(grafica, fuegoInicial)

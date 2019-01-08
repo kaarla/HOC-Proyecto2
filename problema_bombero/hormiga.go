@@ -24,7 +24,7 @@ var Semilla int64
 //número de vértices que se incendiarán en t = 1
 var q1 int
 //Ids del conjunto que hay que salvar a toda costa
-// var PorSalvar []int
+var PorSalvar []int
 
 
 //Estructura para una solución, guardo su trayecto que es un arreglo de escenarios
@@ -32,6 +32,7 @@ var q1 int
 type Solucion struct{
   Trayecto []Escenario
   Costo float64
+  Factible bool
 }
 
 //Estructura para la hormiga
@@ -82,6 +83,15 @@ func (hormiga *Hormiga) CalculaSolucion(c int) *Solucion{
   solucion := Solucion{}
   solucion.Trayecto = hormiga.Trayecto
   solucion.Costo = hormiga.CalculaCosto(c)
+  factible := true
+  temp := true
+  for _, ps := range PorSalvar{
+    if(hormiga.Actual.Ve.Manzanas[ps].Estado == 0){
+      temp = true
+    }
+      factible = factible && temp
+  }
+  solucion.Factible = factible
   return &solucion
 }
 
@@ -114,6 +124,7 @@ func (hormiga *Hormiga) AvanzaHormiga(c int) bool{
 
     // fmt.Println("<p>Seed:", Semilla, "</p>")
     fmt.Println("<p>Cost:", sol.Costo, "</p>")
+    fmt.Println("<p>Fact:", sol.Factible, "</p>")
     // fmt.Println("<p>Saved: ", len(hormiga.Actual.Ve.GetASalvo()) + len(hormiga.Actual.Ve.GetDefendidos()), "</p>")
     // fmt.Println("<p>Total of firefighters: ", len(hormiga.Actual.Ve.GetDefendidos()), "</p>")
     // fmt.Println("<p>Firefighters in each t: ", BomberosXt, "</p>")

@@ -5,7 +5,7 @@ import(
 )
 
 // Ids del conjunto que hay que salvar a toda costa
-  var PorSalvar []int
+  // var PorSalvar []int
 //Arboles a partir de los vertices de S-Fire
   var Arboles []Arbol
 
