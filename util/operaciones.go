@@ -37,7 +37,7 @@ func getProm(i int, mapa [][]int) float64{
   moda de las distancias de un vertice
 */
 func GetModa(i int, mapa [][]int) (int, int, int){
-  aux := OrdenaDistancias(i, mapa)
+  aux := Ordena(i, mapa)
 
   countAnterior, count := 0, 0
   actual, moda := aux[0], aux[0]
@@ -59,7 +59,7 @@ func GetModa(i int, mapa [][]int) (int, int, int){
 /*
   Ordena las distancias de un vertice
 */
-func OrdenaDistancias(i int, mapa [][]int) []int{
+func Ordena(i int, mapa [][]int) []int{
   aux := make([]int, len(mapa))
   for j := 0; j < len(mapa); j++{
     aux[j] = mapa[i][j]
@@ -86,6 +86,25 @@ func Contiene(a []int, e int) bool{
   }
   return false
 }
+
+/*
+  Cuenta las veces que i esta en el arreglo ordenado
+*/
+func Cuenta(arr []int, i int) int{
+  ordenado := arr
+  // sort.Ints(ordenado)
+  count := 0
+  for _, e := range ordenado{
+    if(e == i){
+      count++
+    }
+    if(count != 0 && e != i){
+      return count
+    }
+  }
+  return count
+}
+
 
 func RandInt(min int, max int) int {
   return min + rand.Intn(max-min)

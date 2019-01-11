@@ -45,28 +45,6 @@ type Hormiga struct{
   Index int               // indice del escenario de la trayectoria en el que va
 }
 
-//Estructura para el escenario
-type Escenario struct{
-  Ve Vecindario            //estado de la gráfica en la que se extiende el inciendio
-  PheActual float64        //feromonas actuales en el escenario
-  Eval float64             //evaluación del escenario dado el vecindario
-  Vecinos []Escenario      //escenarios conocidos a los que se puede llegar desde el actual en una unidad de tiempo
-  MejorVecino *Escenario   //vecino con mejor evaluación
-}
-
-/*
-  Inicializa el vecindario vacío
-*/
-func InitEscenario(vecindario Vecindario) *Escenario{
-  escenario := Escenario{}
-  escenario.Ve= vecindario.Copia()
-  escenario.PheActual = 0.0
-  escenario.Eval = escenario.Ve.Evalua(TotalBomberos)
-  escenario.Vecinos = nil
-  escenario.MejorVecino = nil
-  return &escenario
-}
-
 /*
   Inicializa una hormiga con un escenario.
 */
@@ -93,10 +71,6 @@ func (hormiga *Hormiga) CalculaSolucion(c int) *Solucion{
   }
   solucion.Factible = factible
   return &solucion
-}
-
-func (escenario *Escenario) reducePheActual(){
-  escenario.PheActual = escenario.PheActual - PheReducion
 }
 
 func (hormiga *Hormiga) CalculaCosto(c int) float64{
@@ -162,16 +136,6 @@ func (hormiga *Hormiga) Regresa() bool{
   hormiga.Actual.PheActual = hormiga.Actual.PheActual + Phe
   hormiga.Index = hormiga.Index - 1
   return true
-}
-
-func (escenario *Escenario) copia() Escenario{
-    escenarioN := Escenario{}
-    escenarioN.Ve = escenario.Ve
-    escenarioN.PheActual = escenario.PheActual
-    escenarioN.Eval = escenario.Eval
-    escenarioN.Vecinos = escenario.Vecinos
-    escenarioN.MejorVecino = escenario.MejorVecino
-    return escenarioN
 }
 
 func (hormiga* Hormiga) copia() Hormiga{

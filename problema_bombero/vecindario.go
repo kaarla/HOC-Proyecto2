@@ -8,16 +8,22 @@ package problema_bombero
   "strconv"
  )
 
+ //arreglo de trayectorias
+var Trayectorias [][]int
+//arreglo de distancias
+var Distancias [][]int
+
+
+ type Vecindario struct{
+   Manzanas []Manzana
+   Mapa [][]int
+   Grado int
+ }
+
 type Manzana struct{
   Id int
   Estado int
   Vecinos []int
-}
-
-type Vecindario struct{
-  Manzanas []Manzana
-  Mapa [][]int
-  Grado int
 }
 
 
@@ -29,7 +35,7 @@ func NewVecindario(mapa [][]int) *Vecindario{
 
 func VecindarioCero(grafica string) Vecindario{
   vecindario := Vecindario{}
-  vecindario.Mapa = initMapa(grafica)
+  vecindario.Mapa = InitMapa(grafica)
   vecindario.Manzanas = nil
   vecindario.Grado = 5
   vecindario.initManzanas()
@@ -40,7 +46,7 @@ func VecindarioCero(grafica string) Vecindario{
 Inicializa el mapa del vecindario a partir de la gráfica
 que recibe en formato de texto convirtiéndolo en un arreglo bidimensional.
 */
-func initMapa(grafica string) [][]int{
+func InitMapa(grafica string) [][]int{
   datos, err := ioutil.ReadFile(grafica)
   check(err)
   lineas := strings.Split(string(datos), "\n") //cada línea es una fila de la cuadrícula
@@ -203,6 +209,30 @@ func check(e error){
   if e != nil{
     panic(e)
   }
+}
+
+/*
+  initTrayectorias
+*/
+func initTrayectorias(grafica string) [][]int{
+  datos, err := ioutil.ReadFile(grafica)
+  check(err)
+  lineas := strings.Split(string(datos), "\n") //cada línea es una fila de la cuadrícula
+
+  var mapa [][]int = make([][]int, len(lineas) - 1)
+  for k := range mapa{
+    mapa[k] = make([]int, len(lineas) - 1)
+  }
+  for i := 0; i < len(lineas) - 1; i++{
+    linea := strings.Split(string(lineas[i]), ",")
+    for j := 0; j < len(lineas) - 1; j++{
+      num, err := strconv.ParseInt(linea[j], 10, 64)
+      check(err)
+      mapa[i][j] = int(num)
+      mapa[j][i] = int(num)
+    }
+  }
+  return mapa
 }
 
 /*

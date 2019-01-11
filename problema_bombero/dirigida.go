@@ -93,3 +93,7 @@ func (dirigida *Dirigida) agregaVertices(id int, dist [][]int, numVer int, porPr
     return dirigida.agregaVertices(temp.(int), dist, numVer, porProc, vert)
   }
 }
+
+/*
+  
+*/

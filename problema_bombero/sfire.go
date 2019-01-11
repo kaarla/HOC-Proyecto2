@@ -16,11 +16,11 @@ type ArbolVertice struct{
 
 }
 
-type Candidato struct{
-  Id int
-  Relaciones []ArbolVertice
-  Incidencias int
-}
+// type Candidato struct{
+//   Id int
+//   Relaciones []ArbolVertice
+//   Incidencias int
+// }
 
 // func GetCandidatos(vecin Vecindario) []int{
 //

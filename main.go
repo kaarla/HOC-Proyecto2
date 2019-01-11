@@ -32,8 +32,11 @@ func main() {
       problema_bombero.PheReducion = 0.15
       problema_bombero.Semilla =  54565
       problema_bombero.PorSalvar = []int{1}
-      grafica = "graficas/grafica1000.txt"
-      fuegoInicial = []int{31, 33, 18, 20}
+      grafica = "graficas/distancias9x9.txt"
+      trayectorias := "graficas/recorridos9x9.txt"
+      problema_bombero.Distancias = problema_bombero.InitMapa(grafica)
+      problema_bombero.Trayectorias = problema_bombero.InitMapa(trayectorias)
+      fuegoInicial = []int{6}
       problema_bombero.CorreHeuristica(grafica, fuegoInicial)
 
     }else if (os.Args[1] == "arbol"){
