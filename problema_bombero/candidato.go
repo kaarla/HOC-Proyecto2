@@ -1,4 +1,8 @@
 package problema_bombero
+import(
+  // "fmt"
+  "github.com/kaarla/HOC-Proyecto2/util"
+)
 
 //Modela un candidato a defender
 type Candidato struct{
@@ -17,6 +21,24 @@ func NewCandidato(id int, t int) *Candidato{
   return cand
 }
 
-// func (c *Candidato) GetMins(dists []int, mapa [][]int) *Candidato{
-//
-// }
+func (c *Candidato) FindMins(dists []int, manzanas []Manzana){
+  var minS int
+  var minB int
+  auxS := false
+  auxB := false
+  i := 0
+  for !(auxB && auxS){
+
+    if(manzanas[i].Estado == 2 && !auxB){
+      minB = manzanas[i].Id
+      c.DistMinB = minB
+      auxB = true
+    }
+    if(util.Contiene(PorSalvar, manzanas[i].Id) && !auxS){
+      minS = manzanas[i].Id
+      c.DistMinS = minS
+      auxS = true
+    }
+    i++
+  }
+}

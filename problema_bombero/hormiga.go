@@ -88,7 +88,7 @@ func (hormiga *Hormiga) AvanzaHormiga(c int) bool{
   d1 := 0
   d1 = util.RandInt(0, 2)
   nuevoEscenario := Escenario{}
-  candidatos := hormiga.Actual.Ve.GetCandidatos()
+  candidatos := hormiga.Actual.GetCandidatos()
   if(len(candidatos) < 1){
     if (hormiga.Ida){
       hormiga.Index = len(hormiga.Trayecto) - 2
@@ -147,7 +147,7 @@ func (hormiga* Hormiga) copia() Hormiga{
   return hormigaN
 }
 
-func (hormiga *Hormiga) newEscenario(candidatos []int) Escenario{
+func (hormiga *Hormiga) newEscenario(candidatos []*Candidato) Escenario{
   rand.Seed(Semilla)
   escenario := hormiga.Actual.copia()
   bomberosN := []int{}
@@ -167,7 +167,7 @@ func (hormiga *Hormiga) newEscenario(candidatos []int) Escenario{
     }
   }
   for i := 0; i < len(bomberosN); i++{
-    escenario.Ve.Manzanas[candidatos[bomberosN[i]]].Estado = 1
+    escenario.Ve.Manzanas[candidatos[bomberosN[i]].Id].Estado = 1
   }
   return escenario
 }

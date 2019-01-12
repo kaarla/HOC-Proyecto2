@@ -15,13 +15,3 @@ type ArbolVertice struct{
   eval float64
 
 }
-
-// type Candidato struct{
-//   Id int
-//   Relaciones []ArbolVertice
-//   Incidencias int
-// }
-
-// func GetCandidatos(vecin Vecindario) []int{
-//
-// }

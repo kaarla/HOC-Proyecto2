@@ -2,6 +2,7 @@ package problema_bombero
 import(
   "github.com/kaarla/HOC-Proyecto2/util"
   "sort"
+  // "fmt"
 )
 
 //Estructura para el escenario
@@ -40,10 +41,6 @@ func (escenario *Escenario) copia() Escenario{
   return escenarioN
 }
 
-// func (escenario *Escenario) GetCandidatos(){
-//
-// }
-
 /*
   Obtiene la trayectoria entre 2 vertices
 */
@@ -53,11 +50,12 @@ func (escenario *Escenario) GetTrayectoria(a int, b int) []int{
   for actual != a {
     if (actual == 1){
       path = path
+      actual = a
     }else{
       aux := escenario.Ve.Manzanas[actual]
       if(aux.Estado == 0){
         path = append(path, actual)
-        b = escenario.Ve.Mapa[a][actual]
+        actual = escenario.Ve.Mapa[a][actual]
       }else{
         return []int{}
       }
@@ -69,7 +67,7 @@ func (escenario *Escenario) GetTrayectoria(a int, b int) []int{
 /*
   crea los candidatos para un escenario
 */
-func (esc *Escenario) GetCandidato() []*Candidato{
+func (esc *Escenario) GetCandidatos() []*Candidato{
   incendiados := esc.Ve.GetIncendiados()
   candidatosBrut := []int{}
   candidatos := []*Candidato{}
@@ -81,15 +79,18 @@ func (esc *Escenario) GetCandidato() []*Candidato{
   }
   sort.Ints(candidatosBrut)
 
-  for len(candidatosBrut) != 0{
+  for len(candidatosBrut) > 1{
     actual = candidatosBrut[0]
     incidencias := util.Cuenta(candidatosBrut, actual)
     newCand := NewCandidato(actual, incidencias)
+    newCand.FindMins(esc.Ve.Mapa[actual], esc.Ve.Manzanas)
     candidatos = append(candidatos, newCand)
-    // distsOrd = util.Ordena(actual, esc.Ve.Mapa)
-    // newCand.DistMinB =
-    // newCand.DistMinS =
-    candidatosBrut = append(candidatosBrut[:0], candidatosBrut[(incidencias - 1):]...)
+
+    candidatosBrut = append(candidatosBrut[:0], candidatosBrut[(incidencias):]...)
+  }
+  if(len(candidatosBrut) == 1){
+    newCand := NewCandidato(candidatosBrut[0], 1)
+    candidatos = append(candidatos, newCand)
   }
 
   return candidatos
