@@ -1,7 +1,7 @@
 package problema_bombero
 
  import(
-  // "github.com/kaarla/HOC-Proyecto2/util"
+  "github.com/kaarla/HOC-Proyecto2/util"
   "fmt"
   "strings"
   "io/ioutil"
@@ -51,19 +51,21 @@ func InitMapa(grafica string) [][]int{
   check(err)
   lineas := strings.Split(string(datos), "\n") //cada línea es una fila de la cuadrícula
 
-  var mapa [][]int = make([][]int, len(lineas) - 1)
+  var mapa [][]int = make([][]int, len(lineas))
   for k := range mapa{
-    mapa[k] = make([]int, len(lineas) - 1)
+    mapa[k] = make([]int, len(lineas))
   }
-  for i := 0; i < len(lineas) - 1; i++{
+  for i := 0; i < len(lineas); i++{
     linea := strings.Split(string(lineas[i]), ",")
-    for j := 0; j < len(lineas) - 1; j++{
+    for j := 0; j < len(lineas); j++{
       num, err := strconv.ParseInt(linea[j], 10, 64)
       check(err)
       mapa[i][j] = int(num)
       mapa[j][i] = int(num)
     }
   }
+  // fmt.Println("longitud de lineas ########", len(lineas))
+  // fmt.Println("longitud en initMapa$$$$$$$$4", len(mapa[1]))
   return mapa
 }
 
@@ -91,7 +93,7 @@ func (vecindario *Vecindario) initManzanas(){
     vecinos := []int{}
     manzanas[i] = initManzana(i)
     for j := 0; j < len(mapa); j++{
-      if(mapa[i][j] > 0.0 && i != j){
+      if(mapa[i][j] == 1.0 && i != j){
         vecinos = append(vecinos, j)
       }
     }
@@ -259,6 +261,9 @@ func (vecindario *Vecindario) PrintManzana(){
     case 2:
       color = "red}"
     }
+    if(util.Contiene(PorSalvar, m.Id)){
+      color = "green}"
+    }
      fmt.Println(m.Id, " {color:", color)
   }
 }
@@ -269,8 +274,8 @@ func (vecindario *Vecindario) PrintManzana(){
 func (vecindario *Vecindario) PrintSVG(){
     x := 5
     y := 5
-    numColumnas := 0
-    h := 0
+    numColumnas := 3
+    h := 500
     color := ""
     switch len(vecindario.Manzanas) {
     case 9:
@@ -287,7 +292,9 @@ func (vecindario *Vecindario) PrintSVG(){
       h = 1500
     }
     fmt.Printf("<svg height=\"%d\" width=\"2000\">\n<g font-size=\"10\" font-family=\"sans-serif\" fill=\"black\" stroke=\"none\">\n", h)
+    // fmt.Println("------------------------", len(vecindario.Manzanas))
     for _, m := range vecindario.Manzanas{
+      // fmt.Println("&&&&&&&&&&&&&&&&&&&&", m.Id)
       switch m.Estado {
       case 0:
         color = "pink"
@@ -296,6 +303,10 @@ func (vecindario *Vecindario) PrintSVG(){
       case 2:
         color = "red"
       }
+      if(util.Contiene(PorSalvar, m.Id)){
+        color = "green"
+      }
+      // fmt.Println("m.Id", "numColumnas", m.Id, numColumnas)
       if(m.Id % numColumnas == 0){
         x = 5
         y += 50

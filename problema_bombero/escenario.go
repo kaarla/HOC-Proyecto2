@@ -2,7 +2,7 @@ package problema_bombero
 import(
   "github.com/kaarla/HOC-Proyecto2/util"
   "sort"
-  // "fmt"
+  "fmt"
 )
 
 //Estructura para el escenario
@@ -46,18 +46,12 @@ func (escenario *Escenario) copia() Escenario{
 */
 func (escenario *Escenario) GetTrayectoria(a int, b int) []int{
   path := []int{}
-  actual := escenario.Ve.Mapa[a][b]
-  for actual != a {
-    if (actual == 1){
-      path = path
-      actual = a
-    }else{
-      aux := escenario.Ve.Manzanas[actual]
+  for a != b{
+    a = Trayectorias[a][b]
+    aux := escenario.Ve.Manzanas[a]
+    if(a != b){
       if(aux.Estado == 0){
-        path = append(path, actual)
-        actual = escenario.Ve.Mapa[a][actual]
-      }else{
-        return []int{}
+        path = append(path, a)
       }
     }
   }
@@ -79,13 +73,13 @@ func (esc *Escenario) GetCandidatos() []*Candidato{
   }
   sort.Ints(candidatosBrut)
 
+  fmt.Println("candBrut", candidatosBrut)
   for len(candidatosBrut) > 1{
     actual = candidatosBrut[0]
     incidencias := util.Cuenta(candidatosBrut, actual)
     newCand := NewCandidato(actual, incidencias)
     newCand.FindMins(esc.Ve.Mapa[actual], esc.Ve.Manzanas)
     candidatos = append(candidatos, newCand)
-
     candidatosBrut = append(candidatosBrut[:0], candidatosBrut[(incidencias):]...)
   }
   if(len(candidatosBrut) == 1){

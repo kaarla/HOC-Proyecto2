@@ -26,11 +26,11 @@ func main() {
       grafica := ""
 
       problema_bombero.TotalBomberos = 20
-      problema_bombero.BomberosXt = 3
-      problema_bombero.HormigasXt = 2
+      problema_bombero.BomberosXt = 2
+      problema_bombero.HormigasXt = 3
       problema_bombero.Phe = 0.3
       problema_bombero.PheReducion = 0.15
-      problema_bombero.Semilla =  54565
+      problema_bombero.Semilla =  54
       problema_bombero.PorSalvar = []int{1}
       grafica = "graficas/distancias9x9.txt"
       trayectorias := "graficas/recorridos9x9.txt"

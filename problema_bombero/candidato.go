@@ -12,6 +12,9 @@ type Candidato struct{
   DistMinS int
 }
 
+/*
+  Crea un nuevo candidato a partir de
+*/
 func NewCandidato(id int, t int) *Candidato{
   cand := new(Candidato)
   cand.Id = id
@@ -21,7 +24,13 @@ func NewCandidato(id int, t int) *Candidato{
   return cand
 }
 
+/*
+  Encuentra el Id de los vertices mas cercanos en fuego y por salvar del candidato
+*/
 func (c *Candidato) FindMins(dists []int, manzanas []Manzana){
+  // fmt.Println("len de manzanas en FindMins, ", len(manzanas))
+  // fmt.Println("len de distancias en FindMins, ", len(dists))
+
   var minS int
   var minB int
   auxS := false

@@ -102,7 +102,7 @@ func (hormiga *Hormiga) AvanzaHormiga(c int) bool{
     // fmt.Println("<p>Saved: ", len(hormiga.Actual.Ve.GetASalvo()) + len(hormiga.Actual.Ve.GetDefendidos()), "</p>")
     // fmt.Println("<p>Total of firefighters: ", len(hormiga.Actual.Ve.GetDefendidos()), "</p>")
     // fmt.Println("<p>Firefighters in each t: ", BomberosXt, "</p>")
-    //sol.Trayecto[len(sol.Trayecto) - 1].Ve.PrintSVG()
+    sol.Trayecto[len(sol.Trayecto) - 1].Ve.PrintSVG()
 
     return hormiga.Regresa()
   }else{
@@ -203,7 +203,7 @@ func CorreHeuristica(grafica string, fuegoInicial []int){
         fmt.Println("camina******", b.Camina)
         t = b.AvanzaHormiga(ciclos)
         b.Actual.Ve.PropagaFuego()
-        fin = fin || b.Camina
+        fin = !(fin && b.Camina)
         HormigasCaminantes[i] = b
       }
     }
