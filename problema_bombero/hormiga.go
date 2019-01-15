@@ -178,8 +178,9 @@ func CorreHeuristica(grafica string, fuegoInicial []int){
   for _, i := range fuegoInicial{
     vecindarioCero.InitFuegoEspecifico(i)
   }
-   // fmt.Println("-------- INICIAL ---------")
-   // fmt.Println("---------------------------")
+   fmt.Println("-------- INICIAL ---------")
+   vecindarioCero.PrintSVG()
+   fmt.Println("---------------------------")
   escenarioCero := InitEscenario(vecindarioCero)
   fin := true
   ciclos := 0
@@ -193,15 +194,14 @@ func CorreHeuristica(grafica string, fuegoInicial []int){
       }
       cuentaGeneraciones++
     }
-    t := true
+    termino := false
     for i, b := range HormigasCaminantes{
-      if t{
-        t = b.AvanzaHormiga(ciclos)
-        if(!t){
+      if !termino{
+        termino = !b.AvanzaHormiga(ciclos)
+        if(termino){
           cuentaTerminadas++
           solActual := b.CalculaSolucion(ciclos)
           if(mejorSol.Costo > solActual.Costo && solActual.Factible){
-          // if(b.Id == 0){
             mejorSol = solActual
           }
         }
@@ -221,8 +221,8 @@ func CorreHeuristica(grafica string, fuegoInicial []int){
   fmt.Println("<p>Cost:", mejorSol.Costo, "</p>")
   fmt.Println("<p>Fact:", mejorSol.Factible, "</p>")
   for i, ve := range mejorSol.Trayecto{
-    fmt.Println("i", i)
+    fmt.Println("<p>-----------------------------------</p>")
+    fmt.Println("Tiempo", i + 1)
     ve.Ve.PrintSVG()
   }
-  // fmt.Println("long", len(mejorSol.Trayecto))
 }

@@ -275,12 +275,12 @@ func (vecindario *Vecindario) PrintSVG(){
     x := 5
     y := 5
     numColumnas := 3
-    h := 500
+    h := 300
     color := ""
     switch len(vecindario.Manzanas) {
     case 9:
       numColumnas = 3
-      h = 500
+      h = 250
     case 50:
       numColumnas = 5
       h =600
