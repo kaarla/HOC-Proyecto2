@@ -45,6 +45,13 @@ type Hormiga struct{
   Index int               // indice del escenario de la trayectoria en el que va
 }
 
+func NewSolucion() *Solucion{
+  sol := Solucion{}
+  sol.Costo = 1.0
+  sol.Factible = false
+  return &sol
+}
+
 /*
   Inicializa una hormiga con un escenario.
 */
@@ -94,15 +101,6 @@ func (hormiga *Hormiga) AvanzaHormiga(c int) bool{
       hormiga.Index = len(hormiga.Trayecto) - 2
       hormiga.Ida = false
     }
-    sol := hormiga.CalculaSolucion(c)
-
-    // fmt.Println("<p>Seed:", Semilla, "</p>")
-    fmt.Println("<p>Cost:", sol.Costo, "</p>")
-    fmt.Println("<p>Fact:", sol.Factible, "</p>")
-    // fmt.Println("<p>Saved: ", len(hormiga.Actual.Ve.GetASalvo()) + len(hormiga.Actual.Ve.GetDefendidos()), "</p>")
-    // fmt.Println("<p>Total of firefighters: ", len(hormiga.Actual.Ve.GetDefendidos()), "</p>")
-    // fmt.Println("<p>Firefighters in each t: ", BomberosXt, "</p>")
-    sol.Trayecto[len(sol.Trayecto) - 1].Ve.PrintSVG()
 
     return hormiga.Regresa()
   }else{
@@ -174,19 +172,20 @@ func (hormiga *Hormiga) newEscenario(candidatos []*Candidato) Escenario{
 
 func CorreHeuristica(grafica string, fuegoInicial []int){
   rand.Seed(Semilla)
-  generaciones := 64
-  fmt.Println("Hola, mundo")
+  generaciones := 3
   q1 = len(fuegoInicial)
   vecindarioCero := VecindarioCero(grafica)
   for _, i := range fuegoInicial{
     vecindarioCero.InitFuegoEspecifico(i)
   }
-   fmt.Println("-------- INICIAL ---------")
-   fmt.Println("---------------------------")
+   // fmt.Println("-------- INICIAL ---------")
+   // fmt.Println("---------------------------")
   escenarioCero := InitEscenario(vecindarioCero)
   fin := true
   ciclos := 0
   cuentaGeneraciones := 0
+  cuentaTerminadas := 0
+  mejorSol := NewSolucion()
   for fin{
     if(cuentaGeneraciones < generaciones){
       for i := 0; i < HormigasXt; i++{
@@ -194,19 +193,36 @@ func CorreHeuristica(grafica string, fuegoInicial []int){
       }
       cuentaGeneraciones++
     }
-    fin = false
+    t := true
     for i, b := range HormigasCaminantes{
-      t := true
       if t{
-        fmt.Println("------\nh.Id", b.Id)
-        fmt.Println("long trayectoria", len(b.Trayecto))
-        fmt.Println("camina******", b.Camina)
         t = b.AvanzaHormiga(ciclos)
+        if(!t){
+          cuentaTerminadas++
+          solActual := b.CalculaSolucion(ciclos)
+          if(mejorSol.Costo > solActual.Costo && solActual.Factible){
+          // if(b.Id == 0){
+            mejorSol = solActual
+          }
+        }
+        if(cuentaTerminadas == generaciones * HormigasXt){
+          fin = false
+        }
         b.Actual.Ve.PropagaFuego()
-        fin = !(fin && b.Camina)
         HormigasCaminantes[i] = b
       }
     }
     ciclos++
   }
+  fmt.Println("<p>Seed:", Semilla, "</p>")
+  fmt.Println("<p>Saved: ", len(mejorSol.Trayecto[len(mejorSol.Trayecto) - 1].Ve.GetASalvo()) + len(mejorSol.Trayecto[len(mejorSol.Trayecto) - 1].Ve.GetDefendidos()), "</p>")
+  fmt.Println("<p>Total of firefighters: ", len(mejorSol.Trayecto[len(mejorSol.Trayecto) - 1].Ve.GetDefendidos()), "</p>")
+  fmt.Println("<p>Firefighters in each t: ", BomberosXt, "</p>")
+  fmt.Println("<p>Cost:", mejorSol.Costo, "</p>")
+  fmt.Println("<p>Fact:", mejorSol.Factible, "</p>")
+  for i, ve := range mejorSol.Trayecto{
+    fmt.Println("i", i)
+    ve.Ve.PrintSVG()
+  }
+  // fmt.Println("long", len(mejorSol.Trayecto))
 }

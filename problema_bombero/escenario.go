@@ -2,7 +2,7 @@ package problema_bombero
 import(
   "github.com/kaarla/HOC-Proyecto2/util"
   "sort"
-  "fmt"
+  // "fmt"
 )
 
 //Estructura para el escenario
@@ -73,7 +73,7 @@ func (esc *Escenario) GetCandidatos() []*Candidato{
   }
   sort.Ints(candidatosBrut)
 
-  fmt.Println("candBrut", candidatosBrut)
+  // fmt.Println("candBrut", candidatosBrut)
   for len(candidatosBrut) > 1{
     actual = candidatosBrut[0]
     incidencias := util.Cuenta(candidatosBrut, actual)
