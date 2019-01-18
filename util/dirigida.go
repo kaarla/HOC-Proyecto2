@@ -1,4 +1,4 @@
-package problema_bombero
+package util
 
 import(
   "container/list"
@@ -95,5 +95,5 @@ func (dirigida *Dirigida) agregaVertices(id int, dist [][]int, numVer int, porPr
 }
 
 /*
-  
+
 */

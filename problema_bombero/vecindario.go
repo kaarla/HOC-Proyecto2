@@ -121,6 +121,12 @@ func (vecindario *Vecindario) InitFuegoEspecifico(manzana int){
 */
 func (vecindario *Vecindario) PropagaFuego(){
   incendiados := vecindario.GetIncendiados()
+  // defendidos := vecindario.GetDefendidos()
+  // asalvo := vecindario.GetASalvo()
+  // // fmt.Println("<p> incenciados", incendiados, "</p>")
+  // // fmt.Println("<p> defendidos", defendidos, "</p>")
+  // // fmt.Println("<p> asalvo", asalvo, "</p>")
+  // // fmt.Println("<p>vecinos de 3, ", vecindario.Manzanas[3].Vecinos, "</p>")
   for i := 0; i < len(incendiados); i++{
     v := vecindario.Manzanas[incendiados[i]].Vecinos
     for j := 0; j < len(v); j++{
@@ -177,21 +183,21 @@ func (vecindario *Vecindario) GetDefendidos() []int{
   Devuelve un arreglo con el id de las manzanas vecinas de incendiados
   que no han sido defendidas ni incendiadas
 */
-// func (vecindario *Vecindario) GetCandidatos() []int{
-//   incendiados := vecindario.GetIncendiados()
-//   candidatos := []int{}
-//   for i := 0; i < len(incendiados); i++{
-//     v := vecindario.Manzanas[incendiados[i]].Vecinos
-//     for j := 0; j < len(v); j++{
-//       m := vecindario.Manzanas[v[j]]
-//       if(m.Estado == 0 && !util.Contiene(candidatos, v[j])){
-//         candidatos = append(candidatos, v[j])
-//       }
-//     }
-//   }
-//   fmt.Println("")
-//   return candidatos
-// }
+func (vecindario *Vecindario) GetPorQuemar() []int{
+  incendiados := vecindario.GetIncendiados()
+  candidatos := []int{}
+  for i := 0; i < len(incendiados); i++{
+    v := vecindario.Manzanas[incendiados[i]].Vecinos
+    for j := 0; j < len(v); j++{
+      m := vecindario.Manzanas[v[j]]
+      if(m.Estado == 0 && !util.Contiene(candidatos, v[j])){
+        candidatos = append(candidatos, v[j])
+      }
+    }
+  }
+  fmt.Println("")
+  return candidatos
+}
 
 /*
   Devuelve una copia del vecindario sobre el que se aplica.

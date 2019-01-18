@@ -1,4 +1,4 @@
-package problema_bombero
+package util
 
 import(
   "container/list"

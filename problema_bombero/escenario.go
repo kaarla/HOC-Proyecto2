@@ -46,8 +46,11 @@ func (escenario *Escenario) copia() Escenario{
 */
 func (escenario *Escenario) GetTrayectoria(a int, b int) []int{
   path := []int{}
-  for a != b{
-    a = Trayectorias[a][b]
+    a1 := Trayectorias[a][b]
+    path = append(path, a1)
+  for a != b && a != a1{
+    a1 = a
+    a = Trayectorias[a1][b]
     aux := escenario.Ve.Manzanas[a]
     if(a != b){
       if(aux.Estado == 0){
@@ -62,18 +65,21 @@ func (escenario *Escenario) GetTrayectoria(a int, b int) []int{
   crea los candidatos para un escenario
 */
 func (esc *Escenario) GetCandidatos() []*Candidato{
+  // fmt.Println("entra GetCandidatos")
   incendiados := esc.Ve.GetIncendiados()
   candidatosBrut := []int{}
   candidatos := []*Candidato{}
   actual := 0
   for _, s := range PorSalvar{
+    // fmt.Println("<p>*POR SALVAR:", s, "</p>")
     for _, b := range incendiados{
+      // fmt.Println("<p>INCENDIADO:", b, "</p>")
       candidatosBrut = append(candidatosBrut, esc.GetTrayectoria(s, b)...)
     }
   }
   sort.Ints(candidatosBrut)
 
-  // fmt.Println("candBrut", candidatosBrut)
+  // fmt.Println("<p>candBrut", candidatosBrut, "</p>")
   for len(candidatosBrut) > 1{
     actual = candidatosBrut[0]
     incidencias := util.Cuenta(candidatosBrut, actual)
@@ -86,6 +92,16 @@ func (esc *Escenario) GetCandidatos() []*Candidato{
     newCand := NewCandidato(candidatosBrut[0], 1)
     candidatos = append(candidatos, newCand)
   }
+  // for _, c := range candidatos{
+    // fmt.Println("<p>id", c.Id, "</p>")
+    // fmt.Println("<p>tray", c.NumTrayectorias, "</p>")
+  // }
+  // fmt.Println("<p>id---------</p>")
 
+  QSort(candidatos)
+  // for _, c := range candidatos{
+    // fmt.Println("<p>id", c.Id, "</p>")
+    // fmt.Println("<p>tray", c.NumTrayectorias, "</p>")
+  // }
   return candidatos
 }
