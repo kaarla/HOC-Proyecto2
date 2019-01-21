@@ -45,9 +45,11 @@ func (escenario *Escenario) copia() Escenario{
   Obtiene la trayectoria entre 2 vertices
 */
 func (escenario *Escenario) GetTrayectoria(a int, b int) []int{
+  if(a > b){
+    a, b = b, a
+  }
   path := []int{}
     a1 := Trayectorias[a][b]
-    path = append(path, a1)
   for a != b && a != a1{
     a1 = a
     a = Trayectorias[a1][b]
@@ -55,6 +57,8 @@ func (escenario *Escenario) GetTrayectoria(a int, b int) []int{
     if(a != b){
       if(aux.Estado == 0){
         path = append(path, a)
+      }else{
+        return []int{}
       }
     }
   }
@@ -62,46 +66,33 @@ func (escenario *Escenario) GetTrayectoria(a int, b int) []int{
 }
 
 /*
-  crea los candidatos para un escenario
+crea los candidatos para un escenario
 */
 func (esc *Escenario) GetCandidatos() []*Candidato{
-  // fmt.Println("entra GetCandidatos")
   incendiados := esc.Ve.GetIncendiados()
   candidatosBrut := []int{}
   candidatos := []*Candidato{}
   actual := 0
   for _, s := range PorSalvar{
-    // fmt.Println("<p>*POR SALVAR:", s, "</p>")
     for _, b := range incendiados{
-      // fmt.Println("<p>INCENDIADO:", b, "</p>")
       candidatosBrut = append(candidatosBrut, esc.GetTrayectoria(s, b)...)
     }
   }
   sort.Ints(candidatosBrut)
 
-  // fmt.Println("<p>candBrut", candidatosBrut, "</p>")
   for len(candidatosBrut) > 1{
     actual = candidatosBrut[0]
     incidencias := util.Cuenta(candidatosBrut, actual)
-    newCand := NewCandidato(actual, incidencias)
-    newCand.FindMins(esc.Ve.Mapa[actual], esc.Ve.Manzanas)
-    candidatos = append(candidatos, newCand)
+    if(!util.Contiene(PorSalvar, actual)){
+      newCand := NewCandidato(actual, incidencias)
+      newCand.FindMins(esc.Ve.Mapa[actual], esc.Ve.Manzanas)
+      candidatos = append(candidatos, newCand)
+    }
     candidatosBrut = append(candidatosBrut[:0], candidatosBrut[(incidencias):]...)
   }
-  if(len(candidatosBrut) == 1){
-    newCand := NewCandidato(candidatosBrut[0], 1)
-    candidatos = append(candidatos, newCand)
-  }
-  // for _, c := range candidatos{
-    // fmt.Println("<p>id", c.Id, "</p>")
-    // fmt.Println("<p>tray", c.NumTrayectorias, "</p>")
-  // }
-  // fmt.Println("<p>id---------</p>")
-
   QSort(candidatos)
   // for _, c := range candidatos{
-    // fmt.Println("<p>id", c.Id, "</p>")
-    // fmt.Println("<p>tray", c.NumTrayectorias, "</p>")
+  //   fmt.Println("<p>c ", c.Id, "</p>")
   // }
   return candidatos
 }

@@ -1,7 +1,8 @@
 package problema_bombero
 import(
-  // "fmt"
+  "fmt"
   "github.com/kaarla/HOC-Proyecto2/util"
+  "math/rand"
 )
 
 //Modela un candidato a defender
@@ -36,12 +37,12 @@ func (c *Candidato) FindMins(dists []int, manzanas []Manzana){
   for !(auxB && auxS){
 
     if(manzanas[i].Estado == 2 && !auxB){
-      minB = manzanas[i].Id
+      minB = Distancias[c.Id][manzanas[i].Id]
       c.DistMinB = minB
       auxB = true
     }
     if(util.Contiene(PorSalvar, manzanas[i].Id) && !auxS){
-      minS = manzanas[i].Id
+      minS = Distancias[c.Id][manzanas[i].Id]
       c.DistMinS = minS
       auxS = true
     }
@@ -57,6 +58,10 @@ func (c *Candidato) FindMins(dists []int, manzanas []Manzana){
 */
 func (cA *Candidato) compareTo(cB *Candidato) int{
   if(cA.DistMinS == 1 && cA.DistMinB == 1){
+    fmt.Println("<p>", cA.Id, "mayor que", cB.Id, "</p>")
+    return 1
+  }
+  if(cB.DistMinS == 1 && cB.DistMinB == 1){
     return 1
   }
   if(cA.NumTrayectorias == cB.NumTrayectorias){
@@ -77,46 +82,16 @@ func (cA *Candidato) compareTo(cB *Candidato) int{
   return -1
 }
 
-// func QSort(cs []*Candidato, p int, fin int){
-//   if((fin - p + 1) < 2){
-//     return
-//   }
-//   i := p + 1
-//   j := fin
-//   for i < j {
-//     fmt.Println("<p>i, j  ", i, j, "</p>")
-//     if(cs[i].compareTo(cs[p]) > 0 && cs[j].compareTo(cs[p]) < 0){
-//       i++
-//       j--
-//       intercambia(cs, i, j)
-//     }else if(cs[i].compareTo(cs[p]) <= 0 && cs[j].compareTo(cs[p]) >= 0){
-//       i++
-//       j++
-//     }else if(cs[i].compareTo(cs[p]) <= 0){
-//       i++
-//     }else{
-//       j--
-//     }
-//   }
-//   if(cs[i].compareTo(cs[p]) >= 0){
-//     i--
-//   }
-//   intercambia(cs, p, i)
-//   if(j - p > 1){
-//     QSort(cs, p, j - 1)
-//   }
-//   if(fin - 1 > 1){
-//     QSort(cs, i + 1, fin)
-//   }
-// }
-
+/*
+  QuickSort para los candidatos
+*/
 func QSort(cs []*Candidato) []*Candidato{
   if len(cs) < 2{
     return cs
   }
-  izq, der := 0, len(cs) - 1
-  p := int(len(cs) / 2)
-  cs[p], cs[izq] = cs[der], cs[p]
+  izq, der := 0, (len(cs) - 1)
+  p := rand.Int() % len(cs)
+  cs[p], cs[der] = cs[der], cs[p]
   for i, _ := range cs{
     if cs[i].compareTo(cs[der]) == -1{
       cs[izq], cs[i] = cs[i], cs[izq]
@@ -126,13 +101,5 @@ func QSort(cs []*Candidato) []*Candidato{
   cs[izq], cs[der] = cs[der], cs[izq]
   QSort(cs[:izq])
   QSort(cs[(izq + 1):])
-
   return cs
 }
-
-// func intercambia(array []*Candidato, i int, j int){
-//   aux1 := array[i]
-//   aux2 := array[j]
-//   array[i] = aux2
-//   array[j] = aux1
-// }

@@ -27,8 +27,8 @@ func main() {
       grafica := ""
 
       problema_bombero.TotalBomberos = 20
-      problema_bombero.BomberosXt = 15
-      problema_bombero.HormigasXt = 1
+      problema_bombero.BomberosXt = 5
+      problema_bombero.HormigasXt = 3
       problema_bombero.Phe = 0.3
       problema_bombero.PheReducion = 0.15
       problema_bombero.Semilla =  93558
@@ -37,7 +37,7 @@ func main() {
       trayectorias := "graficas/recorridos10x10.txt"
       problema_bombero.Distancias = problema_bombero.InitMapa(grafica)
       problema_bombero.Trayectorias = problema_bombero.InitMapa(trayectorias)
-      fuegoInicial = []int{56}
+      fuegoInicial = []int{36, 66}
       problema_bombero.CorreHeuristica(grafica, fuegoInicial)
 
     }else if (os.Args[1] == "arbol"){

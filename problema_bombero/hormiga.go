@@ -104,7 +104,6 @@ func (hormiga *Hormiga) AvanzaHormiga(c int) bool{
 
   hormiga.Actual.Ve.PrintSVG()
   if(len(porQuemar) < 1){
-    fmt.Println("<p>len menor a uno1111</p>")
     if (hormiga.Ida){
       hormiga.Index = len(hormiga.Trayecto) - 2
       hormiga.Ida = false
@@ -113,7 +112,6 @@ func (hormiga *Hormiga) AvanzaHormiga(c int) bool{
     return hormiga.Regresa()
   }else{
     if(hormiga.Actual.Vecinos != nil && d1 == 0){
-      fmt.Println("<p>CASO 1&&&&&&&</p>")
       nuevoEscenario = *hormiga.Actual.MejorVecino
     }
     d1 = util.RandInt(0, 2)
@@ -159,23 +157,27 @@ func (hormiga *Hormiga) newEscenario(candidatos []*Candidato) Escenario{
   rand.Seed(Semilla)
   escenario := hormiga.Actual.copia()
   bomberosN := []int{}
-  r1 := 0
+  // r1 := 0
   if(len(candidatos) <= BomberosXt){
     for i:= 0; i < len(candidatos); i++{
-      bomberosN = append(bomberosN, i)
+      bomberosN = append(bomberosN, candidatos[i].Id)
     }
   }else{
-    for i:= 0; i < BomberosXt; i++{
-      r1 = util.RandInt(0, len(candidatos))
-      if(util.Contiene(bomberosN, r1)){
-        i--
-      }else{
-        bomberosN = append(bomberosN, r1)
-      }
+    for i := 0; i < BomberosXt; i++{
+      bomberosN = append(bomberosN, candidatos[0].Id)
+      candidatos = candidatos[1:]
     }
+    // for i:= 0; i < BomberosXt; i++{
+    //   r1 = util.RandInt(0, len(candidatos))
+    //   if(util.Contiene(bomberosN, candidatos[r1].Id)){
+    //     i--
+    //   }else{
+    //     bomberosN = append(bomberosN, candidatos[r1].Id)
+    //   }
+    // }
   }
   for i := 0; i < len(bomberosN); i++{
-    escenario.Ve.Manzanas[candidatos[bomberosN[i]].Id].Estado = 1
+    escenario.Ve.Manzanas[bomberosN[i]].Estado = 1
   }
   return escenario
 }
@@ -188,9 +190,9 @@ func CorreHeuristica(grafica string, fuegoInicial []int){
   for _, i := range fuegoInicial{
     vecindarioCero.InitFuegoEspecifico(i)
   }
-   fmt.Println("-------- INICIAL ---------")
-   // vecindarioCero.PrintSVG()
-   fmt.Println("---------------------------")
+   // fmt.Println("-------- INICIAL ---------")
+   vecindarioCero.PrintSVG()
+   // fmt.Println("---------------------------")
   escenarioCero := InitEscenario(vecindarioCero)
   fin := true
   ciclos := 0
@@ -211,10 +213,10 @@ func CorreHeuristica(grafica string, fuegoInicial []int){
       // fmt.Println("hormigas avanzan, ", i)
       if !termino{
         termino = b.AvanzaHormiga(ciclos)
-        fmt.Println("no termino ", i, termino)
+        // fmt.Println("no termino ", i, termino)
         if(termino){
           cuentaTerminadas++
-          fmt.Println("<p>terminaron, ", cuentaTerminadas, "len trayecto", len(b.Trayecto), "</p>")
+          // fmt.Println("<p>terminaron, ", cuentaTerminadas, "len trayecto", len(b.Trayecto), "</p>")
           solActual := b.CalculaSolucion(ciclos)
           if(mejorSol.Costo >= solActual.Costo && solActual.Factible){
             mejorSol = solActual
@@ -222,7 +224,6 @@ func CorreHeuristica(grafica string, fuegoInicial []int){
           }
         }
         if(cuentaTerminadas == (generaciones * HormigasXt)){
-          fmt.Println("<p> terminooooooooooooooooooooop3u8ro82r </p>")
           fin = false
         }
         b.Actual.Ve.PropagaFuego()
