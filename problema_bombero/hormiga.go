@@ -72,9 +72,7 @@ func (hormiga *Hormiga) CalculaSolucion(c int) *Solucion{
   factible := true
   temp := false
   for _, ps := range PorSalvar{
-    // fmt.Println("checando PorSalvar", ps)
     if(hormiga.Actual.Ve.Manzanas[ps].Estado == 0){
-      // fmt.Println("estado 0")
       temp = true
     }
       factible = factible && temp
@@ -95,7 +93,6 @@ func (hormiga *Hormiga) CalculaCosto(c int) float64{
 }
 
 func (hormiga *Hormiga) AvanzaHormiga(c int) bool{
-  // fmt.Println("avanza hormiga 1")
   d1 := 0
   d1 = util.RandInt(0, 2)
   nuevoEscenario := Escenario{}
@@ -164,17 +161,9 @@ func (hormiga *Hormiga) newEscenario(candidatos []*Candidato) Escenario{
     }
   }else{
     for i := 0; i < BomberosXt; i++{
-      bomberosN = append(bomberosN, candidatos[0].Id)
-      candidatos = candidatos[1:]
+      bomberosN = append(bomberosN, candidatos[len(candidatos) - 1].Id)
+      candidatos = candidatos[:len(candidatos) -1]
     }
-    // for i:= 0; i < BomberosXt; i++{
-    //   r1 = util.RandInt(0, len(candidatos))
-    //   if(util.Contiene(bomberosN, candidatos[r1].Id)){
-    //     i--
-    //   }else{
-    //     bomberosN = append(bomberosN, candidatos[r1].Id)
-    //   }
-    // }
   }
   for i := 0; i < len(bomberosN); i++{
     escenario.Ve.Manzanas[bomberosN[i]].Estado = 1

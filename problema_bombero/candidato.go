@@ -101,5 +101,9 @@ func QSort(cs []*Candidato) []*Candidato{
   cs[izq], cs[der] = cs[der], cs[izq]
   QSort(cs[:izq])
   QSort(cs[(izq + 1):])
+  fmt.Println("<p>Ordenados</p>")
+  for _, c := range cs{
+    fmt.Println(c.Id, ", ")
+  }
   return cs
 }

@@ -74,7 +74,7 @@ func CreaDirigida(distancias [][]int, raices []int, numVertices int) *Dirigida{
 func (dirigida *Dirigida) agregaVertices(id int, dist [][]int, numVer int, porProc *list.List, vert []*VerticeD) *Dirigida{
   var verTemp *VerticeD
   for i := 0; i < len(dist); i++ {
-    if(dist[id][i] == 1 && (vert[i] == nil || vert[i].Nivel <= vert[id].Nivel)){
+    if(dist[id][i] == 1 && (vert[i] == nil || vert[i].Nivel < vert[id].Nivel)){
       if(vert[i] == nil){
         verTemp = newVerticeD(i, (vert[id].Nivel + 1))
         vert[i] = verTemp
