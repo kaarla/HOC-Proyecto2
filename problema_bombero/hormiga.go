@@ -25,6 +25,9 @@ var Semilla int64
 var q1 int
 //Ids del conjunto que hay que salvar a toda costa
 var PorSalvar []int
+//Grafica dirigida sobre la que va a trabajar
+var Dirigida *util.Dirigida
+
 
 
 //Estructura para una solución, guardo su trayecto que es un arreglo de escenarios
@@ -172,6 +175,7 @@ func (hormiga *Hormiga) newEscenario(candidatos []*Candidato) Escenario{
 }
 
 func CorreHeuristica(grafica string, fuegoInicial []int){
+  Dirigida = util.CreaDirigida(Distancias, PorSalvar, len(Distancias))
   rand.Seed(Semilla)
   generaciones := 3
   q1 = len(fuegoInicial)

@@ -2,8 +2,10 @@ package problema_bombero
 import(
   "github.com/kaarla/HOC-Proyecto2/util"
   "sort"
+  "container/list"
   // "fmt"
 )
+
 
 //Estructura para el escenario
 type Escenario struct{
@@ -95,4 +97,27 @@ func (esc *Escenario) GetCandidatos() []*Candidato{
   //   fmt.Println("<p>c ", c.Id, "</p>")
   // }
   return candidatos
+}
+
+/*
+  Busca candidatos por BFS
+*/
+func (esc *Escenario) GetCandidatoBFS(indiceV int) *Candidato{
+  porProcesar := list.New()
+  valor := 0.0
+  for _, v := range esc.Ve.Manzanas[indiceV].Vecinos {
+    porProcesar.PushFront(v)
+  }
+  candidato := Candidato{}
+  nivelActual := porProcesar.Front().Value.(util.VerticeD).Nivel
+
+  return esc.trueBFS(porProcesar, &candidato, valor, nivelActual)
+}
+
+/*
+  Hace el trabajo de BFS
+*/
+func (esc *Escenario) trueBFS(porProcesar *list.List, candidato *Candidato, valor float64, nivelActual int) *Candidato{
+  cand := Candidato{}
+  return &cand
 }

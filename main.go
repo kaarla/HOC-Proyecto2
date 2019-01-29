@@ -32,7 +32,8 @@ func main() {
       problema_bombero.Phe = 0.3
       problema_bombero.PheReducion = 0.15
       problema_bombero.Semilla =  93558
-      problema_bombero.PorSalvar = []int{40, 50}
+      problema_bombero.PorSalvar = []int{40, 99}
+      
       grafica = "graficas/distancias10x10.txt"
       trayectorias := "graficas/recorridos10x10.txt"
       problema_bombero.Distancias = problema_bombero.InitMapa(grafica)

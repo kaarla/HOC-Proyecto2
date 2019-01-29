@@ -2,6 +2,7 @@ package util
 
 import(
   "container/list"
+  // "fmt"
 )
 
 /*
@@ -65,13 +66,13 @@ func CreaDirigida(distancias [][]int, raices []int, numVertices int) *Dirigida{
     dirigida.Elementos++
   }
   temp := porProcesar.Front().Value
-  return dirigida.agregaVertices(temp.(int), distancias, numVertices, porProcesar, dirigida.Vertices)
+  return dirigida.agregaVertices(temp.(int), distancias, porProcesar, dirigida.Vertices)
 }
 
 /*
   Trabajo sucio de agregar los vertices
 */
-func (dirigida *Dirigida) agregaVertices(id int, dist [][]int, numVer int, porProc *list.List, vert []*VerticeD) *Dirigida{
+func (dirigida *Dirigida) agregaVertices(id int, dist [][]int, porProc *list.List, vert []*VerticeD) *Dirigida{
   var verTemp *VerticeD
   for i := 0; i < len(dist); i++ {
     if(dist[id][i] == 1 && (vert[i] == nil || vert[i].Nivel < vert[id].Nivel)){
@@ -80,7 +81,9 @@ func (dirigida *Dirigida) agregaVertices(id int, dist [][]int, numVer int, porPr
         vert[i] = verTemp
         porProc.PushBack(i)
       }
-      dirigida.Vertices[id].Hijos = append(dirigida.Vertices[id].Hijos, verTemp.Id)
+      if(dirigida.Vertices[id].Hijos != nil){
+        dirigida.Vertices[id].Hijos = append(dirigida.Vertices[id].Hijos, verTemp.Id)
+      }
       vert[i].Padres = append(vert[i].Padres, id)
       dirigida.Elementos++
     }
@@ -90,7 +93,7 @@ func (dirigida *Dirigida) agregaVertices(id int, dist [][]int, numVer int, porPr
     return dirigida
   }else{
     temp := porProc.Front().Value
-    return dirigida.agregaVertices(temp.(int), dist, numVer, porProc, vert)
+    return dirigida.agregaVertices(temp.(int), dist, porProc, vert)
   }
 }
 
