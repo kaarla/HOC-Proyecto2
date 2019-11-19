@@ -102,7 +102,7 @@ func (hormiga *Hormiga) AvanzaHormiga(c int) bool{
   candidatos := hormiga.Actual.GetCandidatos()
   porQuemar := hormiga.Actual.Ve.GetPorQuemar()
 
-  hormiga.Actual.Ve.PrintSVG()
+  // hormiga.Actual.Ve.PrintSVG()
   if(len(porQuemar) < 1){
     if (hormiga.Ida){
       hormiga.Index = len(hormiga.Trayecto) - 2
@@ -119,6 +119,9 @@ func (hormiga *Hormiga) AvanzaHormiga(c int) bool{
       nuevoEscenario = hormiga.Actual.Vecinos[(util.RandInt(0, len(hormiga.Actual.Vecinos)))]
     }else{
       nuevoEscenario = hormiga.newEscenario(candidatos)
+    }
+    if(nuevoEscenario.DistanciaAe0 > c || nuevoEscenario.DistanciaAe0 == 0){
+      nuevoEscenario.DistanciaAe0 = c
     }
     hormiga.Actual.Vecinos = append(hormiga.Actual.Vecinos, nuevoEscenario)
     hormiga.Trayecto = append(hormiga.Trayecto, nuevoEscenario)

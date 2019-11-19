@@ -2,7 +2,7 @@ package problema_bombero
 import(
   "github.com/kaarla/HOC-Proyecto2/util"
   "sort"
-  "container/list"
+  // "container/list"
   // "fmt"
 )
 
@@ -14,6 +14,7 @@ type Escenario struct{
   Eval float64             //evaluación del escenario dado el vecindario
   Vecinos []Escenario      //escenarios conocidos a los que se puede llegar desde el actual en una unidad de tiempo
   MejorVecino *Escenario   //vecino con mejor evaluación
+  DistanciaAe0 int
 }
 
 /*
@@ -26,6 +27,7 @@ func InitEscenario(vecindario Vecindario) *Escenario{
   escenario.Eval = escenario.Ve.Evalua(TotalBomberos)
   escenario.Vecinos = nil
   escenario.MejorVecino = nil
+  escenario.DistanciaAe0 = 0
   return &escenario
 }
 
@@ -88,6 +90,7 @@ func (esc *Escenario) GetCandidatos() []*Candidato{
     if(!util.Contiene(PorSalvar, actual)){
       newCand := NewCandidato(actual, incidencias)
       newCand.FindMins(esc.Ve.Mapa[actual], esc.Ve.Manzanas)
+      newCand.GetPrioridad(esc);
       candidatos = append(candidatos, newCand)
     }
     candidatosBrut = append(candidatosBrut[:0], candidatosBrut[(incidencias):]...)
@@ -97,27 +100,4 @@ func (esc *Escenario) GetCandidatos() []*Candidato{
   //   fmt.Println("<p>c ", c.Id, "</p>")
   // }
   return candidatos
-}
-
-/*
-  Busca candidatos por BFS
-*/
-func (esc *Escenario) GetCandidatoBFS(indiceV int) *Candidato{
-  porProcesar := list.New()
-  valor := 0.0
-  for _, v := range esc.Ve.Manzanas[indiceV].Vecinos {
-    porProcesar.PushFront(v)
-  }
-  candidato := Candidato{}
-  nivelActual := porProcesar.Front().Value.(util.VerticeD).Nivel
-
-  return esc.trueBFS(porProcesar, &candidato, valor, nivelActual)
-}
-
-/*
-  Hace el trabajo de BFS
-*/
-func (esc *Escenario) trueBFS(porProcesar *list.List, candidato *Candidato, valor float64, nivelActual int) *Candidato{
-  cand := Candidato{}
-  return &cand
 }

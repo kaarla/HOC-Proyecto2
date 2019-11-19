@@ -11,7 +11,7 @@ type Candidato struct{
   NumTrayectorias int
   DistMinB int
   DistMinS int
-  Valor float64
+  Prioridad float64
 }
 
 /*
@@ -23,6 +23,7 @@ func NewCandidato(id int, t int) *Candidato{
   cand.NumTrayectorias = t
   cand.DistMinB = 2147483647
   cand.DistMinS = 2147483647
+  cand.Prioridad = 0.0
   return cand
 }
 
@@ -65,6 +66,7 @@ func (cA *Candidato) compareTo(cB *Candidato) int{
   if(cB.DistMinS == 1 && cB.DistMinB == 1){
     return 1
   }
+  //falta incluir prioridad obtenida con BFS
   if(cA.NumTrayectorias == cB.NumTrayectorias){
     if(cA.DistMinS < cB.DistMinS){ //prioridad al que esta mas cerca de S
         return 1
@@ -103,4 +105,34 @@ func QSort(cs []*Candidato) []*Candidato{
   QSort(cs[:izq])
   QSort(cs[(izq + 1):])
   return cs
+}
+
+/*
+  Busca prioridad de candidato por BFS
+*/
+func (cand *Candidato) GetPrioridad(esc *Escenario){
+  idIndiceV := cand.Id
+  porProcesar := make([]*util.VerticeD, 0)
+  porProcesar = append(porProcesar, Dirigida.Vertices[idIndiceV])
+  prioridad := 0.0
+  mapeo := make([]int, 0)
+  aux := 1;
+  for _, v := range porProcesar{
+    if(esc.Ve.Manzanas[idIndiceV].Estado == 2){
+      mapeo[aux]++
+    }
+    aux++
+    for _, u := range v.Hijos{
+      porProcesar = append(porProcesar, Dirigida.Vertices[u])
+    }
+    porProcesar = porProcesar[1:]
+  }
+  aux = 1
+  for _, i := range mapeo{
+    if(i != 0){
+      prioridad += (float64(aux) * float64(i))
+    }
+    aux /= 2
+  }
+  cand.Prioridad = prioridad
 }

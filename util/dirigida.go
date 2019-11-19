@@ -96,7 +96,3 @@ func (dirigida *Dirigida) agregaVertices(id int, dist [][]int, porProc *list.Lis
     return dirigida.agregaVertices(temp.(int), dist, porProc, vert)
   }
 }
-
-/*
-
-*/

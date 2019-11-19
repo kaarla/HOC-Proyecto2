@@ -64,8 +64,7 @@ func InitMapa(grafica string) [][]int{
       mapa[j][i] = int(num)
     }
   }
-  // fmt.Println("longitud de lineas ########", len(lineas))
-  // fmt.Println("longitud en initMapa$$$$$$$$4", len(mapa[1]))
+
   return mapa
 }
 
