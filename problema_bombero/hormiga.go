@@ -42,7 +42,7 @@ type Hormiga struct{
 /*
   Inicializa una hormiga con un escenario.
 */
-func InitHormiga(id int, escenario *Escenario) *Hormiga{
+func newHormiga(id int, escenario *Escenario) *Hormiga{
   hormiga := Hormiga{}
   hormiga.Id = id
   hormiga.Actual = *escenario
@@ -51,7 +51,7 @@ func InitHormiga(id int, escenario *Escenario) *Hormiga{
   return &hormiga
 }
 
-func (hormiga *Hormiga) AvanzaHormiga(c int) bool{
+func (hormiga *Hormiga) avanza(c int) bool{
   d1 := 0
   d1 = util.RandInt(0, 2)
   nuevoEscenario := Escenario{}
@@ -65,7 +65,7 @@ func (hormiga *Hormiga) AvanzaHormiga(c int) bool{
       hormiga.Ida = false
     }
 
-    return hormiga.Regresa()
+    return hormiga.regresa()
   }else{
     if(hormiga.Actual.Vecinos != nil && d1 == 0){
       nuevoEscenario = *hormiga.Actual.MejorVecino
@@ -74,7 +74,7 @@ func (hormiga *Hormiga) AvanzaHormiga(c int) bool{
     if(hormiga.Actual.Vecinos != nil && d1 == 1){
       nuevoEscenario = hormiga.Actual.Vecinos[(util.RandInt(0, len(hormiga.Actual.Vecinos)))]
     }else{
-      nuevoEscenario = hormiga.newEscenario(candidatos)
+      nuevoEscenario = CreaEscenario(candidatos, hormiga.Actual)
     }
     if(nuevoEscenario.DistanciaAe0 > c || nuevoEscenario.DistanciaAe0 == 0){
       nuevoEscenario.DistanciaAe0 = c
@@ -91,7 +91,7 @@ func (hormiga *Hormiga) AvanzaHormiga(c int) bool{
   }
 }
 
-func (hormiga *Hormiga) Regresa() bool{
+func (hormiga *Hormiga) regresa() bool{
   fmt.Println("regresa hormiga en index, ", hormiga.Index)
   if(hormiga.Index <= 0){
     hormiga.Camina = false
@@ -112,27 +112,6 @@ func (hormiga* Hormiga) copia() Hormiga{
   return hormigaN
 }
 
-func (hormiga *Hormiga) newEscenario(candidatos []*Candidato) Escenario{
-  rand.Seed(Semilla)
-  escenario := hormiga.Actual.copia()
-  bomberosN := []int{}
-  // r1 := 0
-  if(len(candidatos) <= BomberosXt){
-    for i:= 0; i < len(candidatos); i++{
-      bomberosN = append(bomberosN, candidatos[i].Id)
-    }
-  }else{
-    for i := 0; i < BomberosXt; i++{
-      bomberosN = append(bomberosN, candidatos[len(candidatos) - 1].Id)
-      candidatos = candidatos[:len(candidatos) -1]
-    }
-  }
-  for i := 0; i < len(bomberosN); i++{
-    escenario.Ve.Manzanas[bomberosN[i]].Estado = 1
-  }
-  return escenario
-}
-
 func CorreHeuristica(grafica string, fuegoInicial []int){
   Dirigida = util.CreaDirigida(Distancias, PorSalvar, len(Distancias))
   rand.Seed(Semilla)
@@ -145,7 +124,7 @@ func CorreHeuristica(grafica string, fuegoInicial []int){
    // fmt.Println("-------- INICIAL ---------")
    vecindarioCero.PrintSVG()
    // fmt.Println("---------------------------")
-  escenarioCero := InitEscenario(vecindarioCero)
+  escenarioCero := NewEscenario(vecindarioCero)
   fin := true
   ciclos := 0
   cuentaGeneraciones := 0
@@ -156,7 +135,7 @@ func CorreHeuristica(grafica string, fuegoInicial []int){
     if(cuentaGeneraciones < generaciones){
       for i := 0; i < HormigasXt; i++{
         // fmt.Println("generando hormiga")
-        HormigasExploradoras = append(HormigasExploradoras, *InitHormiga(i + (ciclos * HormigasXt), escenarioCero))
+        HormigasExploradoras = append(HormigasExploradoras, *newHormiga(i + (ciclos * HormigasXt), escenarioCero))
       }
       cuentaGeneraciones++
     }
@@ -164,7 +143,7 @@ func CorreHeuristica(grafica string, fuegoInicial []int){
     for i, b := range HormigasExploradoras{
       // fmt.Println("hormigas avanzan, ", i)
       if !termino{
-        termino = b.AvanzaHormiga(ciclos)
+        termino = b.avanza(ciclos)
         // fmt.Println("no termino ", i, termino)
         if(termino){
           cuentaTerminadas++

@@ -64,7 +64,6 @@ func InitMapa(grafica string) [][]int{
       mapa[j][i] = int(num)
     }
   }
-
   return mapa
 }
 

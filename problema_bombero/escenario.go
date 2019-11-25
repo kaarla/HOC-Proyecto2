@@ -2,6 +2,7 @@ package problema_bombero
 import(
   "github.com/kaarla/HOC-Proyecto2/util"
   "sort"
+  "math/rand"
   // "container/list"
   // "fmt"
 )
@@ -20,7 +21,7 @@ type Escenario struct{
 /*
   Inicializa el vecindario vacío
 */
-func InitEscenario(vecindario Vecindario) *Escenario{
+func NewEscenario(vecindario Vecindario) *Escenario{
   escenario := Escenario{}
   escenario.Ve= vecindario.Copia()
   escenario.PheActual = 0.0
@@ -100,4 +101,25 @@ func (esc *Escenario) GetCandidatos() []*Candidato{
   //   fmt.Println("<p>c ", c.Id, "</p>")
   // }
   return candidatos
+}
+
+func CreaEscenario(candidatos []*Candidato, actual Escenario) Escenario{
+  rand.Seed(Semilla)
+  escenario := actual.copia()
+  bomberosN := []int{}
+  // r1 := 0
+  if(len(candidatos) <= BomberosXt){
+    for i:= 0; i < len(candidatos); i++{
+      bomberosN = append(bomberosN, candidatos[i].Id)
+    }
+  }else{
+    for i := 0; i < BomberosXt; i++{
+      bomberosN = append(bomberosN, candidatos[len(candidatos) - 1].Id)
+      candidatos = candidatos[:len(candidatos) -1]
+    }
+  }
+  for i := 0; i < len(bomberosN); i++{
+    escenario.Ve.Manzanas[bomberosN[i]].Estado = 1
+  }
+  return escenario
 }
