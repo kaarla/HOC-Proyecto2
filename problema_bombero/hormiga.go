@@ -5,29 +5,6 @@ import(
   "github.com/kaarla/HOC-Proyecto2/util"
 )
 
-var Time int
-//rastro que dejará la hormiga al pasar
-var Phe float64
-//cuánto se reducirá el rastro de feromonas por cada unidad de tiempo
-var PheReducion float64
-//cuántos bomberos se utilizaron en una solución
-var TotalBomberos int
-//cuántos bomberos se pueden asignar por unidad de tiempo
-var BomberosXt int
-//cuantas hormigas nuevas salen del origen por cada unidad de tiempo
-var HormigasXt int
-//arreglo para guardar a las hormigas que actualmente están en la heurística
-var HormigasExploradoras []Hormiga
-//semilla que se usará para inicializar el random
-var Semilla int64
-//número de vértices que se incendiarán en t = 1
-var q1 int
-//Ids del conjunto que hay que salvar a toda costa
-var PorSalvar []int
-//Grafica dirigida sobre la que va a trabajar
-var Dirigida *util.Dirigida
-
-
 //Estructura para la hormiga
 type Hormiga struct{
   Id int                  //id para identificarla

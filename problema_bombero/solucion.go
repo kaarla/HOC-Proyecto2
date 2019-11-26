@@ -9,12 +9,14 @@ type Solucion struct{
   Trayecto []Escenario
   Costo float64
   Factible bool
+  Semilla int64
 }
 
 func NewSolucion() *Solucion{
   sol := Solucion{}
   sol.Costo = 10000.0
   sol.Factible = false
+  sol.Semilla = Semilla
   return &sol
 }
 
