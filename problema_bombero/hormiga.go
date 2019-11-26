@@ -58,7 +58,7 @@ func (hormiga *Hormiga) avanza(c int) bool{
   candidatos := hormiga.Actual.GetCandidatos()
   porQuemar := hormiga.Actual.Ve.GetPorQuemar()
 
-  // hormiga.Actual.Ve.PrintSVG()
+  hormiga.Actual.Ve.PrintSVG()
   if(len(porQuemar) < 1){
     if (hormiga.Ida){
       hormiga.Index = len(hormiga.Trayecto) - 2
@@ -163,6 +163,10 @@ func CorreHeuristica(grafica string, fuegoInicial []int){
     }
     ciclos++
   }
+  printResultado(mejorSol, idHormiga)
+}
+
+func printResultado(mejorSol *Solucion, idHormiga int){
   fmt.Println("<p>Seed:", Semilla, "</p>")
   // fmt.Println("<p>Saved: ", len(mejorSol.Trayecto[len(mejorSol.Trayecto) - 1].Ve.GetASalvo()) + len(mejorSol.Trayecto[len(mejorSol.Trayecto) - 1].Ve.GetDefendidos()), "</p>")
   // fmt.Println("<p>Total of firefighters: ", len(mejorSol.Trayecto[len(mejorSol.Trayecto) - 1].Ve.GetDefendidos()), "</p>")
@@ -173,9 +177,9 @@ func CorreHeuristica(grafica string, fuegoInicial []int){
   fmt.Println("<p>HormigaId:", idHormiga, "</p>")
   fmt.Println("<p>Pasos HORMIGA:", len(HormigasExploradoras[idHormiga].Trayecto), "</p>")
   mejorSol.Trayecto = HormigasExploradoras[idHormiga].Trayecto
-  for i, es := range mejorSol.Trayecto{
-    fmt.Println("<p>-----------------------------------</p>")
-    fmt.Println("Tiempo", i + 1)
-    es.Ve.PrintSVG()
-  }
+  // for i, es := range mejorSol.Trayecto{
+  //   fmt.Println("<p>-----------------------------------</p>")
+  //   fmt.Println("Tiempo", i + 1)
+  //   es.Ve.PrintSVG()
+  // }
 }

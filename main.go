@@ -11,7 +11,8 @@ func main() {
 
 
   if(len(os.Args) <= 1){
-    fmt.Println("Hola, mundo")
+    fmt.Println("Uso: \n Para ejecutar ACO sobre el Problema del bombero correr",
+     "el comando: \n $ go run main.go problema")
   }else{
     if(os.Args[1] == "grafica"){
       grafica := grafica.GeneraCuadricula(10)
@@ -31,9 +32,9 @@ func main() {
       problema_bombero.HormigasXt = 3
       problema_bombero.Phe = 0.3
       problema_bombero.PheReducion = 0.15
-      problema_bombero.Semilla =  93558
+      problema_bombero.Semilla =  9355888
       problema_bombero.PorSalvar = []int{40, 99}
-      
+
       grafica = "graficas/distancias10x10.txt"
       trayectorias := "graficas/recorridos10x10.txt"
       problema_bombero.Distancias = problema_bombero.InitMapa(grafica)

@@ -298,7 +298,6 @@ func (vecindario *Vecindario) PrintSVG(){
     fmt.Printf("<svg height=\"%d\" width=\"2000\">\n<g font-size=\"10\" font-family=\"sans-serif\" fill=\"black\" stroke=\"none\">\n", h)
     // fmt.Println("------------------------", len(vecindario.Manzanas))
     for _, m := range vecindario.Manzanas{
-      // fmt.Println("&&&&&&&&&&&&&&&&&&&&", m.Id)
       switch m.Estado {
       case 0:
         color = "pink"
