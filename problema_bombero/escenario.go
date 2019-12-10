@@ -13,9 +13,9 @@ type Escenario struct{
   Ve Vecindario            //estado de la gráfica en la que se extiende el inciendio
   PheActual float64        //feromonas actuales en el escenario
   Eval float64             //evaluación del escenario dado el vecindario
-  Vecinos []Escenario      //escenarios conocidos a los que se puede llegar desde el actual en una unidad de tiempo
+  Vecinos []*Escenario      //escenarios conocidos a los que se puede llegar desde el actual en una unidad de tiempo
   MejorVecino *Escenario   //vecino con mejor evaluación
-  DistanciaAe0 int
+  DistanciaAe0 int         //distancia al hormiguero
 }
 
 /*
@@ -103,7 +103,7 @@ func (esc *Escenario) GetCandidatos() []*Candidato{
   return candidatos
 }
 
-func CreaEscenario(candidatos []*Candidato, actual Escenario) Escenario{
+func CreaEscenario(candidatos []*Candidato, actual *Escenario, distancia int) *Escenario{
   rand.Seed(Semilla)
   escenario := actual.copia()
   bomberosN := []int{}
@@ -121,5 +121,19 @@ func CreaEscenario(candidatos []*Candidato, actual Escenario) Escenario{
   for i := 0; i < len(bomberosN); i++{
     escenario.Ve.Manzanas[bomberosN[i]].Estado = 1
   }
-  return escenario
+  escenario.DistanciaAe0 = distancia
+  return &escenario
+}
+
+func (esc *Escenario)EncuentraRegreso() *Escenario{
+  // fmt.Println("regresa")
+  regreso := esc
+  dist := esc.DistanciaAe0
+  for _, e := range esc.Vecinos{
+    if(dist > e.DistanciaAe0){
+      regreso = e
+      dist = e.DistanciaAe0
+    }
+  }
+  return regreso
 }

@@ -1,12 +1,12 @@
 package problema_bombero
 import(
-  "fmt"
+  // "fmt"
 )
 
 //Estructura para una solución, guardo su trayecto que es un arreglo de escenarios
 // y su costo
 type Solucion struct{
-  Trayecto []Escenario
+  Trayecto []*Escenario
   Costo float64
   Factible bool
   Semilla int64
@@ -20,7 +20,7 @@ func NewSolucion() *Solucion{
   return &sol
 }
 
-func (solucion *Solucion) CalculaCosto(c int, trayectoria []Escenario){
+func (solucion *Solucion) CalculaCosto(c int, trayectoria []*Escenario){
   quemados1 := float64(q1)
   quemadosT := float64(len(trayectoria[len(trayectoria) - 1].Ve.GetIncendiados()))
   bomberosT := float64(len(trayectoria[len(trayectoria) - 1].Ve.GetDefendidos()))
@@ -31,9 +31,9 @@ func (solucion *Solucion) CalculaCosto(c int, trayectoria []Escenario){
   solucion.Costo = (d * b) * float64(c)
 }
 
-func CalculaSolucion(c int, trayectoria []Escenario, actual Escenario) *Solucion{
+func CalculaSolucion(c int, trayectoria []*Escenario, actual *Escenario) *Solucion{
   solucion := NewSolucion()
-  fmt.Println("<p>len de trayectoria en calculaS", len(trayectoria), "</p>")
+  // fmt.Println("<p>len de trayectoria en calculaS", len(trayectoria), "</p>")
   solucion.Trayecto = trayectoria
   solucion.CalculaCosto(c, trayectoria)
   factible := true

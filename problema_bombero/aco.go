@@ -39,7 +39,7 @@ func CorreHeuristica(grafica string, fuegoInicial []int){
     vecindarioCero.InitFuegoEspecifico(i)
   }
    // fmt.Println("-------- INICIAL ---------")
-   vecindarioCero.PrintSVG()
+   // vecindarioCero.PrintSVG()
    // fmt.Println("---------------------------")
   escenarioCero := NewEscenario(vecindarioCero)
   fin := true
@@ -61,12 +61,13 @@ func CorreHeuristica(grafica string, fuegoInicial []int){
       // fmt.Println("hormigas avanzan, ", i)
       if !termino{
         termino = b.avanza(ciclos)
-        // fmt.Println("no termino ", i, termino)
+        // fmt.Println("no termino ", i, termino
         if(termino){
           cuentaTerminadas++
-          // fmt.Println("<p>terminaron, ", cuentaTerminadas, "len trayecto", len(b.Trayecto), "</p>")
+          // fmt.Println("<p>terminaron, ", cuentaTerminadas, "len trayecto de ", b.Id, " es ", len(b.Trayecto), "</p>")
           solActual := CalculaSolucion(ciclos, b.Trayecto, b.Actual)
-          if(mejorSol.Costo >= solActual.Costo && solActual.Factible){
+          fmt.Println("Costo de ", b.Id, ": ", solActual.Costo)
+          if(mejorSol.Costo >= solActual.Costo /*&& solActual.Factible*/){
             mejorSol = solActual
             idHormiga = b.Id
           }
@@ -80,6 +81,9 @@ func CorreHeuristica(grafica string, fuegoInicial []int){
     }
     ciclos++
   }
+  // for _, h := range HormigasExploradoras{
+  //   fmt.Println("Hormiga", h.Id, "trayectoria de: ", len(h.Trayecto))
+  // }
   printResultado(mejorSol, idHormiga)
 }
 
@@ -87,12 +91,12 @@ func printResultado(mejorSol *Solucion, idHormiga int){
   fmt.Println("<p>Seed:", Semilla, "</p>")
   // fmt.Println("<p>Saved: ", len(mejorSol.Trayecto[len(mejorSol.Trayecto) - 1].Ve.GetASalvo()) + len(mejorSol.Trayecto[len(mejorSol.Trayecto) - 1].Ve.GetDefendidos()), "</p>")
   // fmt.Println("<p>Total of firefighters: ", len(mejorSol.Trayecto[len(mejorSol.Trayecto) - 1].Ve.GetDefendidos()), "</p>")
-  fmt.Println("<p>Firefighters in each t: ", BomberosXt, "</p>")
+  // fmt.Println("<p>Firefighters in each t: ", BomberosXt, "</p>")
   fmt.Println("<p>Cost:", mejorSol.Costo, "</p>")
   fmt.Println("<p>Fact:", mejorSol.Factible, "</p>")
-  fmt.Println("<p>Pasos:", len(mejorSol.Trayecto), "</p>")
-  fmt.Println("<p>HormigaId:", idHormiga, "</p>")
-  fmt.Println("<p>Pasos HORMIGA:", len(HormigasExploradoras[idHormiga].Trayecto), "</p>")
+  // fmt.Println("<p>Pasos:", len(mejorSol.Trayecto), "</p>")
+  // fmt.Println("<p>HormigaId:", idHormiga, "</p>")
+  // fmt.Println("<p>Pasos HORMIGA:", len(HormigasExploradoras[idHormiga].Trayecto), "</p>")
   mejorSol.Trayecto = HormigasExploradoras[idHormiga].Trayecto
   // for i, es := range mejorSol.Trayecto{
   //   fmt.Println("<p>-----------------------------------</p>")
