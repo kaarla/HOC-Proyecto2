@@ -15,12 +15,12 @@ func main() {
      "el comando: \n $ go run main.go problema")
   }else{
     if(os.Args[1] == "grafica"){
-      grafica := grafica.GeneraCuadricula(10)
-      grafica.ImprimeGrafica("graficas/basica10x10.txt")
+      grafica := grafica.GeneraCuadricula(105)
+      grafica.ImprimeGrafica("graficas/basica30x30.txt")
 
       distancias, recorridos := grafica.FloydWarshal()
-      distancias.ImprimeGrafica("graficas/distancias10x10.txt")
-      recorridos.ImprimeGrafica("graficas/recorridos10x10.txt")
+      distancias.ImprimeGrafica("graficas/distancias30x30.txt")
+      recorridos.ImprimeGrafica("graficas/recorridos30x30.txt")
 
 
     }else if (os.Args[1] == "problema"){

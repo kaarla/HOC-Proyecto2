@@ -8,9 +8,9 @@ import (
 )
 
 var(
-  numVertices = 100
-  numfilas = 10
-  numColumnas = 10
+  numVertices = 900
+  numfilas = 30
+  numColumnas = 30
 )
 
 /*
