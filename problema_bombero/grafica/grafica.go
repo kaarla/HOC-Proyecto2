@@ -2,9 +2,7 @@ package grafica
 
 import (
   "database/sql"
-  // "errors"
   "fmt"
-  // "strconv"
   "os"
   "github.com/kaarla/HOC-Proyecto2/util"
 )
@@ -24,24 +22,9 @@ type Grafica struct{
   Nodos [][]int
 }
 
-type intNil struct{
-  valid bool
-  value int
-}
-
-
 func GeneraBaseCuadricula(numDiagonales int) int {
-  queryAddColumna := ""
-  queryAddFila := ""
-  var err error
-  for i := 1; i <= numVertices; i++ {
-    queryAddFila = fmt.Sprintf("INSERT INTO grafica (ID) VALUES (%d);", i)
-    _, err = GraphDB.Exec(queryAddFila)
-    check(err)
-    queryAddColumna = fmt.Sprintf("ALTER TABLE grafica ADD `%d` INT;", i)
-    _, err = GraphDB.Exec(queryAddColumna)
-    check(err)
-  }
+  creaBase("grafica")
+  creaBase("recorridos")
   for i := 1; i <= numVertices; i++ {
     for j := 1; j <= numVertices; j++ {
       if (j > numColumnas) && (j % numColumnas == 1) {
@@ -94,10 +77,8 @@ func FloydWarshal() (Grafica, Grafica){
       result := getValue("grafica", i, j)
       if (result == 2147483647){
         addRelation("recorridos", i, j, 0)
-        // paths[i][j] = 0
       }else{
         addRelation("recorridos", i, j, i)
-        // paths[i][j] = i
       }
     }
   }
@@ -151,7 +132,6 @@ func addRelation(name string, i int, j int, dist int){
 
 func getValue(name string, i int, j int) int{
   query := fmt.Sprintf("SELECT `%d` FROM %s WHERE ID = %d;", i, name, j)
-  fmt.Println("QUERY: ", query)
   result, err := GraphDB.Exec(query)
   check(err)
   intResult, err := result.RowsAffected()
@@ -164,4 +144,16 @@ func check(e error) {
       fmt.Println(e)
       panic(e)
     }
+}
+
+func creaBase(name string) {
+  var err error
+  for i := 1; i <= numVertices; i++ {
+    queryAddFila := fmt.Sprintf("INSERT INTO %s (ID) VALUES (%d);", name, i)
+    _, err = GraphDB.Exec(queryAddFila)
+    check(err)
+    queryAddColumna := fmt.Sprintf("ALTER TABLE %s ADD `%d` INT;", name, i)
+    _, err = GraphDB.Exec(queryAddColumna)
+    check(err)
+  }
 }
