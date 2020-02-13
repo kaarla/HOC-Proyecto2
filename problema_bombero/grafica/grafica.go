@@ -74,7 +74,7 @@ func DiagonalesRandom(numDiagonales int){
 func FloydWarshal() (Grafica, Grafica){
   for i := 1; i <= numVertices; i++ {
     for j := 1; j <= numVertices; j++ {
-      result := getValue("grafica", i, j)
+      result := getValue("grafica", j, i)
       if (result == 2147483647){
         addRelation("recorridos", i, j, 0)
       }else{
@@ -85,10 +85,10 @@ func FloydWarshal() (Grafica, Grafica){
   for k := 1; k <= numVertices; k++ {
     for i := 1; i <= numVertices; i++ {
       for j := 1; j <= numVertices; j++ {
-        distIJ := getValue("grafica", i, j)
-        distIK := getValue("grafica", i, k)
-        distKJ := getValue("grafica", k, j)
-        pathKJ := getValue("recorridos", k, j)
+        distIJ := getValue("grafica", j, i)
+        distIK := getValue("grafica", k, i)
+        distKJ := getValue("grafica", j, k)
+        pathKJ := getValue("recorridos", j, k)
         if(distIJ > distIK + distKJ) {
           addRelation("grafica", i, j, distIK + distKJ)
           addRelation("recorridos", i, j, pathKJ)
