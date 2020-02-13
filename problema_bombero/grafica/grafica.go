@@ -4,7 +4,7 @@ import (
   "database/sql"
   // "errors"
   "fmt"
-  "strconv"
+  // "strconv"
   "os"
   "github.com/kaarla/HOC-Proyecto2/util"
 )
@@ -155,6 +155,7 @@ func getValue(name string, i int, j int) int{
   result, err := GraphDB.Exec(query)
   check(err)
   intResult, err := result.RowsAffected()
+  check(err)
   return int(intResult)
 }
 
