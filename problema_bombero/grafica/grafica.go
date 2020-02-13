@@ -24,18 +24,21 @@ type Grafica struct{
 
 func GeneraBaseCuadricula(numDiagonales int) int {
   creaBase("grafica")
-  creaBase("recorridos")
+  // creaBase("recorridos")
   for i := 1; i <= numVertices; i++ {
     for j := 1; j <= numVertices; j++ {
       if (j > numColumnas) && (j % numColumnas == 1) {
         addRelation("grafica", (j - numColumnas), j, 1)
       } else {
         if (((j - numColumnas) == i) && (numVertices % j != 1)) || ((j - 1) == i) {
+          fmt.Println("par: ", i, j)
           addRelation("grafica", i, j, 1)
-        }else if j == i {
-          addRelation("grafica", i, j, 0)
         }else{
-          addRelation("grafica", i, j, 2147483647)
+          if j == i {
+            addRelation("grafica", i, j, 0)
+          }else{
+            addRelation("grafica", i, j, 2147483647)
+          }
         }
       }
     }
