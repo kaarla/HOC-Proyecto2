@@ -26,14 +26,14 @@ func main() {
       var err error
       grafica.GraphDB, err = sql.Open("sqlite3", "databases/Grafica3x3.db")
       check(err)
-      errS := grafica.GeneraBaseCuadricula(4)
+      errS := grafica.GeneraBaseCuadricula(5)
       fmt.Printf("errS: %d ", errS)
       // grafica := grafica.GeneraCuadricula(25)
       // grafica.ImprimeGrafica("graficas/basica5x5.txt")
 
-      // distancias, recorridos := grafica.FloydWarshal()
-      // distancias.ImprimeGrafica("graficas/distancias75x75.txt")
-      // recorridos.ImprimeGrafica("graficas/recorridos75x75.txt")
+      distancias, recorridos := grafica.FloydWarshal()
+      distancias.ImprimeGrafica("graficas/distancias75x75.txt")
+      recorridos.ImprimeGrafica("graficas/recorridos75x75.txt")
 
 
     }else if (os.Args[1] == "problema"){
