@@ -34,22 +34,16 @@ func GeneraBaseCuadricula(numDiagonales int) int {
   for i := 1; i <= numVertices; i++ {
     for j := 1; j <= numVertices; j++ {
       if (j > numColumnas) && (j % numColumnas == 1) && (j != i){
-        fmt.Printf("UNO: %d,%d\n", j, i)
         addRelation("grafica", (j - numColumnas), j, 1)
       } else {
         if (((j - numColumnas) == i) && (numVertices % j != 1)){
-          // fmt.Printf("UNO: j - 1 = %d, i = %d \n", j-1, i)
-          fmt.Printf("UNO: %d,%d\n", j, i)
           addRelation("grafica", i, j, 1)
         }else{
           if  (((j - 1) == i) || ((j + 1) == i)) && (j % numColumnas != 0){
-            fmt.Printf("UNO no modulo: %d, %d\n", j, i)
             addRelation("grafica", i, j, 1)
           }else{
-            current := getValue("grafica", i, j)
-            fmt.Printf("Vale at %d, %d: %d", j, i, current)
+            // current := getValue("grafica", i, j)
             if getValue("grafica", i, j) == 0 {
-              fmt.Printf("INFINITO: %d, %d\n", j, i)
               addRelation("grafica", i, j, 2147483647)
             }
           }
@@ -90,7 +84,7 @@ func FloydWarshal() (Grafica, Grafica){
   beginTransaction()
   for i := 1; i <= numVertices; i++ {
     for j := 1; j <= numVertices; j++ {
-      result := getValue("grafica", j, i)
+      result := getValue("grafica", i, j)
       if (result == 2147483647){
         addRelation("recorridos", i, j, 0)
       }else{
