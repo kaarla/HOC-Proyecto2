@@ -42,7 +42,6 @@ func GeneraBaseCuadricula(numDiagonales int) int {
           if  (((j - 1) == i) || ((j + 1) == i)) && (j % numColumnas != 0){
             addRelation("grafica", i, j, 1)
           }else{
-            // current := getValue("grafica", i, j)
             if getValue("grafica", i, j) == 0 {
               addRelation("grafica", i, j, 2147483647)
             }

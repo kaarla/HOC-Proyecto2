@@ -28,6 +28,8 @@ var PorSalvar []int
 //Grafica dirigida sobre la que va a trabajar
 var Dirigida *util.Dirigida
 
+var NumVertices int
+
 
 func CorreHeuristica(grafica string, fuegoInicial []int){
   Dirigida = util.CreaDirigida(Distancias, PorSalvar, len(Distancias))

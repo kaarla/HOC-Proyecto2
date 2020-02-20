@@ -22,10 +22,10 @@ func main() {
     fmt.Println("Uso: \n Para ejecutar ACO sobre el Problema del bombero correr",
      "el comando: \n $ go run main.go problema")
   }else{
+    grafica.GraphDB, err = sql.Open("sqlite3", "databases/Grafica3x3.db")
+    check(err)
     if(os.Args[1] == "grafica"){
       var err error
-      grafica.GraphDB, err = sql.Open("sqlite3", "databases/Grafica3x3.db")
-      check(err)
       errS := grafica.GeneraBaseCuadricula(5)
       fmt.Printf("errS: %d ", errS)
       // grafica := grafica.GeneraCuadricula(25)
@@ -40,6 +40,7 @@ func main() {
       fuegoInicial := []int{}
       grafica := ""
 
+      problema_bombero.NumVertices = 9
       problema_bombero.TotalBomberos = 20
       problema_bombero.BomberosXt = 9
       problema_bombero.HormigasXt = 6

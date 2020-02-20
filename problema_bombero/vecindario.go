@@ -6,6 +6,7 @@ package problema_bombero
   "strings"
   "io/ioutil"
   "strconv"
+  "githug.com/fatih/set"
  )
 
  //arreglo de trayectorias
@@ -35,36 +36,11 @@ func NewVecindario(mapa [][]int) *Vecindario{
 
 func VecindarioCero(grafica string) Vecindario{
   vecindario := Vecindario{}
-  vecindario.Mapa = InitMapa(grafica)
+  // vecindario.Mapa = InitMapa(grafica)
   vecindario.Manzanas = nil
   vecindario.Grado = 5
   vecindario.initManzanas()
   return vecindario
-}
-
-/*
-Inicializa el mapa del vecindario a partir de la gráfica
-que recibe en formato de texto convirtiéndolo en un arreglo bidimensional.
-*/
-func InitMapa(grafica string) [][]int{
-  datos, err := ioutil.ReadFile(grafica)
-  check(err)
-  lineas := strings.Split(string(datos), "\n") //cada línea es una fila de la cuadrícula
-
-  var mapa [][]int = make([][]int, len(lineas))
-  for k := range mapa{
-    mapa[k] = make([]int, len(lineas))
-  }
-  for i := 0; i < len(lineas); i++{
-    linea := strings.Split(string(lineas[i]), ",")
-    for j := 0; j < len(lineas); j++{
-      num, err := strconv.ParseInt(linea[j], 10, 64)
-      check(err)
-      mapa[i][j] = int(num)
-      mapa[j][i] = int(num)
-    }
-  }
-  return mapa
 }
 
 /*
@@ -85,26 +61,30 @@ func initManzana(id int) Manzana{
   y se agrega el arreglo de manzanas al vecindario.
 */
 func (vecindario *Vecindario) initManzanas(){
-  mapa := vecindario.Mapa
-  var manzanas []Manzana = make ([]Manzana, len(mapa))
-  for i := 0; i < len(mapa); i++{
-    vecinos := []int{}
-    manzanas[i] = initManzana(i)
-    for j := 0; j < len(mapa); j++{
-      if(mapa[i][j] == 1.0 && i != j){
-        vecinos = append(vecinos, j)
+  grafica.beginTransaction()
+  for i := 0; i < ; i++{
+    vecinos := ""
+    for j := 0; j < len(NumVertices); j++{
+      sonVecinos = grafica.getValue("grafica", i, j)
+      if(sonVecinos == 1){
+        vecinos += strconv.Itoa(j) + ", " //append(vecinos, j)
       }
     }
-    manzanas[i].Vecinos = vecinos
+    query := fmt.Sprintf("INSERT INTO manzanas (ID, ESTADO, VECINOS) VALUES (%d, 0, %s);", i, vecinos)
+    _, err := GraphDB.Exec(query)
     vecindario.Manzanas = manzanas
   }
+  grafica.endTransaction()
 }
 
 /*
   Cambia el estado de una manzana.
 */
-func (manzana *Manzana) SetEstado(estado int){
-  manzana.Estado = estado
+func (manzana *Manzana) SetEstado(estado int, id int){
+  grafica.beginTransaction()
+  query := fmt.Sprintf("UPDATE grafica SET ESTADO = %d WHERE ID = %d;" estado, id)
+  _, err := GraphDB.Exec(query)
+  grafica.endTransaction()
 }
 
 /*
@@ -137,65 +117,48 @@ func (vecindario *Vecindario) PropagaFuego(){
 }
 
 /*
-  Devuelve un arreglo con el id de las manzanas incendiadas
-*/
-func (vecindario *Vecindario) GetIncendiados() []int{
-  res := []int{}
-  for i := 0; i < len(vecindario.Manzanas); i++{
-    if(vecindario.Manzanas[i].Estado == 2){
-      res = append(res, i)
-    }
-  }
-  return res
-}
-
-/*
-  Devuelve un arreglo con el id de las manzanas a salvo
+Devuelve un arreglo con el id de las manzanas a salvo
 */
 func (vecindario *Vecindario) GetASalvo() []int{
-  res := []int{}
-  i := 0
-  for _, b := range vecindario.Manzanas{
-    if(b.Estado == 0){
-      res = append(res, i)
-    }
-    i++
-  }
-  return res
+  return consultaPorEstado(0)
 }
 
 /*
-  Devuelve un arreglo con el id de las manzanas defendidas
+Devuelve un arreglo con el id de las manzanas defendidas
 */
 func (vecindario *Vecindario) GetDefendidos() []int{
-  res := []int{}
-  for i := 0; i < len(vecindario.Manzanas); i++{
-    if(vecindario.Manzanas[i].Estado == 1){
-      res = append(res, i)
-    }
-  }
-  return res
+  return consultaPorEstado(1)
+}
+
+/*
+  Devuelve un arreglo con el id de las manzanas incendiadas
+*/
+func (vecindario *Vecindario) GetIncendiados() indices []int{
+  return consultaPorEstado(2)
 }
 
 /*
   Devuelve un arreglo con el id de las manzanas vecinas de incendiados
   que no han sido defendidas ni incendiadas
 */
-func (vecindario *Vecindario) GetPorQuemar() []int{
+func (vecindario *Vecindario) GetPorQuemar() []interface{
   incendiados := vecindario.GetIncendiados()
-  candidatos := []int{}
-  for i := 0; i < len(incendiados); i++{
-    v := vecindario.Manzanas[incendiados[i]].Vecinos
-    for j := 0; j < len(v); j++{
-      m := vecindario.Manzanas[v[j]]
-      if(m.Estado == 0 && !util.Contiene(candidatos, v[j])){
-        candidatos = append(candidatos, v[j])
-      }
+  conjuntoCandidatos := set.New(set.ThreadSafe)
+  for _, id := range incendiados {
+    vecinos := getVecinos(id)
+    query := fmt.Sprintf("SELECT ID FROM manzanas WHERE ID IN (%s) AND ESTADO = 0;", vecinos[:last])
+    result, err := GraphDB.Query(query)
+    check(err)
+    var value int
+    defer result.Close()
+    for result.Next() {
+      err = result.Scan(&value)
+      conjuntoCandidatos.Add(value)
     }
   }
-  fmt.Println("")
-  return candidatos
+  return conjuntoCandidatos.List()
 }
+
 
 /*
   Devuelve una copia del vecindario sobre el que se aplica.
@@ -218,30 +181,6 @@ func check(e error){
 }
 
 /*
-  initTrayectorias
-*/
-func initTrayectorias(grafica string) [][]int{
-  datos, err := ioutil.ReadFile(grafica)
-  check(err)
-  lineas := strings.Split(string(datos), "\n") //cada línea es una fila de la cuadrícula
-
-  var mapa [][]int = make([][]int, len(lineas) - 1)
-  for k := range mapa{
-    mapa[k] = make([]int, len(lineas) - 1)
-  }
-  for i := 0; i < len(lineas) - 1; i++{
-    linea := strings.Split(string(lineas[i]), ",")
-    for j := 0; j < len(lineas) - 1; j++{
-      num, err := strconv.ParseInt(linea[j], 10, 64)
-      check(err)
-      mapa[i][j] = int(num)
-      mapa[j][i] = int(num)
-    }
-  }
-  return mapa
-}
-
-/*
   Evalúa "qué tan bueno" es un escenario tomando en cuenta una relación
   entre los incendios y el número de bomberos utilizados.
 */
@@ -250,6 +189,32 @@ func (vecindario *Vecindario) Evalua(numBomberos int) float64{
   defendidos := float64(len(vecindario.GetDefendidos()))
   return (quemados / float64(len(vecindario.Manzanas))) * (defendidos / float64(numBomberos))
 }
+
+func consultaPorEstado(estado int) indices []int{
+  query := fmt.Sprintf("SELECT ID FROM manzanas WHERE ESTADO = %d;" estado)
+  result, err := GraphDB.Query(query)
+  check(err)
+  var value int
+  defer result.Close()
+  for result.Next() {
+    err = result.Scan(&value)
+    indices = append(indices, value)
+  }
+  return
+}
+
+func consultaEstado(id int) estado int {
+  query := fmt.Sprintf("SELECT ESTADO FROM manzanas WHERE ID = %d;", id)
+  result, err := GraphDB.Query(query)
+  check(err)
+  var value int
+  defer result.Close()
+  result.Next()
+  err = result.Scan(&value)
+
+  return int(value)
+}
+
 
 /*
   Formato para imprimir una manzana con su color con javascript.
@@ -270,6 +235,26 @@ func (vecindario *Vecindario) PrintManzana(){
     }
      fmt.Println(m.Id, " {color:", color)
   }
+}
+
+func getVecinos(i int) string{
+  vecinos := ""
+  grafica.beginTransaction()
+  for j := 1; j <= NumVertices; j++ {
+    query := fmt.Sprintf("SELECT `%d` FROM grafica WHERE ID = %d;", i, j)
+    result, err := GraphDB.Query(query)
+    check(err)
+    var value int
+    defer result.Close()
+    result.Next()
+    err = result.Scan(&value)
+    check(err)
+    if value == 1 {
+      vecinos += strconv.Itoa(j) + ","
+    }
+  }
+  grafica.endTransaction()
+  return result
 }
 
 /*
