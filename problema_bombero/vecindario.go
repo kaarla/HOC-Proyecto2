@@ -17,7 +17,7 @@ var Distancias [][]int
 
  type Vecindario struct{
    Manzanas []Manzana
-   Mapa [][]int
+   // Mapa [][]int
    Grado int
  }
 
@@ -30,7 +30,7 @@ type Manzana struct{
 
 func NewVecindario(mapa [][]int) *Vecindario{
   vec := Vecindario{}
-  vec.Mapa = mapa
+  // vec.Mapa = mapa
   return &vec
 }
 

@@ -116,27 +116,17 @@ func FloydWarshal() (Grafica, Grafica){
 */
 func (grafica *Grafica) ImprimeGrafica(nombre string){
   s := ""
-  // for i := 0; i < len(grafica.Nodos); i++{
-  //   for j := 0; j < len(grafica.Nodos); j++{
-  //     s += strconv.Itoa(grafica.Nodos[i][j]) + ","
-  //   }
-  //   s = s[:len(s) - 1]
-  //   s += "\n"
-  // }
-  // s = s[:len(s) - 1]
   f, _ := os.Create(nombre)
-  // check(err)
-  // defer f.Close()
   n3, _ := f.WriteString(s)
   fmt.Printf("se escribieron %d bytes en %s\n", n3, nombre)
 }
 
 func addRelation(name string, i int, j int, dist int){
-  query := fmt.Sprintf("UPDATE %s SET `%d` = %d WHERE ID = %d;", name, i, dist, j)
+  query := fmt.Sprintf("INSERT INTO %s (VERTICEA, VERTICEB, DISTANCIA) VALUES (%d, %d, %d);", name, i, j, dist)
   _, err := GraphDB.Exec(query)
   check(err)
-  query = fmt.Sprintf("UPDATE %s SET `%d` = %d WHERE ID = %d;", name, j, dist, i)
-  _, err = GraphDB.Exec(query)
+  query := fmt.Sprintf("INSERT INTO %s (VERTICEA, VERTICEB, DISTANCIA) VALUES (%d, %d, %d);", name, i, j, dist)
+  _, err := GraphDB.Exec(query)
   check(err)
 }
 
