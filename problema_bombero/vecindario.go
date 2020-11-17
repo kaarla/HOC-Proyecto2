@@ -5,8 +5,8 @@ package problema_bombero
   "fmt"
   "strings"
   "io/ioutil"
+  "github.com/fatih/set"
   "strconv"
-  "githug.com/fatih/set"
  )
 
  //arreglo de trayectorias
