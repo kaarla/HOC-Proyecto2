@@ -90,7 +90,8 @@ func (esc *Escenario) GetCandidatos() []*Candidato{
     incidencias := util.Cuenta(candidatosBrut, actual)
     if(!util.Contiene(PorSalvar, actual)){
       newCand := NewCandidato(actual, incidencias)
-      newCand.FindMins(esc.Ve.Mapa[actual], esc.Ve.Manzanas)
+      //// TODO: adaptar busqueda en mapa a busqueda en BD
+      // newCand.FindMins(esc.Ve.Mapa[actual], esc.Ve.Manzanas)
       newCand.GetPrioridad(esc);
       candidatos = append(candidatos, newCand)
     }
