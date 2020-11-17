@@ -29,7 +29,7 @@ esta gráfica será la matriz de distancias
 */
 func GeneraBaseCuadricula(numDiagonales int) int {
   creaBase("grafica")
-  beginTransaction()
+  BeginTransaction()
   // creaBase("recorridos")
   for i := 1; i <= numVertices; i++ {
     for j := 1; j <= numVertices; j++ {
@@ -42,7 +42,7 @@ func GeneraBaseCuadricula(numDiagonales int) int {
           if  (((j - 1) == i) || ((j + 1) == i)) && (j % numColumnas != 0){
             addRelation("grafica", i, j, 1)
           }else{
-            if getValue("grafica", i, j) == 0 {
+            if GetValue("grafica", i, j) == 0 {
               addRelation("grafica", i, j, 2147483647)
             }
           }
@@ -54,7 +54,7 @@ func GeneraBaseCuadricula(numDiagonales int) int {
     addRelation("grafica", i, i, 0)
   }
   DiagonalesRandom(numDiagonales)
-  endTransaction()
+  EndTransaction()
   return 1
 }
 
@@ -80,10 +80,10 @@ func DiagonalesRandom(numDiagonales int){
 
 func FloydWarshal() (Grafica, Grafica){
   creaBase("recorridos")
-  beginTransaction()
+  BeginTransaction()
   for i := 1; i <= numVertices; i++ {
     for j := 1; j <= numVertices; j++ {
-      result := getValue("grafica", i, j)
+      result := GetValue("grafica", i, j)
       if (result == 2147483647){
         addRelation("recorridos", i, j, 0)
       }else{
@@ -94,10 +94,10 @@ func FloydWarshal() (Grafica, Grafica){
   for k := 1; k <= numVertices; k++ {
     for i := 1; i <= numVertices; i++ {
       for j := 1; j <= numVertices; j++ {
-        distIJ := getValue("grafica", i, j)
-        distIK := getValue("grafica", i, k)
-        distKJ := getValue("grafica", k, j)
-        pathKJ := getValue("recorridos", k, j)
+        distIJ := GetValue("grafica", i, j)
+        distIK := GetValue("grafica", i, k)
+        distKJ := GetValue("grafica", k, j)
+        pathKJ := GetValue("recorridos", k, j)
         if(distIJ > distIK + distKJ) {
           addRelation("grafica", i, j, distIK + distKJ)
           addRelation("recorridos", i, j, pathKJ)
@@ -105,7 +105,7 @@ func FloydWarshal() (Grafica, Grafica){
       }
     }
   }
-  endTransaction()
+  EndTransaction()
   dist := Grafica{}
   recorridos := Grafica{}
   return dist, recorridos
@@ -140,7 +140,7 @@ func addRelation(name string, i int, j int, dist int){
   check(err)
 }
 
-func getValue(name string, i int, j int) int{
+func GetValue(name string, i int, j int) int{
   query := fmt.Sprintf("SELECT `%d` FROM %s WHERE ID = %d;", i, name, j)
   result, err := GraphDB.Query(query)
   check(err)
@@ -173,13 +173,13 @@ func creaBase(name string) {
   }
 }
 
-func beginTransaction()  {
+func BeginTransaction()  {
   queryStart := fmt.Sprintf("BEGIN TRANSACTION;")
   _, err := GraphDB.Exec(queryStart)
   check(err)
 }
 
-func endTransaction() {
+func EndTransaction() {
   queryEnd := fmt.Sprintf("END TRANSACTION;")
   _, err := GraphDB.Exec(queryEnd)
   check(err)

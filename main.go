@@ -1,4 +1,4 @@
-package main
+  package main
 import(
   "database/sql"
   "fmt"
@@ -22,10 +22,10 @@ func main() {
     fmt.Println("Uso: \n Para ejecutar ACO sobre el Problema del bombero correr",
      "el comando: \n $ go run main.go problema")
   }else{
-    grafica.GraphDB, err = sql.Open("sqlite3", "databases/Grafica3x3.db")
-    check(err)
+    sql.Open("sqlite3", "databases/Grafica3x3.db")
+    // check(err)
     if(os.Args[1] == "grafica"){
-      var err error
+      // var err error
       errS := grafica.GeneraBaseCuadricula(5)
       fmt.Printf("errS: %d ", errS)
       // grafica := grafica.GeneraCuadricula(25)
@@ -50,9 +50,9 @@ func main() {
       problema_bombero.PorSalvar = []int{300, 400, 850, 410}
 
       grafica = "graficas/distancias30x30.txt"
-      trayectorias := "graficas/recorridos30x30.txt"
-      problema_bombero.Distancias = problema_bombero.InitMapa(grafica)
-      problema_bombero.Trayectorias = problema_bombero.InitMapa(trayectorias)
+      // trayectorias := "graficas/recorridos30x30.txt"
+      // problema_bombero.Distancias = problema_bombero.InitMapa(grafica)
+      // problema_bombero.Trayectorias = problema_bombero.InitMapa(trayectorias)
       fuegoInicial = []int{1, 800, 350, 389, 246, 288, 236, 741, 896, 200}
       problema_bombero.CorreHeuristica(grafica, fuegoInicial)
 
