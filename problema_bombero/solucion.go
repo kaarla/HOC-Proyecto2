@@ -10,6 +10,8 @@ type Solucion struct{
   Costo float64
   Factible bool
   Semilla int64
+  CostoIteraciones float64
+  CostoBomberos float64
 }
 
 func NewSolucion() *Solucion{
@@ -28,8 +30,11 @@ func (solucion *Solucion) CalculaCosto(c int, trayectoria []*Escenario){
   danoT := quemadosT / float64(c)
   d := (danoT - dano1)
   b := (bomberosT / float64(TotalBomberos)) * (bomberosT / float64(TotalBomberos))
-  solucion.Costo = (d * b) * float64(c)
+  solucion.Costo = (d * b) * float64(c / 10)
+  solucion.CostoBomberos = d * b
+  solucion.CostoIteraciones = (d * b) * float64(c / 10)
 }
+
 
 func CalculaSolucion(c int, trayectoria []*Escenario, actual *Escenario) *Solucion{
   solucion := NewSolucion()

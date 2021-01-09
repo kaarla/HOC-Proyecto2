@@ -14,7 +14,7 @@ package problema_bombero
  //arreglo de trayectorias
 var Trayectorias [][]int
 //arreglo de distancias
-var Distancias [][]int
+//var Distancias [][]int
 
 
  type Vecindario struct{

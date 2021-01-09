@@ -32,7 +32,7 @@ var NumVertices int
 
 
 func CorreHeuristica(grafica string, fuegoInicial []int){
-  Dirigida = util.CreaDirigida(Distancias, PorSalvar, len(Distancias))
+  //Dirigida = util.CreaDirigida(Distancias, PorSalvar, len(Distancias))
   rand.Seed(Semilla)
   generaciones := 3
   q1 = len(fuegoInicial)

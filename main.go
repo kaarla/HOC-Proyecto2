@@ -1,4 +1,4 @@
-  package main
+package main
 import(
   "database/sql"
   "fmt"
@@ -47,13 +47,13 @@ func main() {
       problema_bombero.Phe = 0.3
       problema_bombero.PheReducion = 0.15
       problema_bombero.Semilla =  9355
-      problema_bombero.PorSalvar = []int{300, 400, 850, 410}
+      problema_bombero.PorSalvar = []int{1}
 
-      grafica = "graficas/distancias30x30.txt"
+      //grafica = "graficas/distancias30x30.txt"
       // trayectorias := "graficas/recorridos30x30.txt"
       // problema_bombero.Distancias = problema_bombero.InitMapa(grafica)
       // problema_bombero.Trayectorias = problema_bombero.InitMapa(trayectorias)
-      fuegoInicial = []int{1, 800, 350, 389, 246, 288, 236, 741, 896, 200}
+      fuegoInicial = []int{8}
       problema_bombero.CorreHeuristica(grafica, fuegoInicial)
 
     }
