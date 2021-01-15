@@ -35,8 +35,8 @@ func main() {
 
     }else if (os.Args[1] == "problema"){
       fuegoInicial := []int{}
-      //grafica := "Grafica3x3.db"
       grafica.GraphDB, _ = sql.Open("sqlite3", "databases/Grafica3x3.db")
+      // check(error)
 
       problema_bombero.NumVertices = 9
       problema_bombero.TotalBomberos = 20

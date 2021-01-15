@@ -44,7 +44,7 @@ func CalculaSolucion(c int, trayectoria []*Escenario, actual *Escenario) *Soluci
   factible := true
   aux := false
   for _, ps := range PorSalvar{
-    if(actual.Ve.Manzanas[ps].Estado == 0){
+    if(ConsultaEstado(ps) == 0){
       aux = true
     }
       factible = factible && aux

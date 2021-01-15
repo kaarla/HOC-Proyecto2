@@ -1,12 +1,9 @@
 package problema_bombero
 
  import(
-  "github.com/kaarla/HOC-Proyecto2/util"
   "github.com/kaarla/HOC-Proyecto2/problema_bombero/grafica"
   "fmt"
-  // "container/list"
   "strings"
-  // "io/ioutil"
   "strconv"
   "github.com/fatih/set"
  )
@@ -93,7 +90,7 @@ func (vecindario *Vecindario) PropagaFuego(){
     estadoManzana := -1
     vecinos := consultaVecinos(incendiados[i])
     for j := 0; j < len(vecinos); j++{
-      estadoManzana = consultaEstado(vecinos[j])
+      estadoManzana = ConsultaEstado(vecinos[j])
       if(estadoManzana == 0){
         SetEstado(2, vecinos[j])
       }
@@ -187,7 +184,7 @@ func consultaPorEstado(estado int) []int{
   return indices
 }
 
-func consultaEstado(id int) int {
+func ConsultaEstado(id int) int {
   query := fmt.Sprintf("SELECT ESTADO FROM manzanas WHERE ID = %d;", id)
   result, err := grafica.GraphDB.Query(query)
   check(err)
@@ -220,23 +217,23 @@ func consultaVecinos(id int) []int{
 /*
   Formato para imprimir una manzana con su color con javascript.
 */
-func (vecindario *Vecindario) PrintManzana(){
-  color := ""
-  for _, m := range vecindario.Manzanas{
-    switch m.Estado {
-    case 0:
-      color = "pink}"
-    case 1:
-      color = "blue}"
-    case 2:
-      color = "red}"
-    }
-    if(util.Contiene(PorSalvar, m.Id)){
-      color = "green}"
-    }
-     fmt.Println(m.Id, " {color:", color)
-  }
-}
+// func (vecindario *Vecindario) PrintManzana(){
+//   color := ""
+//   for _, m := range vecindario.Manzanas{
+//     switch m.Estado {
+//     case 0:
+//       color = "pink}"
+//     case 1:
+//       color = "blue}"
+//     case 2:
+//       color = "red}"
+//     }
+//     if(util.Contiene(PorSalvar, m.Id)){
+//       color = "green}"
+//     }
+//      fmt.Println(m.Id, " {color:", color)
+//   }
+// }
 
 func getVecinos(i int) string{
   vecinos := ""

@@ -53,14 +53,16 @@ func (escenario *Escenario) GetTrayectoria(a int, b int) []int{
   if(a > b){
     a, b = b, a
   }
+  var estado int
   path := []int{}
     a1 := Trayectorias[a][b]
   for a != b && a != a1{
     a1 = a
     a = Trayectorias[a1][b]
-    aux := escenario.Ve.Manzanas[a]
+    estado = ConsultaEstado(a)
+    // aux := escenario.Ve.Manzanas[a]
     if(a != b){
-      if(aux.Estado == 0){
+      if(estado == 0){
         path = append(path, a)
       }else{
         return []int{}
@@ -120,7 +122,8 @@ func CreaEscenario(candidatos []*Candidato, actual *Escenario, distancia int) *E
     }
   }
   for i := 0; i < len(bomberosN); i++{
-    escenario.Ve.Manzanas[bomberosN[i]].Estado = 1
+    SetEstado(1, bomberosN[i])
+    // escenario.Ve.Manzanas[bomberosN[i]].Estado = 1
   }
   escenario.DistanciaAe0 = distancia
   return &escenario

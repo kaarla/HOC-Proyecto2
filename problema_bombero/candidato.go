@@ -41,13 +41,11 @@ func (c *Candidato) FindMins(dists []int, manzanas []Manzana){
 
     if(manzanas[i].Estado == 2 && !auxB){
       minB = grafica.GetValue("distancias", c.Id, manzanas[i].Id)
-      //minB = Distancias[c.Id][manzanas[i].Id]
       c.DistMinB = minB
       auxB = true
     }
     if(util.Contiene(PorSalvar, manzanas[i].Id) && !auxS){
       minS = grafica.GetValue("distancias", c.Id, manzanas[i].Id)
-      //minS = Distancias[c.Id][manzanas[i].Id]
       c.DistMinS = minS
       auxS = true
     }
@@ -121,7 +119,7 @@ func (cand *Candidato) GetPrioridad(esc *Escenario){
   mapeo := make([]int, 0)
   aux := 1;
   for _, v := range porProcesar{
-    if(esc.Ve.Manzanas[idIndiceV].Estado == 2){
+    if(ConsultaEstado(idIndiceV) == 2){
       mapeo[aux]++
     }
     aux++
