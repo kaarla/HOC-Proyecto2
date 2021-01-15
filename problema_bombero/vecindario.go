@@ -12,17 +12,14 @@ package problema_bombero
 var Trayectorias [][]int
 
 
- type Vecindario struct{
+type Vecindario struct{
    Grado int
    Cantidad int
- }
-
-type Manzana struct{
-  Id int
-  Estado int
-  Vecinos []int
+   Incendiados int
+   ASalvo int
+   Defendidos int
+   Estados []int
 }
-
 
 func NewVecindario(mapa [][]int) *Vecindario{
   vec := Vecindario{}
@@ -57,7 +54,7 @@ func (vecindario *Vecindario) initManzanas(){
         vecinos += strconv.Itoa(j) + ", " //append(vecinos, j)
       }
     }
-    query := fmt.Sprintf("INSERT INTO manzanas (ID, ESTADO, VECINOS) VALUES (%d, 0, %s);", i, vecinos)
+    query := fmt.Sprintf("INSERT INTO manzanas (ID, VECINOS) VALUES (%d, 0, %s);", i, vecinos)
     grafica.GraphDB.Exec(query)
   }
   grafica.EndTransaction()

@@ -106,9 +106,6 @@ func FloydWarshal() {
     }
   }
   EndTransaction()
-  // dist := Grafica{}
-  // recorridos := Grafica{}
-  // return dist, recorridos
 }
 
 /*
