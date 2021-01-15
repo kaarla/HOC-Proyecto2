@@ -38,14 +38,13 @@ func (c *Candidato) FindMins(dists []int, manzanas []Manzana){
   auxB := false
   i := 0
   for !(auxB && auxS){
-
-    if(manzanas[i].Estado == 2 && !auxB){
-      minB = grafica.GetValue("distancias", c.Id, manzanas[i].Id)
+    if(ConsultaEstado(i) == 2 && !auxB){
+      minB = grafica.GetValue("distancias", c.Id, i)
       c.DistMinB = minB
       auxB = true
     }
     if(util.Contiene(PorSalvar, manzanas[i].Id) && !auxS){
-      minS = grafica.GetValue("distancias", c.Id, manzanas[i].Id)
+      minS = grafica.GetValue("distancias", c.Id, i)
       c.DistMinS = minS
       auxS = true
     }

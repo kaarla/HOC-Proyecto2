@@ -128,7 +128,7 @@ func addRelation(name string, i int, j int, dist int){
 }
 
 func GetValue(name string, i int, j int) int{
-  query := fmt.Sprintf("SELECT `%d` FROM %s WHERE ID = %d;", i, name, j)
+  query := fmt.Sprintf("SELECT `%d` FROM %s WHERE ID = %d;", i + 1, name, j + 1)
   result, err := GraphDB.Query(query)
   check(err)
   var value int
