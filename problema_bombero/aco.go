@@ -31,12 +31,12 @@ var Dirigida *util.Dirigida
 var NumVertices int
 
 
-func CorreHeuristica(grafica string, fuegoInicial []int){
+func CorreHeuristica(fuegoInicial []int){
   //Dirigida = util.CreaDirigida(Distancias, PorSalvar, len(Distancias))
   rand.Seed(Semilla)
   generaciones := 3
   q1 = len(fuegoInicial)
-  vecindarioCero := VecindarioCero(grafica)
+  vecindarioCero := VecindarioCero()
   for _, i := range fuegoInicial{
     vecindarioCero.InitFuegoEspecifico(i)
   }

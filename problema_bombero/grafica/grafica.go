@@ -78,7 +78,7 @@ func DiagonalesRandom(numDiagonales int){
   }
 }
 
-func FloydWarshal() (Grafica, Grafica){
+func FloydWarshal() {
   creaBase("recorridos")
   BeginTransaction()
   for i := 1; i <= numVertices; i++ {
@@ -106,9 +106,9 @@ func FloydWarshal() (Grafica, Grafica){
     }
   }
   EndTransaction()
-  dist := Grafica{}
-  recorridos := Grafica{}
-  return dist, recorridos
+  // dist := Grafica{}
+  // recorridos := Grafica{}
+  // return dist, recorridos
 }
 
 /*
@@ -136,8 +136,6 @@ func GetValue(name string, i int, j int) int{
   result.Next()
   err = result.Scan(&value)
 
-  // intResult, err := result.RowsAffected()
-  // check(err)
   return int(value)
 }
 
@@ -171,3 +169,8 @@ func EndTransaction() {
   _, err := GraphDB.Exec(queryEnd)
   check(err)
 }
+
+// func Connect(name string){
+//   GraphDB, err = sql.Open("sqlite3", name)
+//
+// }

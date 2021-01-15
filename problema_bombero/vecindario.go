@@ -5,7 +5,7 @@ package problema_bombero
   "github.com/kaarla/HOC-Proyecto2/problema_bombero/grafica"
   "fmt"
   // "container/list"
-  // "strings"
+  "strings"
   // "io/ioutil"
   "strconv"
   "github.com/fatih/set"
@@ -13,14 +13,11 @@ package problema_bombero
 
  //arreglo de trayectorias
 var Trayectorias [][]int
-//arreglo de distancias
-//var Distancias [][]int
 
 
  type Vecindario struct{
-   Manzanas []Manzana
-   // Mapa [][]int
    Grado int
+   Cantidad int
  }
 
 type Manzana struct{
@@ -32,14 +29,11 @@ type Manzana struct{
 
 func NewVecindario(mapa [][]int) *Vecindario{
   vec := Vecindario{}
-  // vec.Mapa = mapa
   return &vec
 }
 
-func VecindarioCero(grafica string) Vecindario{
+func VecindarioCero() Vecindario{
   vecindario := Vecindario{}
-  // vecindario.Mapa = InitMapa(grafica)
-  vecindario.Manzanas = nil
   vecindario.Grado = 5
   vecindario.initManzanas()
   return vecindario
@@ -50,13 +44,6 @@ func VecindarioCero(grafica string) Vecindario{
   mismo que un espacio en el mapa.
   Se inicializa con su id únicamente y se marca como "a salvo".
 */
-func initManzana(id int) Manzana{
-  manzana := Manzana{}
-  manzana.Id = id
-  manzana.Estado = 0
-  manzana.Vecinos = nil
-  return manzana
-}
 
 /*
   Se inicializan todas las manzanas con su respectiva lista de vecinos
@@ -75,7 +62,6 @@ func (vecindario *Vecindario) initManzanas(){
     }
     query := fmt.Sprintf("INSERT INTO manzanas (ID, ESTADO, VECINOS) VALUES (%d, 0, %s);", i, vecinos)
     grafica.GraphDB.Exec(query)
-    // vecindario.Manzanas = manzanas
   }
   grafica.EndTransaction()
 }
@@ -83,9 +69,9 @@ func (vecindario *Vecindario) initManzanas(){
 /*
   Cambia el estado de una manzana.
 */
-func (manzana *Manzana) SetEstado(estado int, id int){
+func SetEstado(estado int, id int){
   grafica.BeginTransaction()
-  query := fmt.Sprintf("UPDATE grafica SET ESTADO = %d WHERE ID = %d;", estado, id)
+  query := fmt.Sprintf("UPDATE manzanas SET ESTADO = %d WHERE ID = %d;", estado, id)
   grafica.GraphDB.Exec(query)
   grafica.EndTransaction()
 }
@@ -94,7 +80,7 @@ func (manzana *Manzana) SetEstado(estado int, id int){
   mmmh, do I really need this?
 */
 func (vecindario *Vecindario) InitFuegoEspecifico(manzana int){
-    vecindario.Manzanas[manzana].Estado = 2
+    SetEstado(2, manzana)
 }
 
 /*
@@ -102,18 +88,14 @@ func (vecindario *Vecindario) InitFuegoEspecifico(manzana int){
 */
 func (vecindario *Vecindario) PropagaFuego(){
   incendiados := vecindario.GetIncendiados()
-  // defendidos := vecindario.GetDefendidos()
-  // asalvo := vecindario.GetASalvo()
-  // // fmt.Println("<p> incenciados", incendiados, "</p>")
-  // // fmt.Println("<p> defendidos", defendidos, "</p>")
-  // // fmt.Println("<p> asalvo", asalvo, "</p>")
-  // // fmt.Println("<p>vecinos de 3, ", vecindario.Manzanas[3].Vecinos, "</p>")
+
   for i := 0; i < len(incendiados); i++{
-    v := vecindario.Manzanas[incendiados[i]].Vecinos
-    for j := 0; j < len(v); j++{
-      m := vecindario.Manzanas[v[j]]
-      if(m.Estado == 0){
-        vecindario.Manzanas[v[j]].Estado = 2
+    estadoManzana := -1
+    vecinos := consultaVecinos(incendiados[i])
+    for j := 0; j < len(vecinos); j++{
+      estadoManzana = consultaEstado(vecinos[j])
+      if(estadoManzana == 0){
+        SetEstado(2, vecinos[j])
       }
     }
   }
@@ -168,8 +150,6 @@ func (vecindario *Vecindario) GetPorQuemar() []interface{}{
 */
 func(vecindario *Vecindario) Copia() Vecindario{
   copia := Vecindario{}
-  // copia.Mapa = vecindario.Mapa
-  copia.Manzanas = vecindario.Manzanas
   copia.Grado = vecindario.Grado
   return copia
 }
@@ -190,7 +170,7 @@ func check(e error){
 func (vecindario *Vecindario) Evalua(numBomberos int) float64{
   quemados := float64(len(vecindario.GetIncendiados()))
   defendidos := float64(len(vecindario.GetDefendidos()))
-  return (quemados / float64(len(vecindario.Manzanas))) * (defendidos / float64(numBomberos))
+  return (quemados / float64(vecindario.Cantidad)) * (defendidos / float64(numBomberos))
 }
 
 func consultaPorEstado(estado int) []int{
@@ -217,6 +197,23 @@ func consultaEstado(id int) int {
   err = result.Scan(&value)
 
   return int(value)
+}
+func consultaVecinos(id int) []int{
+  query := fmt.Sprintf("SELECT VECINOS FROM manzanas WHERE ID = %d;", id)
+  result, _ := grafica.GraphDB.Query(query)
+  var value string
+  defer result.Close()
+  result.Next()
+  // err = result.Scan(&value)
+
+  values := strings.Split(value, ", ")
+  var vecinos []int
+  var number int
+  for i, _ := range values{
+    number, _ = strconv.Atoi(values[i])
+    vecinos = append(vecinos, number)
+  }
+  return vecinos
 }
 
 
@@ -265,62 +262,62 @@ func getVecinos(i int) string{
 /*
   Para dar formato de SVG.
 */
-func (vecindario *Vecindario) PrintSVG(){
-    x := 5
-    y := 5
-    numColumnas := 3
-    h := 300
-    color := ""
-    switch len(vecindario.Manzanas) {
-    case 9:
-      numColumnas = 3
-      h = 250
-    case 50:
-      numColumnas = 5
-      h =600
-    case 100:
-      numColumnas = 10
-      h = 600
-    case 1000:
-      numColumnas = 40
-      h = 1500
-    }
-    fmt.Printf("<svg height=\"%d\" width=\"2000\">\n<g font-size=\"10\" font-family=\"sans-serif\" fill=\"black\" stroke=\"none\">\n", h)
-    // fmt.Println("------------------------", len(vecindario.Manzanas))
-    for _, m := range vecindario.Manzanas{
-      switch m.Estado {
-      case 0:
-        color = "pink"
-      case 1:
-        color = "blue"
-      case 2:
-        color = "red"
-      }
-      if(util.Contiene(PorSalvar, m.Id)){
-        color = "green"
-      }
-      // fmt.Println("m.Id", "numColumnas", m.Id, numColumnas)
-      if(m.Id % numColumnas == 0){
-        x = 5
-        y += 50
-      }
-      fmt.Printf("<circle id=\"point%d\" cx=\"%d\" cy=\"%d\" r=\"6\" fill=\"%s\" stroke=\"%s\" />\n",
-        m.Id, x, y, color, color)
-      fmt.Printf("<text x=\"%d\" y=\"%d\" dy=\"%d\">%d</text>\n", x, y, -10, m.Id)
-      for _, n := range m.Vecinos{
-        switch n {
-        case m.Id + 1:
-          fmt.Printf("<path id=\"line%d%d\" d=\"M %d %d l %d %d\" stroke=\"black\" stroke-width=\"3\" />\n",
-             m.Id, n, x, y, 47, 0)
-        case m.Id + numColumnas:
-          fmt.Printf("<path id=\"line%d%d\" d=\"M %d %d l %d %d\" stroke=\"black\" stroke-width=\"3\" />\n",
-             m.Id, n, x, y, 0, 47)
-        case m.Id + numColumnas + 1:
-          fmt.Printf("<path id=\"line%d%d\" d=\"M %d %d l %d %d\" stroke=\"black\" stroke-width=\"3\" />\n",
-             m.Id, n, x, y, 47, 47)
-        }
-      }
-      x += 50
-    }
-  fmt.Println("</g>\n</svg>")
-}
+// func (vecindario *Vecindario) PrintSVG(){
+//     x := 5
+//     y := 5
+//     numColumnas := 3
+//     h := 300
+//     color := ""
+//     switch len(vecindario.Manzanas) {
+//     case 9:
+//       numColumnas = 3
+//       h = 250
+//     case 50:
+//       numColumnas = 5
+//       h =600
+//     case 100:
+//       numColumnas = 10
+//       h = 600
+//     case 1000:
+//       numColumnas = 40
+//       h = 1500
+//     }
+//     fmt.Printf("<svg height=\"%d\" width=\"2000\">\n<g font-size=\"10\" font-family=\"sans-serif\" fill=\"black\" stroke=\"none\">\n", h)
+//     // fmt.Println("------------------------", len(vecindario.Manzanas))
+//     for _, m := range vecindario.Manzanas{
+//       switch m.Estado {
+//       case 0:
+//         color = "pink"
+//       case 1:
+//         color = "blue"
+//       case 2:
+//         color = "red"
+//       }
+//       if(util.Contiene(PorSalvar, m.Id)){
+//         color = "green"
+//       }
+//       // fmt.Println("m.Id", "numColumnas", m.Id, numColumnas)
+//       if(m.Id % numColumnas == 0){
+//         x = 5
+//         y += 50
+//       }
+//       fmt.Printf("<circle id=\"point%d\" cx=\"%d\" cy=\"%d\" r=\"6\" fill=\"%s\" stroke=\"%s\" />\n",
+//         m.Id, x, y, color, color)
+//       fmt.Printf("<text x=\"%d\" y=\"%d\" dy=\"%d\">%d</text>\n", x, y, -10, m.Id)
+//       for _, n := range m.Vecinos{
+//         switch n {
+//         case m.Id + 1:
+//           fmt.Printf("<path id=\"line%d%d\" d=\"M %d %d l %d %d\" stroke=\"black\" stroke-width=\"3\" />\n",
+//              m.Id, n, x, y, 47, 0)
+//         case m.Id + numColumnas:
+//           fmt.Printf("<path id=\"line%d%d\" d=\"M %d %d l %d %d\" stroke=\"black\" stroke-width=\"3\" />\n",
+//              m.Id, n, x, y, 0, 47)
+//         case m.Id + numColumnas + 1:
+//           fmt.Printf("<path id=\"line%d%d\" d=\"M %d %d l %d %d\" stroke=\"black\" stroke-width=\"3\" />\n",
+//              m.Id, n, x, y, 47, 47)
+//         }
+//       }
+//       x += 50
+//     }
+//   fmt.Println("</g>\n</svg>")
+// }

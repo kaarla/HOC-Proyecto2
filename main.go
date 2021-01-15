@@ -19,26 +19,24 @@ func check(e error) {
 
 func main() {
   if(len(os.Args) <= 1){
-    fmt.Println("Uso: \n Para ejecutar ACO sobre el Problema del bombero correr",
+    fmt.Println("Uso: \n Para ejecutar ACO sobre el Problema del bombero ejecuta",
      "el comando: \n $ go run main.go problema")
   }else{
     sql.Open("sqlite3", "databases/Grafica3x3.db")
-    // check(err)
+
     if(os.Args[1] == "grafica"){
-      // var err error
       errS := grafica.GeneraBaseCuadricula(5)
       fmt.Printf("errS: %d ", errS)
-      // grafica := grafica.GeneraCuadricula(25)
-      // grafica.ImprimeGrafica("graficas/basica5x5.txt")
 
-      distancias, recorridos := grafica.FloydWarshal()
-      distancias.ImprimeGrafica("graficas/distancias75x75.txt")
-      recorridos.ImprimeGrafica("graficas/recorridos75x75.txt")
+      grafica.FloydWarshal()
+      // distancias.ImprimeGrafica("graficas/distancias75x75.txt")
+      // recorridos.ImprimeGrafica("graficas/recorridos75x75.txt")
 
 
     }else if (os.Args[1] == "problema"){
       fuegoInicial := []int{}
-      grafica := ""
+      //grafica := "Grafica3x3.db"
+      grafica.GraphDB, _ = sql.Open("sqlite3", "databases/Grafica3x3.db")
 
       problema_bombero.NumVertices = 9
       problema_bombero.TotalBomberos = 20
@@ -49,12 +47,8 @@ func main() {
       problema_bombero.Semilla =  9355
       problema_bombero.PorSalvar = []int{1}
 
-      //grafica = "graficas/distancias30x30.txt"
-      // trayectorias := "graficas/recorridos30x30.txt"
-      // problema_bombero.Distancias = problema_bombero.InitMapa(grafica)
-      // problema_bombero.Trayectorias = problema_bombero.InitMapa(trayectorias)
       fuegoInicial = []int{8}
-      problema_bombero.CorreHeuristica(grafica, fuegoInicial)
+      problema_bombero.CorreHeuristica(fuegoInicial)
 
     }
   }

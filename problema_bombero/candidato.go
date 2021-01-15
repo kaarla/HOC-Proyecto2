@@ -2,6 +2,7 @@ package problema_bombero
 import(
   "fmt"
   "github.com/kaarla/HOC-Proyecto2/util"
+  "github.com/kaarla/HOC-Proyecto2/problema_bombero/grafica"
   "math/rand"
 )
 
@@ -39,12 +40,14 @@ func (c *Candidato) FindMins(dists []int, manzanas []Manzana){
   for !(auxB && auxS){
 
     if(manzanas[i].Estado == 2 && !auxB){
-      minB = Distancias[c.Id][manzanas[i].Id]
+      minB = grafica.GetValue("distancias", c.Id, manzanas[i].Id)
+      //minB = Distancias[c.Id][manzanas[i].Id]
       c.DistMinB = minB
       auxB = true
     }
     if(util.Contiene(PorSalvar, manzanas[i].Id) && !auxS){
-      minS = Distancias[c.Id][manzanas[i].Id]
+      minS = grafica.GetValue("distancias", c.Id, manzanas[i].Id)
+      //minS = Distancias[c.Id][manzanas[i].Id]
       c.DistMinS = minS
       auxS = true
     }
