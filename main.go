@@ -22,7 +22,7 @@ func main() {
     fmt.Println("Uso: \n Para ejecutar ACO sobre el Problema del bombero ejecuta",
      "el comando: \n $ go run main.go problema")
   }else{
-    sql.Open("sqlite3", "databases/Grafica3x3.db")
+    sql.Open("sqlite3", "databases/Grafica4x4.db")
 
     if(os.Args[1] == "grafica"){
       errS := grafica.GeneraBaseCuadricula(5)

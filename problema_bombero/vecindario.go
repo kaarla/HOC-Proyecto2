@@ -18,7 +18,12 @@ type Vecindario struct{
    Incendiados int
    ASalvo int
    Defendidos int
-   Estados []int
+   Manzana []int
+}
+
+type Manzana struct{
+  Id int
+  Estado int
 }
 
 func NewVecindario(mapa [][]int) *Vecindario{

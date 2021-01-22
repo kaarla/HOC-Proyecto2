@@ -8,9 +8,9 @@ import (
 )
 
 var(
-  numVertices = 9
-  numfilas = 3
-  numColumnas = 3
+  numVertices = 16
+  numfilas = 4
+  numColumnas = 4
 )
 
 var GraphDB *sql.DB
