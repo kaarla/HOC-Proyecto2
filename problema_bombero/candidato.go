@@ -31,19 +31,19 @@ func NewCandidato(id int, t int) *Candidato{
 /*
   Encuentra el Id de los vertices mas cercanos en fuego y por salvar del candidato
 */
-func (c *Candidato) FindMins(dists []int, manzanas []Manzana){
+func (c *Candidato) FindMins(vecindario Vecindario){
   var minS int
   var minB int
   auxS := false
   auxB := false
   i := 0
   for !(auxB && auxS){
-    if(ConsultaEstado(i) == 2 && !auxB){
+    if(vecindario.ConsultaEstado(i) == 2 && !auxB){
       minB = grafica.GetValue("distancias", c.Id, i)
       c.DistMinB = minB
       auxB = true
     }
-    if(util.Contiene(PorSalvar, manzanas[i].Id) && !auxS){
+    if(util.Contiene(PorSalvar, vecindario.Manzanas[i].Id) && !auxS){
       minS = grafica.GetValue("distancias", c.Id, i)
       c.DistMinS = minS
       auxS = true
@@ -118,7 +118,7 @@ func (cand *Candidato) GetPrioridad(esc *Escenario){
   mapeo := make([]int, 0)
   aux := 1;
   for _, v := range porProcesar{
-    if(ConsultaEstado(idIndiceV) == 2){
+    if(esc.Ve.ConsultaEstado(idIndiceV) == 2){
       mapeo[aux]++
     }
     aux++

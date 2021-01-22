@@ -166,8 +166,3 @@ func EndTransaction() {
   _, err := GraphDB.Exec(queryEnd)
   check(err)
 }
-
-// func Connect(name string){
-//   GraphDB, err = sql.Open("sqlite3", name)
-//
-// }

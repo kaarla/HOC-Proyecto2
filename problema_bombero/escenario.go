@@ -59,7 +59,7 @@ func (escenario *Escenario) GetTrayectoria(a int, b int) []int{
   for a != b && a != a1{
     a1 = a
     a = Trayectorias[a1][b]
-    estado = ConsultaEstado(a)
+    estado = escenario.Ve.ConsultaEstado(a)
     // aux := escenario.Ve.Manzanas[a]
     if(a != b){
       if(estado == 0){
@@ -92,8 +92,7 @@ func (esc *Escenario) GetCandidatos() []*Candidato{
     incidencias := util.Cuenta(candidatosBrut, actual)
     if(!util.Contiene(PorSalvar, actual)){
       newCand := NewCandidato(actual, incidencias)
-      //// TODO: adaptar busqueda en mapa a busqueda en BD
-      // newCand.FindMins(esc.Ve.Mapa[actual], esc.Ve.Manzanas)
+      newCand.FindMins(esc.Ve)
       newCand.GetPrioridad(esc);
       candidatos = append(candidatos, newCand)
     }
@@ -122,7 +121,7 @@ func CreaEscenario(candidatos []*Candidato, actual *Escenario, distancia int) *E
     }
   }
   for i := 0; i < len(bomberosN); i++{
-    SetEstado(1, bomberosN[i])
+    escenario.Ve.Manzanas[bomberosN[i]].SetEstado(1)
     // escenario.Ve.Manzanas[bomberosN[i]].Estado = 1
   }
   escenario.DistanciaAe0 = distancia

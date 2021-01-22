@@ -3,9 +3,10 @@ package problema_bombero
  import(
   "github.com/kaarla/HOC-Proyecto2/problema_bombero/grafica"
   "fmt"
+  "github.com/kaarla/HOC-Proyecto2/util"
   "strings"
   "strconv"
-  "github.com/fatih/set"
+  // "github.com/fatih/set"
  )
 
  //arreglo de trayectorias
@@ -18,7 +19,7 @@ type Vecindario struct{
    Incendiados int
    ASalvo int
    Defendidos int
-   Manzana []int
+   Manzanas []Manzana
 }
 
 type Manzana struct{
@@ -43,43 +44,51 @@ func VecindarioCero() Vecindario{
   mismo que un espacio en el mapa.
   Se inicializa con su id únicamente y se marca como "a salvo".
 */
+func initManzana(id int) Manzana{
+  manzana := Manzana{}
+  manzana.Id = id
+  manzana.Estado = 0
+  return manzana
+}
 
 /*
   Se inicializan todas las manzanas con su respectiva lista de vecinos
   y se agrega el arreglo de manzanas al vecindario.
 */
 func (vecindario *Vecindario) initManzanas(){
+  var manzanas []Manzana = make ([]Manzana, NumVertices)
+  fmt.Println("numV", NumVertices)
   grafica.BeginTransaction()
   for i := 0; i < NumVertices; i++{
     vecinos := ""
     sonVecinos := 0
+    manzanas[i] = initManzana(i)
     for j := 0; j < NumVertices; j++{
       sonVecinos = grafica.GetValue("grafica", i, j)
       if(sonVecinos == 1){
-        vecinos += strconv.Itoa(j) + ", " //append(vecinos, j)
+        vecinos += strconv.Itoa(j) + ", "
       }
     }
     query := fmt.Sprintf("INSERT INTO manzanas (ID, VECINOS) VALUES (%d, 0, %s);", i, vecinos)
     grafica.GraphDB.Exec(query)
   }
   grafica.EndTransaction()
+  vecindario.Manzanas = manzanas
+  fmt.Println("len de manzanas en init", len(vecindario.Manzanas))
 }
 
 /*
   Cambia el estado de una manzana.
 */
-func SetEstado(estado int, id int){
-  grafica.BeginTransaction()
-  query := fmt.Sprintf("UPDATE manzanas SET ESTADO = %d WHERE ID = %d;", estado, id)
-  grafica.GraphDB.Exec(query)
-  grafica.EndTransaction()
+func (manzana *Manzana)SetEstado(estado int){
+  manzana.Estado = estado;
 }
 
 /*
   mmmh, do I really need this?
 */
-func (vecindario *Vecindario) InitFuegoEspecifico(manzana int){
-    SetEstado(2, manzana)
+func (vecindario *Vecindario) InitFuegoEspecifico(id int){
+  vecindario.Manzanas[id].SetEstado(2)
 }
 
 /*
@@ -89,12 +98,11 @@ func (vecindario *Vecindario) PropagaFuego(){
   incendiados := vecindario.GetIncendiados()
 
   for i := 0; i < len(incendiados); i++{
-    estadoManzana := -1
-    vecinos := consultaVecinos(incendiados[i])
+    _, vecinos := vecindario.getVecinos(incendiados[i])
     for j := 0; j < len(vecinos); j++{
-      estadoManzana = ConsultaEstado(vecinos[j])
-      if(estadoManzana == 0){
-        SetEstado(2, vecinos[j])
+      manzana := vecindario.Manzanas[vecinos[j]]
+      if(manzana.Estado == 0){
+        vecindario.Manzanas[vecinos[j]].SetEstado(2)
       }
     }
   }
@@ -104,43 +112,41 @@ func (vecindario *Vecindario) PropagaFuego(){
 Devuelve un arreglo con el id de las manzanas a salvo
 */
 func (vecindario *Vecindario) GetASalvo() []int{
-  return consultaPorEstado(0)
+  return vecindario.ConsultaPorEstado(0)
 }
 
 /*
 Devuelve un arreglo con el id de las manzanas defendidas
 */
 func (vecindario *Vecindario) GetDefendidos() []int{
-  return consultaPorEstado(1)
+  return vecindario.ConsultaPorEstado(1)
 }
 
 /*
   Devuelve un arreglo con el id de las manzanas incendiadas
 */
 func (vecindario *Vecindario) GetIncendiados() []int{
-  return consultaPorEstado(2)
+  return vecindario.ConsultaPorEstado(2)
 }
 
 /*
   Devuelve un arreglo con el id de las manzanas vecinas de incendiados
   que no han sido defendidas ni incendiadas
 */
-func (vecindario *Vecindario) GetPorQuemar() []interface{}{
+func (vecindario *Vecindario) GetPorQuemar() []int{
   incendiados := vecindario.GetIncendiados()
-  conjuntoCandidatos := set.New(set.ThreadSafe)
-  for _, id := range incendiados {
-    vecinos := getVecinos(id)
-    query := fmt.Sprintf("SELECT ID FROM manzanas WHERE ID IN (%s) AND ESTADO = 0;", vecinos[:len(vecinos)-1])
-    result, err := grafica.GraphDB.Query(query)
-    check(err)
-    var value int
-    defer result.Close()
-    for result.Next() {
-      err = result.Scan(&value)
-      conjuntoCandidatos.Add(value)
+  candidatos := []int{}
+  for i := 0; i < len(incendiados); i++{
+    _, vecinos := vecindario.getVecinos(incendiados[i])
+    for j := 0; j < len(vecinos); j++{
+      m := vecindario.Manzanas[vecinos[j]]
+      if(m.Estado == 0 && !util.Contiene(candidatos, vecinos[j])){
+        candidatos = append(candidatos, vecinos[j])
+      }
     }
   }
-  return conjuntoCandidatos.List()
+  fmt.Println("")
+  return candidatos
 }
 
 
@@ -172,30 +178,19 @@ func (vecindario *Vecindario) Evalua(numBomberos int) float64{
   return (quemados / float64(vecindario.Cantidad)) * (defendidos / float64(numBomberos))
 }
 
-func consultaPorEstado(estado int) []int{
-  query := fmt.Sprintf("SELECT ID FROM manzanas WHERE ESTADO = %d;", estado)
-  result, err := grafica.GraphDB.Query(query)
-  var indices []int
-  check(err)
-  var value int
-  defer result.Close()
-  for result.Next() {
-    err = result.Scan(&value)
-    indices = append(indices, value)
+func (vecindario *Vecindario) ConsultaPorEstado(estado int) []int{
+  res := []int{}
+  for i := 0; i < len(vecindario.Manzanas); i++{
+    if(vecindario.Manzanas[i].Estado == estado){
+      res = append(res, i)
+    }
   }
-  return indices
+  return res
 }
 
-func ConsultaEstado(id int) int {
-  query := fmt.Sprintf("SELECT ESTADO FROM manzanas WHERE ID = %d;", id)
-  result, err := grafica.GraphDB.Query(query)
-  check(err)
-  var value int
-  defer result.Close()
-  result.Next()
-  err = result.Scan(&value)
-
-  return int(value)
+func (vecindario *Vecindario)ConsultaEstado(id int) int {
+  fmt.Println("len de manzanas", len(vecindario.Manzanas))
+  return vecindario.Manzanas[id].Estado
 }
 func consultaVecinos(id int) []int{
   query := fmt.Sprintf("SELECT VECINOS FROM manzanas WHERE ID = %d;", id)
@@ -203,7 +198,6 @@ func consultaVecinos(id int) []int{
   var value string
   defer result.Close()
   result.Next()
-  // err = result.Scan(&value)
 
   values := strings.Split(value, ", ")
   var vecinos []int
@@ -237,10 +231,10 @@ func consultaVecinos(id int) []int{
 //   }
 // }
 
-func getVecinos(i int) string{
-  vecinos := ""
+func (vecindario *Vecindario) getVecinos(i int) (string, []int){
+  vecinosString := ""
+  vecinosArray := []int{}
   grafica.BeginTransaction()
-  result := ""
   for j := 1; j <= NumVertices; j++ {
     query := fmt.Sprintf("SELECT `%d` FROM grafica WHERE ID = %d;", i, j)
     result, err := grafica.GraphDB.Query(query)
@@ -251,11 +245,12 @@ func getVecinos(i int) string{
     err = result.Scan(&value)
     check(err)
     if value == 1 {
-      vecinos += strconv.Itoa(j) + ","
+      vecinosString += strconv.Itoa(j) + ","
+      vecinosArray = append(vecinosArray, j)
     }
   }
   grafica.EndTransaction()
-  return result
+  return vecinosString, vecinosArray
 }
 
 /*

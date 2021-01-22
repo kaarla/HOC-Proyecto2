@@ -53,20 +53,16 @@ func CorreHeuristica(fuegoInicial []int){
   for fin{
     if(cuentaGeneraciones < generaciones){
       for i := 0; i < HormigasXt; i++{
-        // fmt.Println("generando hormiga")
         HormigasExploradoras = append(HormigasExploradoras, *newHormiga(i + (ciclos * HormigasXt), escenarioCero))
       }
       cuentaGeneraciones++
     }
     termino := false
     for i, b := range HormigasExploradoras{
-      // fmt.Println("hormigas avanzan, ", i)
       if !termino{
         termino = b.avanza(ciclos)
-        // fmt.Println("no termino ", i, termino
         if(termino){
           cuentaTerminadas++
-          // fmt.Println("<p>terminaron, ", cuentaTerminadas, "len trayecto de ", b.Id, " es ", len(b.Trayecto), "</p>")
           solActual := CalculaSolucion(ciclos, b.Trayecto, b.Actual)
           fmt.Println("Costo de ", b.Id, ": ", solActual.Costo)
           if(mejorSol.Costo >= solActual.Costo /*&& solActual.Factible*/){
