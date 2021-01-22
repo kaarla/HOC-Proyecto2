@@ -4,13 +4,14 @@ import (
   "database/sql"
   "fmt"
   "os"
-  "github.com/kaarla/HOC-Proyecto2/util"
+  "math/rand"
+  
 )
 
 var(
-  numVertices = 16
-  numfilas = 4
-  numColumnas = 4
+  numVertices = 9
+  numfilas = 3
+  numColumnas = 3
 )
 
 var GraphDB *sql.DB
@@ -28,7 +29,7 @@ Genera la gráfica simple y la carga a la base de datos,
 esta gráfica será la matriz de distancias
 */
 func GeneraBaseCuadricula(numDiagonales int) int {
-  creaBase("grafica")
+  // creaBase("grafica")
   BeginTransaction()
   // creaBase("recorridos")
   for i := 1; i <= numVertices; i++ {
@@ -67,7 +68,7 @@ func DiagonalesRandom(numDiagonales int){
   j := 0
   c := 1
   for c != numDiagonales{
-    i = util.RandInt(0, numVertices - numColumnas)
+    i = randInt(0, numVertices - numColumnas)
     if((i % numColumnas) == 0){
       j = i
     }else{
@@ -79,7 +80,7 @@ func DiagonalesRandom(numDiagonales int){
 }
 
 func FloydWarshal() {
-  creaBase("recorridos")
+  // creaBase("recorridos")
   BeginTransaction()
   for i := 1; i <= numVertices; i++ {
     for j := 1; j <= numVertices; j++ {
@@ -97,10 +98,10 @@ func FloydWarshal() {
         distIJ := GetValue("grafica", i, j)
         distIK := GetValue("grafica", i, k)
         distKJ := GetValue("grafica", k, j)
-        pathKJ := GetValue("recorridos", k, j)
+        pathIK := GetValue("recorridos", i, k)
         if(distIJ > distIK + distKJ) {
           addRelation("grafica", i, j, distIK + distKJ)
-          addRelation("recorridos", i, j, pathKJ)
+          addRelation("recorridos", i, j, pathIK)
         }
       }
     }
@@ -114,18 +115,20 @@ func FloydWarshal() {
 func (grafica *Grafica) ImprimeGrafica(nombre string){
   s := ""
   f, _ := os.Create(nombre)
-  n3, _ := f.WriteString(s)
-  fmt.Printf("se escribieron %d bytes en %s\n", n3, nombre)
+  f.WriteString(s)
 }
 
 func addRelation(name string, i int, j int, dist int){
-  query := fmt.Sprintf("INSERT INTO %s (VERTICEA, VERTICEB, DISTANCIA) VALUES (%d, %d, %d);", name, i, j, dist)
+  query := fmt.Sprintf("UPDATE %s SET `%d` = %d WHERE ID = %d;", name, i, dist, j)
   _, err := GraphDB.Exec(query)
+  check(err)
+  query = fmt.Sprintf("UPDATE %s SET `%d` = %d WHERE ID = %d;", name, j, dist, i)
+  _, err = GraphDB.Exec(query)
   check(err)
 }
 
 func GetValue(name string, i int, j int) int{
-  query := fmt.Sprintf("SELECT `%d` FROM %s WHERE ID = %d;", i + 1, name, j + 1)
+  query := fmt.Sprintf("SELECT `%d` FROM %s WHERE ID = %d;", i, name, j)
   result, err := GraphDB.Query(query)
   check(err)
   var value int
@@ -149,9 +152,9 @@ func creaBase(name string) {
     queryAddFila := fmt.Sprintf("INSERT INTO %s (ID) VALUES (%d);", name, i)
     _, err = GraphDB.Exec(queryAddFila)
     check(err)
-    queryAddColumna := fmt.Sprintf("ALTER TABLE %s ADD `%d` INT;", name, i)
-    _, err = GraphDB.Exec(queryAddColumna)
-    check(err)
+    // queryAddColumna := fmt.Sprintf("ALTER TABLE %s ADD `%d` INT;", name, i)
+    // _, err = GraphDB.Exec(queryAddColumna)
+    // check(err)
   }
 }
 
@@ -165,4 +168,8 @@ func EndTransaction() {
   queryEnd := fmt.Sprintf("END TRANSACTION;")
   _, err := GraphDB.Exec(queryEnd)
   check(err)
+}
+
+func randInt(min int, max int) int {
+  return min + rand.Intn(max-min)
 }

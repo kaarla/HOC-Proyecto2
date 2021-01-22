@@ -1,10 +1,11 @@
 package problema_bombero
 import(
   "github.com/kaarla/HOC-Proyecto2/util"
+  "github.com/kaarla/HOC-Proyecto2/problema_bombero/grafica"
   "sort"
   "math/rand"
   // "container/list"
-  // "fmt"
+  "fmt"
 )
 
 
@@ -23,7 +24,7 @@ type Escenario struct{
 */
 func NewEscenario(vecindario Vecindario) *Escenario{
   escenario := Escenario{}
-  escenario.Ve= vecindario.Copia()
+  escenario.Ve = vecindario.Copia()
   escenario.PheActual = 0.0
   escenario.Eval = escenario.Ve.Evalua(TotalBomberos)
   escenario.Vecinos = nil
@@ -55,12 +56,11 @@ func (escenario *Escenario) GetTrayectoria(a int, b int) []int{
   }
   var estado int
   path := []int{}
-    a1 := Trayectorias[a][b]
+    a1 := grafica.GetValue("recorridos", a, b)
   for a != b && a != a1{
     a1 = a
-    a = Trayectorias[a1][b]
+    a = grafica.GetValue("recorridos", a1, b)
     estado = escenario.Ve.ConsultaEstado(a)
-    // aux := escenario.Ve.Manzanas[a]
     if(a != b){
       if(estado == 0){
         path = append(path, a)
@@ -80,6 +80,7 @@ func (esc *Escenario) GetCandidatos() []*Candidato{
   candidatosBrut := []int{}
   candidatos := []*Candidato{}
   actual := 0
+  fmt.Println("por salvar: ", PorSalvar, "incendiados:", incendiados)
   for _, s := range PorSalvar{
     for _, b := range incendiados{
       candidatosBrut = append(candidatosBrut, esc.GetTrayectoria(s, b)...)
@@ -99,9 +100,7 @@ func (esc *Escenario) GetCandidatos() []*Candidato{
     candidatosBrut = append(candidatosBrut[:0], candidatosBrut[(incidencias):]...)
   }
   QSort(candidatos)
-  // for _, c := range candidatos{
-  //   fmt.Println("<p>c ", c.Id, "</p>")
-  // }
+
   return candidatos
 }
 

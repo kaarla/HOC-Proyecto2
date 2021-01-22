@@ -32,24 +32,25 @@ var NumVertices int
 
 
 func CorreHeuristica(fuegoInicial []int){
-  //Dirigida = util.CreaDirigida(Distancias, PorSalvar, len(Distancias))
+  Dirigida = util.CreaDirigida(PorSalvar, NumVertices)
   rand.Seed(Semilla)
   generaciones := 3
   q1 = len(fuegoInicial)
   vecindarioCero := VecindarioCero()
+  fmt.Println("len de V cero", len(vecindarioCero.Manzanas))
   for _, i := range fuegoInicial{
     vecindarioCero.InitFuegoEspecifico(i)
   }
-   // fmt.Println("-------- INICIAL ---------")
-   // vecindarioCero.PrintSVG()
-   // fmt.Println("---------------------------")
+
   escenarioCero := NewEscenario(vecindarioCero)
+  fmt.Println("len al crear escenario, ", len(escenarioCero.Ve.Manzanas))
   fin := true
   ciclos := 0
   cuentaGeneraciones := 0
   cuentaTerminadas := 0
   mejorSol := NewSolucion()
   idHormiga := 0
+
   for fin{
     if(cuentaGeneraciones < generaciones){
       for i := 0; i < HormigasXt; i++{
@@ -64,7 +65,6 @@ func CorreHeuristica(fuegoInicial []int){
         if(termino){
           cuentaTerminadas++
           solActual := CalculaSolucion(ciclos, b.Trayecto, b.Actual)
-          fmt.Println("Costo de ", b.Id, ": ", solActual.Costo)
           if(mejorSol.Costo >= solActual.Costo /*&& solActual.Factible*/){
             mejorSol = solActual
             idHormiga = b.Id

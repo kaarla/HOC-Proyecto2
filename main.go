@@ -22,20 +22,18 @@ func main() {
     fmt.Println("Uso: \n Para ejecutar ACO sobre el Problema del bombero ejecuta",
      "el comando: \n $ go run main.go problema")
   }else{
-    sql.Open("sqlite3", "databases/Grafica4x4.db")
+    //sql.Open("sqlite3", "databases/Grafica3x3.db")
+
+    grafica.GraphDB, _ = sql.Open("sqlite3", "databases/Grafica3x3.db")
 
     if(os.Args[1] == "grafica"){
-      errS := grafica.GeneraBaseCuadricula(5)
+      errS := grafica.GeneraBaseCuadricula(1)
       fmt.Printf("errS: %d ", errS)
-
       grafica.FloydWarshal()
-      // distancias.ImprimeGrafica("graficas/distancias75x75.txt")
-      // recorridos.ImprimeGrafica("graficas/recorridos75x75.txt")
-
 
     }else if (os.Args[1] == "problema"){
       fuegoInicial := []int{}
-      grafica.GraphDB, _ = sql.Open("sqlite3", "databases/Grafica3x3.db")
+      // grafica.GraphDB, _ = sql.Open("sqlite3", "databases/Grafica3x3.db")
       // check(error)
 
       problema_bombero.NumVertices = 9
@@ -47,7 +45,7 @@ func main() {
       problema_bombero.Semilla =  9355
       problema_bombero.PorSalvar = []int{1}
 
-      fuegoInicial = []int{8}
+      fuegoInicial = []int{6}
       problema_bombero.CorreHeuristica(fuegoInicial)
 
     }

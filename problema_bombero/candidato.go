@@ -39,12 +39,12 @@ func (c *Candidato) FindMins(vecindario Vecindario){
   i := 0
   for !(auxB && auxS){
     if(vecindario.ConsultaEstado(i) == 2 && !auxB){
-      minB = grafica.GetValue("distancias", c.Id, i)
+      minB = grafica.GetValue("grafica", c.Id, i)
       c.DistMinB = minB
       auxB = true
     }
     if(util.Contiene(PorSalvar, vecindario.Manzanas[i].Id) && !auxS){
-      minS = grafica.GetValue("distancias", c.Id, i)
+      minS = grafica.GetValue("grafica", c.Id, i)
       c.DistMinS = minS
       auxS = true
     }

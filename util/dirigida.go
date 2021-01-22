@@ -2,6 +2,7 @@ package util
 
 import(
   "container/list"
+  "github.com/kaarla/HOC-Proyecto2/problema_bombero/grafica"
   // "fmt"
 )
 
@@ -55,7 +56,7 @@ func newDirigida(r []int) *Dirigida{
 /*
   Crea grafica dirigida para la instancia
 */
-func CreaDirigida(distancias [][]int, raices []int, numVertices int) *Dirigida{
+func CreaDirigida(raices []int, numVertices int) *Dirigida{
   dirigida := newDirigida(raices)
   porProcesar := list.New()
   vertices := make([]*VerticeD, numVertices)
@@ -66,16 +67,16 @@ func CreaDirigida(distancias [][]int, raices []int, numVertices int) *Dirigida{
     dirigida.Elementos++
   }
   temp := porProcesar.Front().Value
-  return dirigida.agregaVertices(temp.(int), distancias, porProcesar, dirigida.Vertices)
+  return dirigida.agregaVertices(temp.(int), porProcesar, dirigida.Vertices, numVertices)
 }
 
 /*
   Trabajo sucio de agregar los vertices
 */
-func (dirigida *Dirigida) agregaVertices(id int, dist [][]int, porProc *list.List, vert []*VerticeD) *Dirigida{
+func (dirigida *Dirigida) agregaVertices(id int, porProc *list.List, vert []*VerticeD, numV int) *Dirigida{
   var verTemp *VerticeD
-  for i := 0; i < len(dist); i++ {
-    if(dist[id][i] == 1 && (vert[i] == nil || vert[i].Nivel < vert[id].Nivel)){
+  for i := 0; i < numV; i++ {
+    if(grafica.GetValue("grafica", id, i) == 1 && (vert[i] == nil || vert[i].Nivel < vert[id].Nivel)){
       if(vert[i] == nil){
         verTemp = newVerticeD(i, (vert[id].Nivel + 1))
         vert[i] = verTemp
@@ -93,6 +94,6 @@ func (dirigida *Dirigida) agregaVertices(id int, dist [][]int, porProc *list.Lis
     return dirigida
   }else{
     temp := porProc.Front().Value
-    return dirigida.agregaVertices(temp.(int), dist, porProc, vert)
+    return dirigida.agregaVertices(temp.(int), porProc, vert, numV)
   }
 }

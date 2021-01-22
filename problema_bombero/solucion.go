@@ -1,7 +1,4 @@
 package problema_bombero
-import(
-  "fmt"
-)
 
 //Estructura para una solución, guardo su trayecto que es un arreglo de escenarios
 // y su costo
@@ -44,8 +41,7 @@ func CalculaSolucion(c int, trayectoria []*Escenario, actual *Escenario) *Soluci
   factible := true
   aux := false
   for _, ps := range PorSalvar{
-    fmt.Println("len de manzana en calcula", len(actual.Ve.Manzanas))
-    if(actual.Ve.ConsultaEstado(ps) == 0){
+      if(actual.Ve.ConsultaEstado(ps) == 0){
       aux = true
     }
       factible = factible && aux
