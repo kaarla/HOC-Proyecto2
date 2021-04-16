@@ -81,13 +81,14 @@ func CorreHeuristica(grafica string, fuegoInicial []int){
 }
 
 func printResultado(mejorSol *Solucion, idHormiga int){
-  fmt.Printf("%d Semilla\n", Semilla)
-  fmt.Printf("%d A salvo\n", len(mejorSol.Trayecto[len(mejorSol.Trayecto) - 1].Ve.GetASalvo()) + len(mejorSol.Trayecto[len(mejorSol.Trayecto) - 1].Ve.GetDefendidos()))
-  fmt.Println("<p>Total of firefighters: ", len(mejorSol.Trayecto[len(mejorSol.Trayecto) - 1].Ve.GetDefendidos()), "</p>")
+  fmt.Printf("%d Semilla \n", Semilla)
+//   fmt.Printf("%d A salvo \n", len(mejorSol.Trayecto[len(mejorSol.Trayecto)-1].Ve.GetASalvo()))
+  fmt.Printf("%d Salvados\n", len(mejorSol.Trayecto[len(mejorSol.Trayecto) - 1].Ve.GetASalvo()) + len(mejorSol.Trayecto[len(mejorSol.Trayecto) - 1].Ve.GetDefendidos()))
+//   fmt.Println("<p>Total of firefighters: ", len(mejorSol.Trayecto[len(mejorSol.Trayecto) - 1].Ve.GetDefendidos()), "</p>\n")
   fmt.Printf("%d Bomberos por iteración\n", BomberosXt)
-  fmt.Printf("%f Costo\n", mejorSol.Costo)
-  fmt.Printf("%f Costo Bomberos\n", mejorSol.CostoBomberos)
-  fmt.Printf("%f Costo Iteraciones\n", mejorSol.CostoIteraciones)
+//   fmt.Printf("%f Costo\n", mejorSol.Costo)
+//   fmt.Printf("%f Costo Bomberos\n", mejorSol.CostoBomberos)
+//   fmt.Printf("%f Costo Iteraciones\n", mejorSol.CostoIteraciones)
   fmt.Printf("Factible: %b\n", mejorSol.Factible)
   //fmt.Println("<p>Pasos:", len(mejorSol.Trayecto), "</p>")
   // fmt.Println("<p>HormigaId:", idHormiga, "</p>")
@@ -96,6 +97,6 @@ func printResultado(mejorSol *Solucion, idHormiga int){
 //   for i, es := range mejorSol.Trayecto{
 //     fmt.Println("<p>-----------------------------------</p>")
 //     fmt.Println("Tiempo", i + 1)
-//     es.Ve.PrintSVG()
+    mejorSol.Trayecto[len(mejorSol.Trayecto)-1].Ve.PrintSVG()
 //   }
 }

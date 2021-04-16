@@ -16,16 +16,16 @@ func main() {
   }else{
     if(os.Args[1] == "grafica"){
       grafica := grafica.GeneraCuadricula(50)
-      grafica.ImprimeGrafica("graficas/basica23x23.txt")
+      grafica.ImprimeGrafica("graficas/basica30x30.txt")
 
       distancias, recorridos := grafica.FloydWarshal()
-      distancias.ImprimeGrafica("graficas/distancias23x23.txt")
-      recorridos.ImprimeGrafica("graficas/recorridos23x23.txt")
+      distancias.ImprimeGrafica("graficas/distancias30x30.txt")
+      recorridos.ImprimeGrafica("graficas/recorridos30x30.txt")
 
 
     }else if (os.Args[1] == "problema"){
-      grafica := "graficas/distancias10x10.txt"
-      trayectorias := "graficas/recorridos10x10.txt"
+      grafica := "graficas/distancias30x30.txt"
+      trayectorias := "graficas/recorridos30x30.txt"
       problema_bombero.Distancias = problema_bombero.InitMapa(grafica)
       problema_bombero.Trayectorias = problema_bombero.InitMapa(trayectorias)
       cantidadBomberos := []int{5, 6, 7, 8, 9}
@@ -37,7 +37,7 @@ func main() {
       //fmt.Println(semillas)
 
       problema_bombero.TotalBomberos = 30
-      problema_bombero.HormigasXt = 3
+      problema_bombero.HormigasXt = 1
       problema_bombero.Phe = 0.3
       problema_bombero.PheReducion = 0.15
       problema_bombero.PorSalvar = []int{1,6,9,4,15}

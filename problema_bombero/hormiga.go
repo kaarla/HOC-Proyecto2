@@ -39,7 +39,6 @@ func (hormiga *Hormiga) avanza(ciclo int) bool{
   // hormiga.Actual.Ve.PrintSVG()
   if(len(porQuemar) < 1){
     if (hormiga.Ida){
-      // hormiga.Index = len(hormiga.Trayecto) - 2
       hormiga.Ida = false
     }
     return hormiga.regresa()
@@ -53,9 +52,6 @@ func (hormiga *Hormiga) avanza(ciclo int) bool{
     }else{
       nuevoEscenario = CreaEscenario(candidatos, hormiga.Actual, len(hormiga.Trayecto))
     }
-    // if(nuevoEscenario.DistanciaAe0 > ciclo || nuevoEscenario.DistanciaAe0 == 0){
-    //   nuevoEscenario.DistanciaAe0 = ciclo
-    // }
     hormiga.Actual.Vecinos = append(hormiga.Actual.Vecinos, nuevoEscenario)
     hormiga.Trayecto = append(hormiga.Trayecto, nuevoEscenario)
 
@@ -65,6 +61,7 @@ func (hormiga *Hormiga) avanza(ciclo int) bool{
     hormiga.Actual = nuevoEscenario
     nuevoEscenario.PheActual = nuevoEscenario.PheActual + Phe
     hormiga.Index += 1
+    hormiga.Pasos += 1
     return false
   }
 }

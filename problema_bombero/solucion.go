@@ -40,13 +40,11 @@ func CalculaSolucion(c int, trayectoria []*Escenario, actual *Escenario) *Soluci
   solucion.Trayecto = trayectoria
   solucion.CalculaCosto(c, trayectoria)
   factible := true
-  aux := false
+  aux := true
   for _, ps := range PorSalvar{
-    if(actual.Ve.Manzanas[ps].Estado == 0){
-      aux = true
-    }
-      factible = factible && aux
+    aux = aux && (actual.Ve.Manzanas[ps].Estado == 0)
   }
+  factible = factible && aux
   solucion.Factible = factible
   return &solucion
 }

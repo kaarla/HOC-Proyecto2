@@ -37,7 +37,7 @@ func GeneraCuadricula(numDiagonales int) Grafica{
         matriz[j - numColumnas][j] = 1
         matriz[j][j - numColumnas] = 1
       }else{
-        if((j - numColumnas) == i && numVertices % j != 0){
+        if((j - numColumnas) == i){
           matriz[i][j] = 1
           matriz[j][i] = 1
         }

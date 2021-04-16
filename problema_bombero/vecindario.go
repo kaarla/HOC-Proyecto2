@@ -119,12 +119,6 @@ func (vecindario *Vecindario) InitFuegoEspecifico(manzana int){
 */
 func (vecindario *Vecindario) PropagaFuego(){
   incendiados := vecindario.GetIncendiados()
-  // defendidos := vecindario.GetDefendidos()
-  // asalvo := vecindario.GetASalvo()
-  // // fmt.Println("<p> incenciados", incendiados, "</p>")
-  // // fmt.Println("<p> defendidos", defendidos, "</p>")
-  // // fmt.Println("<p> asalvo", asalvo, "</p>")
-  // // fmt.Println("<p>vecinos de 3, ", vecindario.Manzanas[3].Vecinos, "</p>")
   for i := 0; i < len(incendiados); i++{
     v := vecindario.Manzanas[incendiados[i]].Vecinos
     for j := 0; j < len(v); j++{
@@ -154,12 +148,10 @@ func (vecindario *Vecindario) GetIncendiados() []int{
 */
 func (vecindario *Vecindario) GetASalvo() []int{
   res := []int{}
-  i := 0
-  for _, b := range vecindario.Manzanas{
+  for i, b := range vecindario.Manzanas{
     if(b.Estado == 0){
       res = append(res, i)
     }
-    i++
   }
   return res
 }
@@ -276,6 +268,7 @@ func (vecindario *Vecindario) PrintManzana(){
   Para dar formato de SVG.
 */
 func (vecindario *Vecindario) PrintSVG(){
+    fmt.Println("num manzanas", len(vecindario.Manzanas))
     x := 5
     y := 5
     numColumnas := 3
@@ -291,6 +284,10 @@ func (vecindario *Vecindario) PrintSVG(){
     case 100:
       numColumnas = 10
       h = 600
+    case 900:
+      numColumnas = 30
+      h = 1600
+      break
     case 1000:
       numColumnas = 40
       h = 1500
@@ -306,7 +303,7 @@ func (vecindario *Vecindario) PrintSVG(){
       case 2:
         color = "red"
       }
-      if(util.Contiene(PorSalvar, m.Id)){
+      if(util.Contiene(PorSalvar, m.Id) && m.Estado == 0){
         color = "green"
       }
       // fmt.Println("m.Id", "numColumnas", m.Id, numColumnas)
