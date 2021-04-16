@@ -291,20 +291,23 @@ func (vecindario *Vecindario) PrintSVG(){
     case 1000:
       numColumnas = 40
       h = 1500
+    case 529:
+      numColumnas = 23
+      h = 1300
     }
     fmt.Printf("<svg height=\"%d\" width=\"2000\">\n<g font-size=\"10\" font-family=\"sans-serif\" fill=\"black\" stroke=\"none\">\n", h)
     // fmt.Println("------------------------", len(vecindario.Manzanas))
     for _, m := range vecindario.Manzanas{
       switch m.Estado {
       case 0:
-        color = "pink"
+        color = "#d1d5d4"
       case 1:
         color = "blue"
       case 2:
         color = "red"
       }
       if(util.Contiene(PorSalvar, m.Id) && m.Estado == 0){
-        color = "green"
+        color = "#00ff00"
       }
       // fmt.Println("m.Id", "numColumnas", m.Id, numColumnas)
       if(m.Id % numColumnas == 0){

@@ -4,7 +4,7 @@ import(
   "sort"
   "math/rand"
   // "container/list"
-  // "fmt"
+//   "fmt"
 )
 
 
@@ -118,6 +118,7 @@ func CreaEscenario(candidatos []*Candidato, actual *Escenario, distancia int) *E
       candidatos = candidatos[:len(candidatos) -1]
     }
   }
+//   fmt.Println("len bomberosN: ", len(bomberosN))
   for i := 0; i < len(bomberosN); i++{
     escenario.Ve.Manzanas[bomberosN[i]].Estado = 1
   }
