@@ -2,7 +2,7 @@ package main
 import(
   "fmt"
   "os"
-  "github.com/kaarla/HOC-Proyecto2/util"
+  "math/rand"
   "github.com/kaarla/HOC-Proyecto2/problema_bombero/grafica"
   "github.com/kaarla/HOC-Proyecto2/problema_bombero"
 )
@@ -11,45 +11,47 @@ func main() {
 
 
   if(len(os.Args) <= 1){
-    fmt.Println("Uso: \n Para ejecutar ACO sobre el Problema del bombero correr",
+    fmt.Println("Uso: \n Para ejecutar ACO sobre el Problema del bombero ejecutar:",
      "el comando: \n $ go run main.go problema")
   }else{
     if(os.Args[1] == "grafica"){
-      grafica := grafica.GeneraCuadricula(105)
-      grafica.ImprimeGrafica("graficas/basica30x30.txt")
+      grafica := grafica.GeneraCuadricula(50)
+      grafica.ImprimeGrafica("graficas/basica23x23.txt")
 
       distancias, recorridos := grafica.FloydWarshal()
-      distancias.ImprimeGrafica("graficas/distancias30x30.txt")
-      recorridos.ImprimeGrafica("graficas/recorridos30x30.txt")
+      distancias.ImprimeGrafica("graficas/distancias23x23.txt")
+      recorridos.ImprimeGrafica("graficas/recorridos23x23.txt")
 
 
     }else if (os.Args[1] == "problema"){
-      fuegoInicial := []int{}
-      grafica := ""
-
-      problema_bombero.TotalBomberos = 20
-      problema_bombero.BomberosXt = 5
-      problema_bombero.HormigasXt = 3
-      problema_bombero.Phe = 0.3
-      problema_bombero.PheReducion = 0.15
-      problema_bombero.Semilla =  9355888
-      problema_bombero.PorSalvar = []int{1, 10}
-
-      grafica = "graficas/distancias10x10.txt"
+      grafica := "graficas/distancias10x10.txt"
       trayectorias := "graficas/recorridos10x10.txt"
       problema_bombero.Distancias = problema_bombero.InitMapa(grafica)
       problema_bombero.Trayectorias = problema_bombero.InitMapa(trayectorias)
-      fuegoInicial = []int{36, 66}
-      problema_bombero.CorreHeuristica(grafica, fuegoInicial)
+      cantidadBomberos := []int{5, 6, 7, 8, 9}
+      semillas := []int{}
+      for i := 1; i < 10; i++{
+        semillas = append(semillas, rand.Int())
+      }
 
-    }else if (os.Args[1] == "arbol"){
-      grafica := grafica.GeneraCuadricula(6)
-      distancias, recorridos := grafica.FloydWarshal()
-      recorridos.ImprimeGrafica("graficas/recorridos9x9.txt")
+      //fmt.Println(semillas)
 
-      arbol := util.CreaArbol(distancias.Nodos, 4, 9)
-      fmt.Println(arbol.Elementos)
-      fmt.Println(arbol.GetTrayectoria(8))
+      problema_bombero.TotalBomberos = 30
+      problema_bombero.HormigasXt = 3
+      problema_bombero.Phe = 0.3
+      problema_bombero.PheReducion = 0.15
+      problema_bombero.PorSalvar = []int{1,6,9,4,15}
+      fuegoInicial := []int{70,89,56}
+
+//       for _, seed := range(semillas){
+        for _, bomb := range(cantidadBomberos){
+          problema_bombero.Semilla = 13850664//int64(seed)
+          problema_bombero.BomberosXt = bomb
+          problema_bombero.CorreHeuristica(grafica, fuegoInicial)
+          fmt.Println("----------------------------")
+        }
+//         fmt.Println("\n")
+//       }
     }
   }
 }

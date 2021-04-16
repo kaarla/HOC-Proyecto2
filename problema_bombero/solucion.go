@@ -1,6 +1,6 @@
 package problema_bombero
 import(
-  // "fmt"
+//  "fmt"
 )
 
 //Estructura para una solución, guardo su trayecto que es un arreglo de escenarios
@@ -10,6 +10,8 @@ type Solucion struct{
   Costo float64
   Factible bool
   Semilla int64
+  CostoIteraciones float64
+  CostoBomberos float64
 }
 
 func NewSolucion() *Solucion{
@@ -28,12 +30,13 @@ func (solucion *Solucion) CalculaCosto(c int, trayectoria []*Escenario){
   danoT := quemadosT / float64(c)
   d := (danoT - dano1)
   b := (bomberosT / float64(TotalBomberos)) * (bomberosT / float64(TotalBomberos))
-  solucion.Costo = (d * b) * float64(c)
+  solucion.Costo = (d * b) * float64(c / 10)
+  solucion.CostoBomberos = d * bomberosT
+  solucion.CostoIteraciones = (d) * float64(c / 10)
 }
 
 func CalculaSolucion(c int, trayectoria []*Escenario, actual *Escenario) *Solucion{
-  solucion := NewSolucion()
-  // fmt.Println("<p>len de trayectoria en calculaS", len(trayectoria), "</p>")
+  solucion := Solucion{}
   solucion.Trayecto = trayectoria
   solucion.CalculaCosto(c, trayectoria)
   factible := true
@@ -45,5 +48,5 @@ func CalculaSolucion(c int, trayectoria []*Escenario, actual *Escenario) *Soluci
       factible = factible && aux
   }
   solucion.Factible = factible
-  return solucion
+  return &solucion
 }

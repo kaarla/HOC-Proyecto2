@@ -13,6 +13,7 @@ type Hormiga struct{
   Camina bool             //booleano para saber si ya llegó a la condición de paro
   Ida bool                // true si va, false si regresa
   Index int               // indice del escenario de la trayectoria en el que va
+  Pasos int
 }
 
 /*

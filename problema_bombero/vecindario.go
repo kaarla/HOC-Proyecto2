@@ -193,7 +193,7 @@ func (vecindario *Vecindario) GetPorQuemar() []int{
       }
     }
   }
-  fmt.Println("")
+  //fmt.Println("")
   return candidatos
 }
 
